@@ -3,6 +3,9 @@ package com.revature;
 import java.sql.SQLException;
 
 import com.revature.common.datasource.ConnectionFactory;
+import com.revature.users.Admin;
+import com.revature.users.Employee;
+import com.revature.users.Manager;
 
 public class App 
 {
@@ -15,5 +18,15 @@ public class App
         
             e.printStackTrace();
         }
+
+        Admin admin = new Admin();
+        System.out.println(admin);
+
+        Manager manager = new Manager();
+        System.out.println(manager);
+
+        Employee employee = new Employee();
+        System.out.println(employee);
+
     }
 }
