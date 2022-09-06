@@ -3,9 +3,9 @@ package com.revature;
 import java.sql.SQLException;
 
 import com.revature.common.datasource.ConnectionFactory;
-import com.revature.users.Admin;
-import com.revature.users.Employee;
-import com.revature.users.Manager;
+import com.revature.users.AdminDAO;
+import com.revature.users.EmployeeDAO;
+import com.revature.users.ManagerDAO;
 
 public class App {
     public static void main(String[] args) {
@@ -17,13 +17,13 @@ public class App {
             e.printStackTrace();
         }
 
-        Admin admin = new Admin();
+        AdminDAO admin = new AdminDAO();
         System.out.println(admin);
 
-        Manager manager = new Manager();
+        ManagerDAO manager = new ManagerDAO();
         System.out.println(manager);
 
-        Employee employee = new Employee();
+        EmployeeDAO employee = new EmployeeDAO();
         System.out.println(employee);
 
     }
