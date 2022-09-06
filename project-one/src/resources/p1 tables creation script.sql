@@ -1,14 +1,13 @@
 create table reimbursement_status (
-id varchar default gen_random_uuid (),
+id serial,
 "name" varchar unique,
 
 primary key (id)
 );
 
 
-
 create table reimbursement_type (
-id varchar default gen_random_uuid (),
+id serial,
 "name" varchar unique,
 
 primary key (id)
@@ -17,7 +16,7 @@ primary key (id)
 
 
 create table user_role (
-id varchar default gen_random_uuid (),
+id serial,
 "name" varchar unique,
 
 primary key (id)
@@ -27,14 +26,14 @@ primary key (id)
 
 
 create table "user" (
-id varchar default gen_random_uuid (),
+id serial,
 username varchar not null unique,
 email varchar not null unique,
 "password" varchar not null,
 first_name varchar not null,
 last_name varchar not null,
 is_active boolean,
-role_id varchar,
+role_id serial,
 
 foreign key (role_id) references user_role (id),
 primary key (id)
@@ -42,18 +41,16 @@ primary key (id)
 
 
 
-
-create table reimbursement (
-id varchar default gen_random_uuid (),
-amount int not null,
+create table reimbursement(
+id serial,
+amount numeric(6,2) not null,
 submitted timestamp not null,
 resolved timestamp,
-description varchar not null,
-payment_id varchar,
-author_id varchar not null,
-resolver_id varchar,
-status_id varchar not null,
-type_id varchar not null,
+description varchar,
+author_id serial,
+resolver_id serial,
+status_id serial,
+type_id serial,
 
 foreign key (author_id) references "user" (id),
 foreign key (resolver_id) references "user" (id),
@@ -61,3 +58,7 @@ foreign key (status_id) references reimbursement_status (id),
 foreign key (type_id) references reimbursement_type (id),
 primary key (id)
 );
+
+
+
+

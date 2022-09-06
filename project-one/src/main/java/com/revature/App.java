@@ -7,15 +7,13 @@ import com.revature.users.Admin;
 import com.revature.users.Employee;
 import com.revature.users.Manager;
 
-public class App 
-{
-    public static void main( String[] args )
-    {
+public class App {
+    public static void main(String[] args) {
         try {
             ConnectionFactory.getInstance().getConnection();
-            System.out.println( "Successful Connection!" );
+            System.out.println("Successful Connection!");
         } catch (SQLException e) {
-        
+
             e.printStackTrace();
         }
 
@@ -29,4 +27,5 @@ public class App
         System.out.println(employee);
 
     }
+
 }
