@@ -3,7 +3,6 @@ package com.revature;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 
-import com.revature.users.UserDAO;
 import com.revature.users.UserServlet;
 
 

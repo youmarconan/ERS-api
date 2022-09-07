@@ -1,7 +1,5 @@
 package com.revature.users;
 
-import com.revature.roles.UserRole;
-
 public class User {
 
     private String id;

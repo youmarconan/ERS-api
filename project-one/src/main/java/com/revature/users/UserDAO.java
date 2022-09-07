@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.revature.common.datasource.ConnectionFactory;
-import com.revature.roles.UserRole;
 
 public class UserDAO {
 

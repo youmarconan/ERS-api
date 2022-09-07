@@ -1,4 +1,4 @@
-package com.revature.roles;
+package com.revature.users;
 
 public class UserRole {
     private String id;
