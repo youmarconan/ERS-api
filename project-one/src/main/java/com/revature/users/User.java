@@ -1,5 +1,7 @@
 package com.revature.users;
 
+import com.revature.roles.UserRole;
+
 public class User {
 
     private String id;
@@ -9,15 +11,55 @@ public class User {
     private String firstName;
     private String lastName;
     private boolean isActive;
-    private String roleId;
-
-    @Override
-    public String toString() {
-        return "User [email=" + email + ", firstName=" + firstName + ", id=" + id + ", isActive=" + isActive
-                + ", lastName=" + lastName + ", password=" + password + ", roleId=" + roleId + ", username=" + username
-                + "]";
+    private UserRole role;
+    public String getId() {
+        return id;
     }
-
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public boolean getIsActive() {
+        return isActive;
+    }
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+    public UserRole getRole() {
+        return role;
+    }
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -28,11 +70,10 @@ public class User {
         result = prime * result + (isActive ? 1231 : 1237);
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((roleId == null) ? 0 : roleId.hashCode());
+        result = prime * result + ((role == null) ? 0 : role.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
         return result;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -69,10 +110,10 @@ public class User {
                 return false;
         } else if (!password.equals(other.password))
             return false;
-        if (roleId == null) {
-            if (other.roleId != null)
+        if (role == null) {
+            if (other.role != null)
                 return false;
-        } else if (!roleId.equals(other.roleId))
+        } else if (!role.equals(other.role))
             return false;
         if (username == null) {
             if (other.username != null)
@@ -81,69 +122,13 @@ public class User {
             return false;
         return true;
     }
+    @Override
+    public String toString() {
+        return "User [email=" + email + ", firstName=" + firstName + ", id=" + id + ", isActive=" + isActive
+                + ", lastName=" + lastName + ", password=" + password + ", role=" + role + ", username=" + username
+                + "]";
+    } 
 
-    public String getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
+    
 
 }
