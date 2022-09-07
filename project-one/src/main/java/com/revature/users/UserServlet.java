@@ -9,8 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class UserServlet extends HttpServlet {
     
+    UserDAO userDAO = new UserDAO();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("/users works");
+
+        resp.getWriter().write(userDAO.allUsers().toString());
+
     }
 }
