@@ -3,17 +3,14 @@ package com.revature;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 
-import com.revature.users.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.auth.AuthServlet;
 import com.revature.users.UserDAO;
-import com.revature.users.UserRole;
 import com.revature.users.UserServlet;
 
 
 public class App {
     public static void main(String[] args) throws LifecycleException {
-
-        UserDAO userDAO = new UserDAO();
-        System.out.println(userDAO.login("youmarco", "p@$$word"));
 
         String docBase = System.getProperty("java.io.tmpdir");
         Tomcat webServer =new Tomcat();
@@ -21,8 +18,17 @@ public class App {
         webServer.setPort(5000);
         webServer.getConnector();
 
-        webServer.addContext("/project1", docBase);
-        webServer.addServlet("/project1", "UserServlet", new UserServlet()).addMapping("/users");
+        UserDAO userDAO = new UserDAO();
+        ObjectMapper objectMapper = new ObjectMapper();
+        UserServlet userServlet = new UserServlet(userDAO, objectMapper);
+        AuthServlet authServlet = new AuthServlet(userDAO, objectMapper);
+
+        String rootContext = "/project1";
+
+        webServer.addContext(rootContext, docBase);
+        webServer.addServlet(rootContext, "UserServlet", userServlet).addMapping("/users");
+        
+        webServer.addServlet(rootContext, "AuthServlet", authServlet).addMapping("/auth");
 
         webServer.start();
         webServer.getServer().await();

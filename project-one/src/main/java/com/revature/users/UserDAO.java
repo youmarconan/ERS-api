@@ -90,8 +90,9 @@ public class UserDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
+        
     }
 
 
