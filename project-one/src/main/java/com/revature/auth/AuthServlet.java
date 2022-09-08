@@ -1,7 +1,6 @@
 package com.revature.auth;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.common.errors.Error;
 import com.revature.common.exceptions.AuthenticationException;
 import com.revature.common.exceptions.DataSourceException;
 import com.revature.common.exceptions.InvalidRequestException;
@@ -18,15 +18,18 @@ import com.revature.users.UserResponse;
 
 
 public class AuthServlet extends HttpServlet {
+
+    
     
     private final AuthService authService;
     private final ObjectMapper objectMapper;
+    
+    
 
     public AuthServlet (AuthService authService, ObjectMapper objectMapper){
         this.authService=authService;
         this.objectMapper=objectMapper;
     }
-    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -45,42 +48,36 @@ public class AuthServlet extends HttpServlet {
         }catch(JsonMappingException e){
 
             resp.setStatus(400);
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 400);
-            errorResponse.put("message", "Something wrong with the request body");
-            errorResponse.put("timestamp", System.currentTimeMillis());
 
-            resp.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            Error error = new Error(400, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
 
         }catch(InvalidRequestException e){
 
             resp.setStatus(400);
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 400);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis());
 
-            resp.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            Error error = new Error(400, e.getMessage());
+            
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
             
         }catch(AuthenticationException e){
             
             resp.setStatus(401); 
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 401);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis()); 
 
-            resp.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            Error error = new Error(401, e.getMessage());
+            
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
 
         }catch(DataSourceException e){
 
             resp.setStatus(500); 
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("statusCode", 500);
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("timestamp", System.currentTimeMillis()); 
 
-            resp.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            Error error = new Error(500, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
         }
 
 
