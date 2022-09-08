@@ -9,7 +9,7 @@ import com.revature.auth.AuthService;
 import com.revature.auth.AuthServlet;
 
 import com.revature.users.UserDAO;
-
+import com.revature.users.UserService;
 import com.revature.users.UserServlet;
 
 
@@ -27,8 +27,9 @@ public class App {
         objectMapper.registerModule(new JavaTimeModule());
 
         AuthService authService =new AuthService(userDAO);
+        UserService userService =new UserService(userDAO);
 
-        UserServlet userServlet = new UserServlet(userDAO, objectMapper);
+        UserServlet userServlet = new UserServlet(userService, objectMapper);
         AuthServlet authServlet = new AuthServlet(authService, objectMapper);
 
         String rootContext = "/project1";

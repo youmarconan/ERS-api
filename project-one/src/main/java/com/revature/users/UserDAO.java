@@ -96,7 +96,7 @@ public class UserDAO {
     }
 
 
-    public void register(User user){
+    public String register(User user){
 
         String sql = 
         "insert into \"user\" (username, email, \"password\", first_name, last_name ,is_active ,role_id) values " +
@@ -124,6 +124,51 @@ public class UserDAO {
             e.printStackTrace();
         }
 
-        System.out.println("Successfully registered new user with ID : " +user.getId());
+        return user.getId();
     }
+
+    public Optional<User> findUserByUsername(String username) {
+
+        String sql = base + "where username = ?";
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            return mapResultSet(rs).stream().findFirst();
+
+        } catch (SQLException e) {
+         
+            throw new DataSourceException(e);
+        }
+
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+
+        String sql = base + "where email = ?";
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            return mapResultSet(rs).stream().findFirst();
+
+        } catch (SQLException e) {
+         
+            throw new DataSourceException(e);
+        }
+
+    }
+
+    public boolean isUsernameTaken(String username) {
+        return findUserByUsername(username).isPresent();
+    }
+
+    public boolean isEmailTaken(String email) {
+        return findUserByEmail(email).isPresent();
+    }
+    
 }
