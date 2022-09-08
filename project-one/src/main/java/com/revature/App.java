@@ -26,6 +26,7 @@ public class App {
         String rootContext = "/project1";
 
         webServer.addContext(rootContext, docBase);
+
         webServer.addServlet(rootContext, "UserServlet", userServlet).addMapping("/users");
         
         webServer.addServlet(rootContext, "AuthServlet", authServlet).addMapping("/auth");
