@@ -96,7 +96,7 @@ public class UserDAO {
     }
 
 
-    public void register(User user, Integer userRoleId){
+    public void register(User user){
 
         String sql = 
         "insert into \"user\" (username, email, \"password\", first_name, last_name ,is_active ,role_id) values " +
@@ -111,7 +111,7 @@ public class UserDAO {
             pstat.setString(4, user.getFirstName());
             pstat.setString(5, user.getLastName());
             pstat.setBoolean(6, user.getIsActive());
-            pstat.setInt(7, userRoleId);
+            pstat.setInt(7, Integer.parseInt(user.getRole().getId()));
 
             pstat.executeUpdate();
 
