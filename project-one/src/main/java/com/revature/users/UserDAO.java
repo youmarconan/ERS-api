@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.revature.common.datasource.ConnectionFactory;
+import com.revature.common.exceptions.DataSourceException;
 
 public class UserDAO {
 
@@ -89,8 +90,7 @@ public class UserDAO {
             return mapResultSet(rs).stream().findFirst();
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return Optional.empty();
+           throw new DataSourceException(e);
         }
         
     }

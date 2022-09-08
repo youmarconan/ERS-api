@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.common.exceptions.AuthenticationException;
+import com.revature.common.exceptions.DataSourceException;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.users.User;
 
@@ -66,6 +67,16 @@ public class AuthServlet extends HttpServlet {
             resp.setStatus(401); 
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("statusCode", 401);
+            errorResponse.put("message", e.getMessage());
+            errorResponse.put("timestamp", System.currentTimeMillis()); 
+
+            resp.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+
+        }catch(DataSourceException e){
+
+            resp.setStatus(500); 
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("statusCode", 500);
             errorResponse.put("message", e.getMessage());
             errorResponse.put("timestamp", System.currentTimeMillis()); 
 
