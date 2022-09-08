@@ -2,8 +2,8 @@ package com.revature.auth;
 
 import com.revature.common.exceptions.AuthenticationException;
 import com.revature.common.exceptions.InvalidRequestException;
-import com.revature.users.User;
 import com.revature.users.UserDAO;
+import com.revature.users.UserResponse;
 
 public class AuthService {
     
@@ -13,7 +13,7 @@ public class AuthService {
         this.userDAO=userDAO;   
     }
 
-    public User authenticate (Credentials credentials){
+    public UserResponse authenticate (Credentials credentials){
         
         if (credentials == null) {
             throw new InvalidRequestException("The provided credentials object must not be null!");
@@ -27,7 +27,7 @@ public class AuthService {
             throw new InvalidRequestException("The provided password must be at least 8 characters!");
         }
 
-        return userDAO.login(credentials.getUsername(), credentials.getPassword()).orElseThrow(AuthenticationException::new);
+        return userDAO.login(credentials.getUsername(), credentials.getPassword()).map(UserResponse::new).orElseThrow(AuthenticationException::new);
 
     }
 }

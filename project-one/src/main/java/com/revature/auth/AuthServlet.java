@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.common.exceptions.AuthenticationException;
 import com.revature.common.exceptions.DataSourceException;
 import com.revature.common.exceptions.InvalidRequestException;
-import com.revature.users.User;
+import com.revature.users.UserResponse;
 
 
 
@@ -38,9 +38,9 @@ public class AuthServlet extends HttpServlet {
 
             Credentials credentials = objectMapper.readValue(req.getInputStream(), Credentials.class);
 
-            User loggedInUser = authService.authenticate(credentials);
+            UserResponse loggedInUserResponse = authService.authenticate(credentials);
             resp.setStatus(200);
-            resp.getWriter().write(objectMapper.writeValueAsString(loggedInUser));
+            resp.getWriter().write(objectMapper.writeValueAsString(loggedInUserResponse));
 
         }catch(JsonMappingException e){
 
