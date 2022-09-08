@@ -4,6 +4,7 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.auth.AuthService;
 import com.revature.auth.AuthServlet;
 import com.revature.users.UserDAO;
 import com.revature.users.UserServlet;
@@ -20,8 +21,10 @@ public class App {
 
         UserDAO userDAO = new UserDAO();
         ObjectMapper objectMapper = new ObjectMapper();
+        AuthService authService =new AuthService(userDAO);
+
         UserServlet userServlet = new UserServlet(userDAO, objectMapper);
-        AuthServlet authServlet = new AuthServlet(userDAO, objectMapper);
+        AuthServlet authServlet = new AuthServlet(authService, objectMapper);
 
         String rootContext = "/project1";
 
