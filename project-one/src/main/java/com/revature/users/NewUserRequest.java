@@ -1,5 +1,6 @@
 package com.revature.users;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.common.Request;
 
 public class NewUserRequest implements Request<User> {
@@ -9,6 +10,7 @@ public class NewUserRequest implements Request<User> {
     private String password;
     private String firstName;
     private String lastName;
+    @JsonProperty("isActive")
     private boolean isActive;
     private String userRoleId;
     
@@ -73,7 +75,7 @@ public class NewUserRequest implements Request<User> {
         extractedUser.setIsActive(this.isActive);
 
         extractedRoleId.setId(this.userRoleId);
-        
+
         extractedUser.setRole(extractedRoleId);
 
         return extractedUser;

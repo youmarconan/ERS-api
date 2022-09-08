@@ -36,7 +36,6 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        resp.setContentType("application/json");
         try {
 
             NewUserRequest requestBody = objectMapper.readValue(req.getInputStream(), NewUserRequest.class);
