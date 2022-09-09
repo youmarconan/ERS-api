@@ -1,6 +1,7 @@
 package com.revature.users;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import com.revature.common.Error;
 import com.revature.common.exceptions.DataSourceException;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;
+import com.revature.common.exceptions.ResourceNotFoundException;
 
 public class UserServlet extends HttpServlet {
 
@@ -29,8 +31,39 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         resp.setContentType("application/json");
+        String id = req.getParameter("id");
+        
+        try{
+            if(id == null || id.length() <=0){
+                List<UserResponse> allUsers = userService.getAllUsers();
+                resp.getWriter().write(objectMapper.writeValueAsString(allUsers));
+            }else{
+                UserResponse userResponse = userService.getUserById(id);
+                resp.getWriter().write(objectMapper.writeValueAsString(userResponse));
+            }
+        }catch (InvalidRequestException | JsonMappingException e) {
 
-        resp.getWriter().write(objectMapper.writeValueAsString(userService.getAllUsers()));
+            resp.setStatus(400);
+
+            Error error = new Error(400, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+
+        }catch (DataSourceException e) {
+
+            resp.setStatus(500);
+
+            Error error = new Error(500, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+        }catch (ResourceNotFoundException e) {
+
+            resp.setStatus(400);
+
+            Error error = new Error(400, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+        }
     }
 
     @Override

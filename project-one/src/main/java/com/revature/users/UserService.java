@@ -20,6 +20,54 @@ public class UserService {
         return userDAO.allUsers().stream().map(UserResponse::new).collect(Collectors.toList());
     }
 
+    public UserResponse getUserById(String id) {
+
+        if (id == null || id.length() <= 0) {
+            throw new InvalidRequestException("A non-empty ID must be provided!");
+        }
+
+        try {
+            return userDAO.findUserById(id)
+                          .map(UserResponse::new)
+                          .orElseThrow(InvalidRequestException::new);
+
+        } catch (IllegalArgumentException e) {
+            throw new InvalidRequestException("An invalid ID string was provided.");
+        }
+    }
+
+    public UserResponse getUserByUsername(String username) {
+
+        if (username == null || username.length() <= 0) {
+            throw new InvalidRequestException("A non-empty username must be provided!");
+        }
+
+        try {
+            return userDAO.findUserByUsername(username)
+                          .map(UserResponse::new)
+                          .orElseThrow(InvalidRequestException::new);
+
+        } catch (IllegalArgumentException e) {
+            throw new InvalidRequestException("An invalid username string was provided.");
+        }
+    }
+
+    public UserResponse getUserByEmail(String email) {
+
+        if (email == null || email.length() <= 0) {
+            throw new InvalidRequestException("A non-empty email must be provided!");
+        }
+
+        try {
+            return userDAO.findUserByUsername(email)
+                          .map(UserResponse::new)
+                          .orElseThrow(InvalidRequestException::new);
+
+        } catch (IllegalArgumentException e) {
+            throw new InvalidRequestException("An invalid email string was provided.");
+        }
+    }
+
     public ResponseString register(NewUserRequest newUser){
 
         if (newUser == null) {
