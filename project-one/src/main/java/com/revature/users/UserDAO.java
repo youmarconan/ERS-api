@@ -14,22 +14,20 @@ import com.revature.common.exceptions.DataSourceException;
 
 public class UserDAO {
 
-
     private final String baseSelect = "select \"user\".username as username, " +
-    "\"user\".id as user_id, " +
-    "\"user\".email as email, " +
-    "\"user\".\"password\" as \"password\", " +
-    "\"user\".first_name as first_name, " +
-    "\"user\".last_name as last_name, " +
-    "\"user\".is_active as is_active, " +
-    "user_role.id as role_id, " +
-    "user_role.name as role_name " +
-    "from \"user\" " +
-    "join user_role " +
-    "on user_role.id = \"user\".role_id ";
+            "\"user\".id as user_id, " +
+            "\"user\".email as email, " +
+            "\"user\".\"password\" as \"password\", " +
+            "\"user\".first_name as first_name, " +
+            "\"user\".last_name as last_name, " +
+            "\"user\".is_active as is_active, " +
+            "user_role.id as role_id, " +
+            "user_role.name as role_name " +
+            "from \"user\" " +
+            "join user_role " +
+            "on user_role.id = \"user\".role_id ";
 
-
-    private ArrayList<User> mapResultSet(ResultSet rs) throws SQLException{
+    private ArrayList<User> mapResultSet(ResultSet rs) throws SQLException {
 
         ArrayList<User> users = new ArrayList<>();
 
@@ -53,11 +51,10 @@ public class UserDAO {
         return users;
     }
 
-
     public List<User> allUsers() {
 
         String sql = baseSelect + ";";
-        ArrayList <User> allUsers = new ArrayList<>();
+        ArrayList<User> allUsers = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -65,7 +62,6 @@ public class UserDAO {
             ResultSet rs = stat.executeQuery(sql);
 
             allUsers = mapResultSet(rs);
-            
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -73,25 +69,23 @@ public class UserDAO {
         return allUsers;
     }
 
-    public Optional<User> findUserById(int id) {
+    public Optional<User> findUserById(String id) {
 
         String sql = baseSelect + "where \"user\".id = ?" + " ;";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, Integer.parseInt(id));
             ResultSet rs = pstmt.executeQuery();
             return mapResultSet(rs).stream().findFirst();
 
         } catch (SQLException e) {
-         
+
             throw new DataSourceException(e);
         }
 
     }
-
-
 
     public Optional<User> login(String username, String password) {
 
@@ -107,21 +101,20 @@ public class UserDAO {
             return mapResultSet(rs).stream().findFirst();
 
         } catch (SQLException e) {
-           throw new DataSourceException(e);
+            throw new DataSourceException(e);
         }
-        
+
     }
 
+    public String register(User user) {
 
-    public String register(User user){
+        String sql = "insert into \"user\" (username, email, \"password\", first_name, last_name ,is_active ,role_id) values "
+                +
+                "(?,?,?,?,?,?,?)";
 
-        String sql = 
-        "insert into \"user\" (username, email, \"password\", first_name, last_name ,is_active ,role_id) values " +
-        "(?,?,?,?,?,?,?)";
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-
-            PreparedStatement pstat = conn.prepareStatement(sql, new String[] {"id"});
+            PreparedStatement pstat = conn.prepareStatement(sql, new String[] { "id" });
             pstat.setString(1, user.getUsername());
             pstat.setString(2, user.getEmail());
             pstat.setString(3, user.getPassword());
@@ -137,7 +130,7 @@ public class UserDAO {
 
             user.setId(rs.getString("id"));
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -156,7 +149,7 @@ public class UserDAO {
             return mapResultSet(rs).stream().findFirst();
 
         } catch (SQLException e) {
-         
+
             throw new DataSourceException(e);
         }
 
@@ -174,128 +167,122 @@ public class UserDAO {
             return mapResultSet(rs).stream().findFirst();
 
         } catch (SQLException e) {
-         
+
             throw new DataSourceException(e);
         }
 
     }
 
-    public String updateUserFristName (String to , int id){
-        String sql = "update \"user\" set  first_name = ? where id = ? ;" ;
+    public String updateUserFristName(String to, String id) {
+        String sql = "update \"user\" set  first_name = ? where id = ? ;";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            
+
             pstmt.setString(1, to);
-            pstmt.setInt(2, id);
-            
-            // TODO check the given id is valid in the service layer
+            pstmt.setInt(2, Integer.parseInt(id));
+
             int rs = pstmt.executeUpdate();
 
-            return "User first name updated to " + to + "\nRows affected = " + rs ;
+            return "User first name updated to " + to + ", Rows affected = " + rs;
 
-        }catch ( SQLException e){
+        } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
 
-    public String updateUserLastName (String to , int id){
-        String sql = "update \"user\" set  last_name = ? where id = ? ;" ;
+    public String updateUserLastName(String to, String id) {
+        String sql = "update \"user\" set  last_name = ? where id = ? ;";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            
+
             pstmt.setString(1, to);
-            pstmt.setInt(2, id);
-            
-            // TODO check the given id is valid in the service layer
+            pstmt.setInt(2, Integer.parseInt(id));
+
             int rs = pstmt.executeUpdate();
 
-            return "User last name updated to " + to + "\nRows affected = " + rs ;
+            return "User last name updated to " + to + ", Rows affected = " + rs;
 
-        }catch ( SQLException e){
+        } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
 
-    public String updateUserEmail (String to , int id){
-        String sql = "update \"user\" set  email = ? where id = ? ;" ;
+    public String updateUserEmail(String to, String id) {
+        String sql = "update \"user\" set  email = ? where id = ? ;";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            
+
             pstmt.setString(1, to);
-            pstmt.setInt(2, id);
-            
-            // TODO check the given id is valid in the service layer
+            pstmt.setInt(2, Integer.parseInt(id));
+
             int rs = pstmt.executeUpdate();
 
-            return "User email updated to " + to + "\nRows affected = " + rs ;
+            return "User email updated to " + to + ", Rows affected = " + rs;
 
-        }catch ( SQLException e){
+        } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
 
-    public String updateUserPassword (String to , int id){
-        String sql = "update \"user\" set  \"password\" = ? where id = ? ;" ;
+    public String updateUserPassword(String to, String id) {
+        String sql = "update \"user\" set  \"password\" = ? where id = ? ;";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            
+
             pstmt.setString(1, to);
-            pstmt.setInt(2, id);
-            
-            // TODO check the given id is valid in the service layer
+            pstmt.setInt(2, Integer.parseInt(id));
+
             int rs = pstmt.executeUpdate();
 
-            return "User password updated to " + to + "\nRows affected = " + rs ;
+            return "User password updated to " + to + ", Rows affected = " + rs;
 
-        }catch ( SQLException e){
+        } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
 
-    public String updateUserIsActive (Boolean to , int id){
-        String sql = "update \"user\" set  is_active = ? where id = ? ;" ;
+    public String updateUserIsActive(String to, String id) {
+        String sql = "update \"user\" set  is_active = ? where id = ? ;";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            
-            pstmt.setBoolean(1, to);
-            pstmt.setInt(2, id);
-            
-            // TODO check the given id is valid in the service layer
+
+            pstmt.setBoolean(1, Boolean.parseBoolean(to));
+            pstmt.setInt(2, Integer.parseInt(id));
+
             int rs = pstmt.executeUpdate();
 
-            return "User active status updated to " + to + "\nRows affected = " + rs ;
+            return "User active status updated to " + to + ", Rows affected = " + rs;
 
-        }catch ( SQLException e){
+        } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
 
-    public String updateUserRoleId (int to , int id){
-        String sql = "update \"user\" set  role_id = ? where id = ? ;" ;
+    public String updateUserRoleId(String to, String id) {
+        String sql = "update \"user\" set  role_id = ? where id = ? ;";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            
-            pstmt.setInt(1, to);
-            pstmt.setInt(2, id);
-            
-            // TODO check the given id is valid in the service layer
+
+            pstmt.setInt(1, Integer.parseInt(to));
+            pstmt.setInt(2, Integer.parseInt(id));
+
             int rs = pstmt.executeUpdate();
 
-            return "User role ID updated to " + to + "\nRows affected = " + rs ;
+            return "User role ID updated to " + to + ", Rows affected = " + rs;
 
-        }catch ( SQLException e){
+        } catch (SQLException e) {
             throw new DataSourceException(e);
         }
     }
@@ -308,8 +295,8 @@ public class UserDAO {
         return findUserByEmail(email).isPresent();
     }
 
-    public boolean isIdValid(int id) {
+    public boolean isIdValid(String id) {
         return findUserById(id).isPresent();
     }
-    
+
 }

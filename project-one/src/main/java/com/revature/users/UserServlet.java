@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.common.GeneratedIdResponse;
+import com.revature.common.ResponseString;
 import com.revature.common.Error;
 import com.revature.common.exceptions.DataSourceException;
 import com.revature.common.exceptions.InvalidRequestException;
@@ -39,7 +39,7 @@ public class UserServlet extends HttpServlet {
         try {
 
             NewUserRequest requestBody = objectMapper.readValue(req.getInputStream(), NewUserRequest.class);
-            GeneratedIdResponse generatedId = userService.register(requestBody);
+            ResponseString generatedId = userService.register(requestBody);
             resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
 
         } catch (InvalidRequestException | JsonMappingException e) {
@@ -50,20 +50,78 @@ public class UserServlet extends HttpServlet {
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
 
-        }catch (IsAlreadyExist e) {
+        } catch (IsAlreadyExist e) {
 
             resp.setStatus(409);
 
             Error error = new Error(409, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
-        }catch (DataSourceException e) {
+        } catch (DataSourceException e) {
 
             resp.setStatus(500);
-            
+
             Error error = new Error(500, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         }
     }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        resp.setContentType("application/json");
+        String toBeUpdated = req.getParameter("update");
+
+        try {
+            UpdateRequestBody requestBody = objectMapper.readValue(req.getInputStream(), UpdateRequestBody.class);
+
+            if (toBeUpdated.equals("firstname")) {
+                ResponseString generatedId = userService.updateFristNmae(requestBody);
+                resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("lastname")) {
+                ResponseString generatedId = userService.updateLastNmae(requestBody);
+                resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("email")) {
+                ResponseString generatedId = userService.updateEmail(requestBody);
+                resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("password")) {
+                ResponseString generatedId = userService.updatePassword(requestBody);
+                resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("isactive")) {
+                ResponseString generatedId = userService.updateIsActive(requestBody);
+                resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
+            }
+
+            if (toBeUpdated.equals("roleid")) {
+                ResponseString generatedId = userService.updateRoleId(requestBody);
+                resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
+            }
+        } catch (InvalidRequestException | JsonMappingException e) {
+
+            resp.setStatus(400);
+
+            Error error = new Error(400, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+
+        } catch (DataSourceException e) {
+
+            resp.setStatus(500);
+
+            Error error = new Error(500, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+        }
+
+    }
+
 }
