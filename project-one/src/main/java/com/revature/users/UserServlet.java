@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.common.GeneratedIdResponse;
-import com.revature.common.errors.Error;
+import com.revature.common.Error;
 import com.revature.common.exceptions.DataSourceException;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;

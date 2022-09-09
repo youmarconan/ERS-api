@@ -15,7 +15,7 @@ import com.revature.common.exceptions.DataSourceException;
 public class UserDAO {
 
 
-    private final String base = "select \"user\".username as username, " +
+    private final String baseSelect = "select \"user\".username as username, " +
     "\"user\".id as user_id, " +
     "\"user\".email as email, " +
     "\"user\".\"password\" as \"password\", " +
@@ -56,7 +56,7 @@ public class UserDAO {
 
     public List<User> allUsers() {
 
-        String sql = base + ";";
+        String sql = baseSelect + ";";
         ArrayList <User> allUsers = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
@@ -73,12 +73,29 @@ public class UserDAO {
         return allUsers;
     }
 
+    public Optional<User> findUserById(int id) {
+
+        String sql = baseSelect + "where \"user\".id = ?" + " ;";
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            return mapResultSet(rs).stream().findFirst();
+
+        } catch (SQLException e) {
+         
+            throw new DataSourceException(e);
+        }
+
+    }
 
 
 
     public Optional<User> login(String username, String password) {
 
-        String sql = base + "where username = ? and \"password\" = ?";
+        String sql = baseSelect + "where username = ? and \"password\" = ?";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -129,7 +146,7 @@ public class UserDAO {
 
     public Optional<User> findUserByUsername(String username) {
 
-        String sql = base + "where username = ?";
+        String sql = baseSelect + "where \"user\".username = ?";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -147,7 +164,7 @@ public class UserDAO {
 
     public Optional<User> findUserByEmail(String email) {
 
-        String sql = base + "where email = ?";
+        String sql = baseSelect + "where \"user\".email = ?";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -163,12 +180,136 @@ public class UserDAO {
 
     }
 
+    public String updateUserFristName (String to , int id){
+        String sql = "update \"user\" set  first_name = ? where id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, to);
+            pstmt.setInt(2, id);
+            
+            // TODO check the given id is valid in the service layer
+            int rs = pstmt.executeUpdate();
+
+            return "User first name updated to " + to + "\nRows affected = " + rs ;
+
+        }catch ( SQLException e){
+            throw new DataSourceException(e);
+        }
+    }
+
+    public String updateUserLastName (String to , int id){
+        String sql = "update \"user\" set  last_name = ? where id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, to);
+            pstmt.setInt(2, id);
+            
+            // TODO check the given id is valid in the service layer
+            int rs = pstmt.executeUpdate();
+
+            return "User last name updated to " + to + "\nRows affected = " + rs ;
+
+        }catch ( SQLException e){
+            throw new DataSourceException(e);
+        }
+    }
+
+    public String updateUserEmail (String to , int id){
+        String sql = "update \"user\" set  email = ? where id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, to);
+            pstmt.setInt(2, id);
+            
+            // TODO check the given id is valid in the service layer
+            int rs = pstmt.executeUpdate();
+
+            return "User email updated to " + to + "\nRows affected = " + rs ;
+
+        }catch ( SQLException e){
+            throw new DataSourceException(e);
+        }
+    }
+
+    public String updateUserPassword (String to , int id){
+        String sql = "update \"user\" set  \"password\" = ? where id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, to);
+            pstmt.setInt(2, id);
+            
+            // TODO check the given id is valid in the service layer
+            int rs = pstmt.executeUpdate();
+
+            return "User password updated to " + to + "\nRows affected = " + rs ;
+
+        }catch ( SQLException e){
+            throw new DataSourceException(e);
+        }
+    }
+
+    public String updateUserIsActive (Boolean to , int id){
+        String sql = "update \"user\" set  is_active = ? where id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setBoolean(1, to);
+            pstmt.setInt(2, id);
+            
+            // TODO check the given id is valid in the service layer
+            int rs = pstmt.executeUpdate();
+
+            return "User active status updated to " + to + "\nRows affected = " + rs ;
+
+        }catch ( SQLException e){
+            throw new DataSourceException(e);
+        }
+    }
+
+    public String updateUserRoleId (int to , int id){
+        String sql = "update \"user\" set  role_id = ? where id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setInt(1, to);
+            pstmt.setInt(2, id);
+            
+            // TODO check the given id is valid in the service layer
+            int rs = pstmt.executeUpdate();
+
+            return "User role ID updated to " + to + "\nRows affected = " + rs ;
+
+        }catch ( SQLException e){
+            throw new DataSourceException(e);
+        }
+    }
+
     public boolean isUsernameTaken(String username) {
         return findUserByUsername(username).isPresent();
     }
 
     public boolean isEmailTaken(String email) {
         return findUserByEmail(email).isPresent();
+    }
+
+    public boolean isIdValid(int id) {
+        return findUserById(id).isPresent();
     }
     
 }

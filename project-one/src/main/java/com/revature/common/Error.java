@@ -1,4 +1,4 @@
-package com.revature.common.errors;
+package com.revature.common;
 
 import java.time.LocalDateTime;
 

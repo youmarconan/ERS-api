@@ -43,11 +43,9 @@ public class App {
         webServer.start();
         webServer.getServer().await();
 
-        System.out.println("Web app successflly started!");
-
-        
         
 
+        
     }
 
 }
