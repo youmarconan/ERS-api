@@ -59,7 +59,7 @@ public class UserService {
         }
 
         try {
-            return userDAO.findUserByUsername(email)
+            return userDAO.findUserByEmail(email)
                           .map(UserResponse::new)
                           .orElseThrow(InvalidRequestException::new);
 

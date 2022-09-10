@@ -32,15 +32,30 @@ public class UserServlet extends HttpServlet {
 
         resp.setContentType("application/json");
         String id = req.getParameter("id");
+        String username = req.getParameter("username");
+        String email = req.getParameter("email");
         
         try{
-            if(id == null || id.length() <=0){
+            if(id == null && username == null && email== null){
                 List<UserResponse> allUsers = userService.getAllUsers();
                 resp.getWriter().write(objectMapper.writeValueAsString(allUsers));
-            }else{
+            }
+            if(id != null)
+            {
                 UserResponse userResponse = userService.getUserById(id);
                 resp.getWriter().write(objectMapper.writeValueAsString(userResponse));
             }
+            if(username != null)
+            {
+                UserResponse userResponse = userService.getUserByUsername(username);
+                resp.getWriter().write(objectMapper.writeValueAsString(userResponse));
+            }
+            if(email != null)
+            {
+                UserResponse userResponse = userService.getUserByEmail(email);
+                resp.getWriter().write(objectMapper.writeValueAsString(userResponse));
+            }
+
         }catch (InvalidRequestException | JsonMappingException e) {
 
             resp.setStatus(400);

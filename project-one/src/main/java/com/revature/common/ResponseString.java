@@ -1,25 +1,25 @@
 package com.revature.common;
 
 public class ResponseString {
-    
-    private String response;
 
-    public ResponseString(String response) {
-        this.response = response;
+    private String message;
+
+    public ResponseString(String message) {
+        this.message = message;
     }
 
-    public String getresponse() {
-        return response;
+    public String getMessage() {
+        return message;
     }
 
-    public void setresponse(String response) {
-        this.response = response;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
     public String toString() {
-        return "ResponseString [response=" + response + "]";
+        return "ResponseString [message=" + message + "]";
     }
-
+    
 
 }

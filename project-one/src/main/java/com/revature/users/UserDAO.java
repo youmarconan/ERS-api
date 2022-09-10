@@ -134,7 +134,7 @@ public class UserDAO {
             e.printStackTrace();
         }
 
-        return user.getId();
+        return "Generated ID = " + user.getId();
     }
 
     public Optional<User> findUserByUsername(String username) {
@@ -226,7 +226,7 @@ public class UserDAO {
             return "User email updated to " + to + ", Rows affected = " + rs;
 
         } catch (SQLException e) {
-            throw new DataSourceException(e);
+            throw new DataSourceException("This email is already taken");
         }
     }
 
