@@ -27,7 +27,12 @@ public class AuthService {
             throw new InvalidRequestException("The provided password must be at least 8 characters!");
         }
 
-        return userDAO.login(credentials.getUsername(), credentials.getPassword()).map(UserResponse::new).orElseThrow(AuthenticationException::new);
+        UserResponse userResponse = userDAO.login(credentials.getUsername(), credentials.getPassword()).map(UserResponse::new).orElseThrow(AuthenticationException::new);
 
+        if(userResponse.isActive()){
+            return userResponse;
+        }else{
+            throw new AuthenticationException();
+        }
     }
 }

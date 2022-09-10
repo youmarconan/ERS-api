@@ -43,8 +43,6 @@ public class App {
         webServer.start();
         webServer.getServer().await();
 
-        // UserDAO userDAO = new UserDAO();
-        // System.out.println(userDAO.findUserByEmail("marcoyounan@gmail"));
        
     }
 
