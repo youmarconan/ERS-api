@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,11 +31,33 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        HttpSession loggedInUserSession = req.getSession(false);
+
+        if (loggedInUserSession == null) {
+            resp.setStatus(401);
+            resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
+            return;
+        }
+
+        UserResponse loggedInUser = (UserResponse) loggedInUserSession.getAttribute("loggedInUser");
+
         resp.setContentType("application/json");
+
         String id = req.getParameter("id");
         String username = req.getParameter("username");
         String email = req.getParameter("email");
         
+        boolean w = loggedInUser.getRoleName().equals("admin");
+        boolean x = loggedInUser.getId().equals(id);
+
+        if( (!w && !x) ){
+
+            resp.setStatus(403); // FORBIDDEN
+            resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+            return;
+
+        }
+
         try{
             if(id == null && username == null && email== null){
                 List<UserResponse> allUsers = userService.getAllUsers();
@@ -84,6 +107,27 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
+
+        HttpSession loggedInUserSession = req.getSession(false);
+
+        if (loggedInUserSession == null) {
+            resp.setStatus(401);
+            resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
+            return;
+        }
+
+        UserResponse loggedInUser = (UserResponse) loggedInUserSession.getAttribute("loggedInUser");
+
+        boolean w = loggedInUser.getRoleName().equals("admin");
+
+        if( (!w) ){
+
+            resp.setStatus(403); // FORBIDDEN
+            resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+            return;
+
+        }
+
         try {
 
             NewUserRequest requestBody = objectMapper.readValue(req.getInputStream(), NewUserRequest.class);
@@ -117,6 +161,26 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        HttpSession loggedInUserSession = req.getSession(false);
+
+        if (loggedInUserSession == null) {
+            resp.setStatus(401);
+            resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
+            return;
+        }
+
+        UserResponse loggedInUser = (UserResponse) loggedInUserSession.getAttribute("loggedInUser");
+
+        boolean w = loggedInUser.getRoleName().equals("admin");
+
+        if( (!w) ){
+
+            resp.setStatus(403); // FORBIDDEN
+            resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+            return;
+
+        }
 
         resp.setContentType("application/json");
         String toBeUpdated = req.getParameter("update");

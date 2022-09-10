@@ -1,6 +1,8 @@
 package com.revature.users;
 
-public class UserResponse {
+import java.io.Serializable;
+
+public class UserResponse implements Serializable{
     private String id;
     private String username;
     private String email;
