@@ -4,6 +4,19 @@ public class UserRole {
     private String id;
     private String name;
 
+
+    
+    public UserRole() {
+        super();
+    }
+    
+
+    public UserRole(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+
     public String getId() {
         return id;
     }
