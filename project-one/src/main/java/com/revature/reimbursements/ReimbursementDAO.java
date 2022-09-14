@@ -76,7 +76,7 @@ public class ReimbursementDAO {
             allReimbursements = mapResultSet(rs);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataSourceException(e);
         }
         return allReimbursements;
     }
@@ -181,11 +181,36 @@ public class ReimbursementDAO {
             reimbursement.setId(rs.getString("id"));
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataSourceException(e);
         }
 
         return "Generated reimbursement ID = " + reimbursement.getId();
     }
 
+
+    public String updateOwnreimbursement(String reimbursementId, Double amount, String typeId, String description) {
+        String sql = "update reimbursement " +
+        "set amount = ?, " +
+        "type_id = ?, " +
+        "description = ? " +
+        "where reimbursement.id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setDouble(1, amount);
+            pstmt.setInt(2, Integer.parseInt(typeId));
+            pstmt.setString(3, description);
+            pstmt.setInt(4, Integer.parseInt(reimbursementId));
+
+            int rs = pstmt.executeUpdate();
+
+            return "Reimbursement has been updated, Rows affected = " + rs;
+
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
 
 }

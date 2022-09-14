@@ -45,6 +45,8 @@ public class App {
         // webServer.start();
         // webServer.getServer().await();
 
+        ReimbursementDAO reimbursementDAO = new ReimbursementDAO();
+        System.out.println(reimbursementDAO.updateOwnreimbursement("3", 9999.99, "1", "description2"));
     }
 
 }
