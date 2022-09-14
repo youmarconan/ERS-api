@@ -17,6 +17,17 @@ public class Reimbursement {
         super();
     }
 
+    
+
+    public Reimbursement(double amount, String description, String authorId, ReimbursementType type) {
+        this.amount = amount;
+        this.description = description;
+        this.authorId = authorId;
+        this.type = type;
+    }
+
+
+
     public Reimbursement(String id, double amount, String submitted, String resolved, String description,
             String authorId, String resolverId, ReimbursementStatus status, ReimbursementType type) {
         this.id = id;

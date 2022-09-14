@@ -159,4 +159,33 @@ public class ReimbursementDAO {
             throw new DataSourceException(e);
         }
     }
+
+    public String createNewReimbursement(Reimbursement reimbursement) {
+
+        String sql = "insert into reimbursement ( amount , description , author_id ,type_id ) values " + " ( ?, ?, ?, ?) ;";
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstat = conn.prepareStatement(sql, new String[] { "id" });
+
+            pstat.setDouble(1, reimbursement.getAmount());
+            pstat.setString(2, reimbursement.getDescription());
+            pstat.setInt(3, Integer.parseInt(reimbursement.getAuthorId()));
+            pstat.setInt(4, Integer.parseInt(reimbursement.getType().getTypeId()));
+
+            pstat.executeUpdate();
+
+            ResultSet rs = pstat.getGeneratedKeys();
+            rs.next();
+
+            reimbursement.setId(rs.getString("id"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return "Generated reimbursement ID = " + reimbursement.getId();
+    }
+
+
 }

@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.revature.auth.AuthService;
 import com.revature.auth.AuthServlet;
+import com.revature.reimbursements.Reimbursement;
 import com.revature.reimbursements.ReimbursementDAO;
+import com.revature.reimbursements.ReimbursementType;
 import com.revature.users.UserDAO;
 import com.revature.users.UserService;
 import com.revature.users.UserServlet;
@@ -43,10 +45,6 @@ public class App {
         // webServer.start();
         // webServer.getServer().await();
 
-       ReimbursementDAO reimbursementDAO = new ReimbursementDAO();
-       System.out.println(reimbursementDAO.findReimbursementById("2"));
-       System.out.println(reimbursementDAO.approveOrDenyReimbursement("1", "2", "5"));
-       System.out.println(reimbursementDAO.findReimbursementById("2"));
     }
 
 }
