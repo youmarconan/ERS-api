@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,12 +28,14 @@ public class UserServiceTest {
     UserService sut;
     UserDAO mockUserDAO;
     NewUserRequest mockNewUserRequest;
+    UpdateRequestBody mockUpdateRequestBody;
 
     @BeforeEach
     public void setup(){
         mockUserDAO = Mockito.mock(UserDAO.class);
         mockNewUserRequest = Mockito.mock(NewUserRequest.class);
         sut = new UserService(mockUserDAO);
+        mockUpdateRequestBody = new UpdateRequestBody();
     }
     
     @AfterEach
@@ -529,5 +532,682 @@ public class UserServiceTest {
         });
 
         verify(mockUserDAO, times(0)).register(any());
+    }
+
+
+    @Test
+    public void test_updateFristNmae_returnsSuccessfully_givenValidUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserFristName(anyString(), anyString())).thenReturn("User first name updated to " + "updateTo" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User first name updated to " + "updateTo" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateFristNmae(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserFristName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateFristNmae_throwsInvalidRequestException_givenNullUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = null;
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateFristNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateFristNmae_throwsInvalidRequestException_givenNullUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody(null, "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateFristNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateFristNmae_throwsInvalidRequestException_givenNullUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", null);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateFristNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateFristNmae_throwsInvalidRequestException_givenZeroLengthUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateFristNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateFristNmae_throwsInvalidRequestException_givenZeroLengthUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateFristNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateFristNmae_throwsInvalidRequestException_givenInvalidUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "invalidId");
+        when(mockUserDAO.isIdValid(anyString())).thenThrow(InvalidRequestException.class);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateFristNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateLastNmae_returnsSuccessfully_givenValidUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserLastName(anyString(), anyString())).thenReturn("User last name updated to " + "updateTo" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User last name updated to " + "updateTo" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateLastNmae(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserLastName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateLastNmae_throwsInvalidRequestException_givenNullUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = null;
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateLastNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateLastNmae_throwsInvalidRequestException_givenNullUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody(null, "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateLastNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateLastNmae_throwsInvalidRequestException_givenNullUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", null);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateLastNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateLastNmae_throwsInvalidRequestException_givenZeroLengthUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateLastNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateLastNmae_throwsInvalidRequestException_givenZeroLengthUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateLastNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateLastNmae_throwsInvalidRequestException_givenInvalidUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "invalidId");
+        when(mockUserDAO.isIdValid(anyString())).thenThrow(InvalidRequestException.class);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateLastNmae(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+    }
+    
+    @Test
+    public void test_updateupdateEmail_returnsSuccessfully_givenValidUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserEmail(anyString(), anyString())).thenReturn("User email updated to " + "updateTo" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User email updated to " + "updateTo" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateEmail(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserEmail(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateEmail_throwsInvalidRequestException_givenNullUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = null;
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateEmail(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateEmail_throwsInvalidRequestException_givenNullUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody(null, "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateEmail(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateEmail_throwsInvalidRequestException_givenNullUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", null);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateEmail(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateEmail_throwsInvalidRequestException_givenZeroLengthUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateEmail(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateEmail_throwsInvalidRequestException_givenZeroLengthUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateEmail(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateEmail_throwsInvalidRequestException_givenInvalidUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "invalidId");
+        when(mockUserDAO.isIdValid(anyString())).thenThrow(InvalidRequestException.class);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateEmail(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateupdatePassword_returnsSuccessfully_givenValidUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserPassword(anyString(), anyString())).thenReturn("User password updated to " + "updateTo" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User password updated to " + "updateTo" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updatePassword(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updatePassword_throwsInvalidRequestException_givenNullUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = null;
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updatePassword(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updatePassword_throwsInvalidRequestException_givenNullUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody(null, "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updatePassword(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updatePassword_throwsInvalidRequestException_givenNullUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", null);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updatePassword(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updatePassword_throwsInvalidRequestException_givenZeroLengthUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updatePassword(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updatePassword_throwsInvalidRequestException_givenZeroLengthUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updatePassword(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updatePassword_throwsInvalidRequestException_givenInvalidUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "invalidId");
+        when(mockUserDAO.isIdValid(anyString())).thenThrow(InvalidRequestException.class);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updatePassword(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updatePassword_throwsInvalidRequestException_givenLessThanEightLengthUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("xxxxxxx", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updatePassword(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_returnsSuccessfully_givenTrueUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("true", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserIsActive(anyString(), anyString())).thenReturn("User active status updated to " + "true" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User active status updated to " + "true" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateIsActive(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_returnsSuccessfully_givenFalseUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("false", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserIsActive(anyString(), anyString())).thenReturn("User active status updated to " + "false" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User active status updated to " + "false" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateIsActive(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_throwsInvalidRequestException_givenNullUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = null;
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateIsActive(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_throwsInvalidRequestException_givenNullUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody(null, "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateIsActive(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_throwsInvalidRequestException_givenNullUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("true", null);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateIsActive(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_throwsInvalidRequestException_givenZeroLengthUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateIsActive(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_throwsInvalidRequestException_givenZeroLengthUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateIsActive(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_throwsInvalidRequestException_givenInvalidUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("updateTo", "invalidId");
+        when(mockUserDAO.isIdValid(anyString())).thenThrow(InvalidRequestException.class);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateIsActive(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateIsActive_throwsInvalidRequestException_givenNonBooleanUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("nonBoolean", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateIsActive(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+    }
+
+
+    @Test
+    public void test_updateRoleId_returnsSuccessfully_givenValidRoleId1UpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("1", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserRoleId(anyString(), anyString())).thenReturn("User role ID updated to " + "1" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User role ID updated to " + "1" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateRoleId(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_returnsSuccessfully_givenValidRoleId2UpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("2", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserRoleId(anyString(), anyString())).thenReturn("User role ID updated to " + "2" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User role ID updated to " + "2" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateRoleId(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_returnsSuccessfully_givenValidRoleId3UpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("3", "userId");
+        when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
+        when(mockUserDAO.updateUserRoleId(anyString(), anyString())).thenReturn("User role ID updated to " + "3" + ", Rows affected = 1" );
+        ResponseString expected = new ResponseString("User role ID updated to " + "3" + ", Rows affected = 1");
+        // Act
+        ResponseString actual = sut.updateRoleId(mockUpdateRequestBody);
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        
+
+        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_throwsInvalidRequestException_givenNullUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = null;
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateRoleId(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_throwsInvalidRequestException_givenNullUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody(null, "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateRoleId(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_throwsInvalidRequestException_givenNullUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("1", null);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateRoleId(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_throwsInvalidRequestException_givenZeroLengthUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateRoleId(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_throwsInvalidRequestException_givenZeroLengthUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("1", "");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateRoleId(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_throwsInvalidRequestException_givenInvalidUserIdUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("1", "invalidId");
+        when(mockUserDAO.isIdValid(anyString())).thenThrow(InvalidRequestException.class);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateRoleId(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+    }
+
+    @Test
+    public void test_updateRoleId_throwsInvalidRequestException_givenNonValidRoleIdUpdateToUpdateRequestBody() {
+
+        // Arrange
+        mockUpdateRequestBody = new UpdateRequestBody("4", "userId");
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.updateRoleId(mockUpdateRequestBody);
+        });
+
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
     }
 }

@@ -5,6 +5,18 @@ public class UpdateRequestBody {
     private String updateTo;
     private String userId;
 
+    
+    public UpdateRequestBody() {
+        super();
+    }
+
+    
+    public UpdateRequestBody(String updateTo, String userId) {
+        this.updateTo = updateTo;
+        this.userId = userId;
+    }
+
+
     public String getUpdateTo() {
         return updateTo;
     }

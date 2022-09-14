@@ -299,4 +299,7 @@ public class UserDAO {
         return findUserById(id).isPresent();
     }
 
+    public void updateIsActived(String anyString, String anyString2) {
+    }
+
 }
