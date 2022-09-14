@@ -14,6 +14,79 @@ public class NewUserRequest implements Request<User> {
     private boolean isActive;
     private String userRoleId;
     
+    public NewUserRequest() {
+        super();
+    }
+
+    
+    public NewUserRequest(String username, String email, String password, String firstName, String lastName,
+            boolean isActive, String userRoleId) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isActive = isActive;
+        this.userRoleId = userRoleId;
+    }
+
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + (isActive ? 1231 : 1237);
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((userRoleId == null) ? 0 : userRoleId.hashCode());
+        result = prime * result + ((username == null) ? 0 : username.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NewUserRequest other = (NewUserRequest) obj;
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
+            return false;
+        if (firstName == null) {
+            if (other.firstName != null)
+                return false;
+        } else if (!firstName.equals(other.firstName))
+            return false;
+        if (isActive != other.isActive)
+            return false;
+        if (lastName == null) {
+            if (other.lastName != null)
+                return false;
+        } else if (!lastName.equals(other.lastName))
+            return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
+        if (userRoleId == null) {
+            if (other.userRoleId != null)
+                return false;
+        } else if (!userRoleId.equals(other.userRoleId))
+            return false;
+        if (username == null) {
+            if (other.username != null)
+                return false;
+        } else if (!username.equals(other.username))
+            return false;
+        return true;
+    }
     public String getUsername() {
         return username;
     }
@@ -44,10 +117,10 @@ public class NewUserRequest implements Request<User> {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
-    public void setActive(boolean isActive) {
+    public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
     public String getUserRoleId() {
