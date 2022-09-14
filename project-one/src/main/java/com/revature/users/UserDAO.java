@@ -42,8 +42,10 @@ public class UserDAO {
             user.setFirstName(rs.getString("first_name"));
             user.setLastName(rs.getString("last_name"));
             user.setIsActive(rs.getBoolean("is_active"));
+
             userRole.setId(rs.getString("role_id"));
             userRole.setName(rs.getString("role_name"));
+            
             user.setRole(userRole);
 
             users.add(user);
