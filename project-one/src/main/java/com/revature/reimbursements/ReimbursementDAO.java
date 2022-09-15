@@ -190,8 +190,8 @@ public class ReimbursementDAO {
 
     public String updateOwnreimbursementAmount( UpdateOwnReimbBody updateOwnReimbBody) {
         String sql = "update reimbursement " +
-        "set amount = ?, " +
-        "where reimbursement.id = ? ;" ;
+        "set amount = ? " +
+        "where reimbursement.id = ? " ;
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
@@ -205,13 +205,14 @@ public class ReimbursementDAO {
             return "Reimbursement's amount has been updated, Rows affected = " + rs;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataSourceException(e);
         }
     }
 
     public String updateOwnreimbursementTypeId( UpdateOwnReimbBody updateOwnReimbBody) {
         String sql = "update reimbursement " +
-        "set type_id = ?, " +
+        "set type_id = ? " +
         "where reimbursement.id = ? ;" ;
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
@@ -232,7 +233,7 @@ public class ReimbursementDAO {
 
     public String updateOwnreimbursementDescription( UpdateOwnReimbBody updateOwnReimbBody) {
         String sql = "update reimbursement " +
-        "set description = ?, " +
+        "set description = ? " +
         "where reimbursement.id = ? ;" ;
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {

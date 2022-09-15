@@ -2,54 +2,35 @@ package com.revature.reimbursements;
 
 public class ApproveOrDenyBody {
 
-    private String statusId;
+    private String statusName;
     private String reimbursementId;
-    private String resolverId;
-
     public ApproveOrDenyBody() {
         super();
     }
-
-    public ApproveOrDenyBody(String statusId, String reimbursementId, String resolverId) {
-        this.statusId = statusId;
+    public ApproveOrDenyBody(String statusName, String reimbursementId) {
+        this.statusName = statusName;
         this.reimbursementId = reimbursementId;
-        this.resolverId = resolverId;
     }
-
-    public String getStatusId() {
-        return statusId;
+    public String getStatusName() {
+        return statusName;
     }
-
-    public void setStatusId(String statusId) {
-        this.statusId = statusId;
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
     }
-
     public String getReimbursementId() {
         return reimbursementId;
     }
-
     public void setReimbursementId(String reimbursementId) {
         this.reimbursementId = reimbursementId;
     }
-
-    public String getResolverId() {
-        return resolverId;
-    }
-
-    public void setResolverId(String resolverId) {
-        this.resolverId = resolverId;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((reimbursementId == null) ? 0 : reimbursementId.hashCode());
-        result = prime * result + ((resolverId == null) ? 0 : resolverId.hashCode());
-        result = prime * result + ((statusId == null) ? 0 : statusId.hashCode());
+        result = prime * result + ((statusName == null) ? 0 : statusName.hashCode());
         return result;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -64,23 +45,17 @@ public class ApproveOrDenyBody {
                 return false;
         } else if (!reimbursementId.equals(other.reimbursementId))
             return false;
-        if (resolverId == null) {
-            if (other.resolverId != null)
+        if (statusName == null) {
+            if (other.statusName != null)
                 return false;
-        } else if (!resolverId.equals(other.resolverId))
-            return false;
-        if (statusId == null) {
-            if (other.statusId != null)
-                return false;
-        } else if (!statusId.equals(other.statusId))
+        } else if (!statusName.equals(other.statusName))
             return false;
         return true;
     }
-
     @Override
     public String toString() {
-        return "ApproveOrDenyBody [reimbursementId=" + reimbursementId + ", resolverId=" + resolverId + ", statusId="
-                + statusId + "]";
+        return "ApproveOrDenyBody [reimbursementId=" + reimbursementId + ", statusName=" + statusName + "]";
     }
+    
 
 }

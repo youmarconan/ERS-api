@@ -44,7 +44,7 @@ public class ReimbursementService {
             throw new InvalidRequestException("Status value must be one of (lodging/travel/food/other)");
         }
 
-        return reimbursementDAO.findReimbursementbyStatus(type).stream().map(ReimbursementResponse::new).collect(Collectors.toList());
+        return reimbursementDAO.findReimbursementbyType(type).stream().map(ReimbursementResponse::new).collect(Collectors.toList());
     }
 
     public ReimbursementResponse getReimbursementById(String id) {
@@ -63,7 +63,7 @@ public class ReimbursementService {
         }
     }
 
-    public ResponseString approveOrDeny (ApproveOrDenyBody approveOrDenyBody){
+    public ResponseString approveOrDeny (ApproveOrDenyBody approveOrDenyBody, String resolverId){
 
         if (approveOrDenyBody == null) {
 
@@ -75,14 +75,14 @@ public class ReimbursementService {
             throw new InvalidRequestException("Must provide reimbursement ID!");
         }
 
-        if (approveOrDenyBody.getResolverId() == null || approveOrDenyBody.getResolverId().length() <= 0){
+        if (resolverId == null || resolverId.length() <= 0){
 
             throw new InvalidRequestException("Must provide resolver ID!");
         }
 
-        if(approveOrDenyBody.getStatusId() == null || approveOrDenyBody.getStatusId().length() <= 0) {
+        if(approveOrDenyBody.getStatusName() == null || approveOrDenyBody.getStatusName().length() <= 0) {
 
-                throw new InvalidRequestException("Must provid status ID");
+                throw new InvalidRequestException("Must provid status Name");
         }
 
         if (!reimbursementDAO.isIdValid(approveOrDenyBody.getReimbursementId())){
@@ -90,12 +90,20 @@ public class ReimbursementService {
             throw new InvalidRequestException("Must provid a valid reimbursement ID");
         }
 
-        if ( !approveOrDenyBody.getStatusId().equals("2") && !approveOrDenyBody.getStatusId().equals("3")){
+        if ( !approveOrDenyBody.getStatusName().equals("approve") && !approveOrDenyBody.getStatusName().equals("deny")){
 
-            throw new InvalidRequestException("Status value must be (\"2\" or \"3\")  -hint(\"2\" to approve, \"3\" to deny)");
+            throw new InvalidRequestException("Status value must be (approve/deny)");
         }
 
-        String updateSuccessfullMessage = reimbursementDAO.approveOrDenyReimbursement(approveOrDenyBody.getStatusId(), approveOrDenyBody.getReimbursementId(), approveOrDenyBody.getResolverId());
+        String statusId = null ;
+        if (approveOrDenyBody.getStatusName().equals("approve")){
+            statusId = "2";
+        }
+        if (approveOrDenyBody.getStatusName().equals("deny")){
+            statusId = "3";
+        }
+
+        String updateSuccessfullMessage = reimbursementDAO.approveOrDenyReimbursement(statusId, approveOrDenyBody.getReimbursementId(), resolverId);
         return new ResponseString(updateSuccessfullMessage);
     }
 
@@ -191,10 +199,24 @@ public class ReimbursementService {
             throw new InvalidRequestException("Must provid a valid reimbursement ID");
         }
 
-        if(!updateOwnReimbBody.getUpdateTo().equals("1") && !updateOwnReimbBody.getUpdateTo().equals("2") && !updateOwnReimbBody.getUpdateTo().equals("3") && !updateOwnReimbBody.getUpdateTo().equals("4") ){
+        if(!updateOwnReimbBody.getUpdateTo().equals("lodging") && !updateOwnReimbBody.getUpdateTo().equals("travel") && !updateOwnReimbBody.getUpdateTo().equals("food") && !updateOwnReimbBody.getUpdateTo().equals("other") ){
 
-            throw new InvalidRequestException("Type ID must be one of (\"1\" \"2\" \"3\" \"4\") -hint(\"1\" for lodging, \"2\" for travel, \"3\" for food, \"4\" for other");
+            throw new InvalidRequestException("Reimbursement type must be one of (lodging/travel/food/other)");
         }
+
+        if(updateOwnReimbBody.getUpdateTo().equals("lodging")){
+            updateOwnReimbBody.setUpdateTo("1");
+        }
+        if(updateOwnReimbBody.getUpdateTo().equals("travel")){
+            updateOwnReimbBody.setUpdateTo("2");
+        }
+        if(updateOwnReimbBody.getUpdateTo().equals("food")){
+            updateOwnReimbBody.setUpdateTo("3");
+        }
+        if(updateOwnReimbBody.getUpdateTo().equals("other")){
+            updateOwnReimbBody.setUpdateTo("4");
+        }
+
 
         String updateSuccessfullMessage = reimbursementDAO.updateOwnreimbursementTypeId(updateOwnReimbBody);
         return new ResponseString(updateSuccessfullMessage);
