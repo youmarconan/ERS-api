@@ -188,29 +188,71 @@ public class ReimbursementDAO {
     }
 
 
-    public String updateOwnreimbursement(String reimbursementId, Double amount, String typeId, String description) {
+    public String updateOwnreimbursementAmount( UpdateOwnReimbBody updateOwnReimbBody) {
         String sql = "update reimbursement " +
         "set amount = ?, " +
-        "type_id = ?, " +
-        "description = ? " +
         "where reimbursement.id = ? ;" ;
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setDouble(1, amount);
-            pstmt.setInt(2, Integer.parseInt(typeId));
-            pstmt.setString(3, description);
-            pstmt.setInt(4, Integer.parseInt(reimbursementId));
+            pstmt.setDouble(1, Double.parseDouble(updateOwnReimbBody.getUpdateTo()));
+            pstmt.setInt(2, Integer.parseInt(updateOwnReimbBody.getReimbursementId()));
 
             int rs = pstmt.executeUpdate();
 
-            return "Reimbursement has been updated, Rows affected = " + rs;
+            return "Reimbursement's amount has been updated, Rows affected = " + rs;
 
         } catch (SQLException e) {
             throw new DataSourceException(e);
         }
+    }
+
+    public String updateOwnreimbursementTypeId( UpdateOwnReimbBody updateOwnReimbBody) {
+        String sql = "update reimbursement " +
+        "set type_id = ?, " +
+        "where reimbursement.id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, Integer.parseInt(updateOwnReimbBody.getUpdateTo()));
+            pstmt.setInt(2, Integer.parseInt(updateOwnReimbBody.getReimbursementId()));
+
+            int rs = pstmt.executeUpdate();
+
+            return "Reimbursement's type ID has been updated, Rows affected = " + rs;
+
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+
+    public String updateOwnreimbursementDescription( UpdateOwnReimbBody updateOwnReimbBody) {
+        String sql = "update reimbursement " +
+        "set description = ?, " +
+        "where reimbursement.id = ? ;" ;
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, updateOwnReimbBody.getUpdateTo());
+            pstmt.setInt(2, Integer.parseInt(updateOwnReimbBody.getReimbursementId()));
+
+            int rs = pstmt.executeUpdate();
+
+            return "Reimbursement's description has been updated, Rows affected = " + rs;
+
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+
+    public boolean isIdValid(String id) {
+        return findReimbursementById(id).isPresent();
     }
 
 }

@@ -301,7 +301,9 @@ public class UserDAO {
         return findUserById(id).isPresent();
     }
 
-    public void updateIsActived(String anyString, String anyString2) {
+    public boolean isIdActive(String id) {
+        User user = findUserById(id).get();
+        return user.getIsActive();
     }
 
 }
