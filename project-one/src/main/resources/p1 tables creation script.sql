@@ -50,7 +50,7 @@ description varchar,
 author_id serial not null,
 resolver_id int default null,
 status_id int default 1,
-type_id int default 1, 
+type_id int, 
 
 foreign key (author_id) references "user" (id),
 foreign key (resolver_id) references "user" (id),
