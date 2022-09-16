@@ -79,7 +79,15 @@ public class UserServlet extends HttpServlet {
                 resp.getWriter().write(objectMapper.writeValueAsString(userResponse));
             }
 
-        }catch (InvalidRequestException | JsonMappingException e) {
+        }catch (InvalidRequestException e) {
+
+            resp.setStatus(400);
+
+            Error error = new Error(400, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+
+        }catch (JsonMappingException e) {
 
             resp.setStatus(400);
 
@@ -183,10 +191,18 @@ public class UserServlet extends HttpServlet {
         }
 
         resp.setContentType("application/json");
-        String toBeUpdated = req.getParameter("update");
+
+        
 
         try {
+            String toBeUpdated = req.getParameter("update");
             UpdateRequestBody requestBody = objectMapper.readValue(req.getInputStream(), UpdateRequestBody.class);
+
+            if (toBeUpdated == null) {
+
+                throw new InvalidRequestException("Provided request must not be null!");
+                
+            }
 
             if (toBeUpdated.equals("firstname")) {
                 ResponseString generatedId = userService.updateFristNmae(requestBody);
@@ -217,6 +233,7 @@ public class UserServlet extends HttpServlet {
                 ResponseString generatedId = userService.updateRoleId(requestBody);
                 resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
             }
+
         } catch (InvalidRequestException | JsonMappingException e) {
 
             resp.setStatus(400);
@@ -232,6 +249,14 @@ public class UserServlet extends HttpServlet {
             Error error = new Error(500, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
+        } catch(NullPointerException e){
+
+            resp.setStatus(400);
+
+            Error error = new Error(400, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+
         }
 
     }

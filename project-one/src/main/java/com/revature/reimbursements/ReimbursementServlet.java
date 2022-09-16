@@ -129,7 +129,7 @@ public class ReimbursementServlet extends HttpServlet {
         try {
 
             NewReimbursementRequest newReimbursementRequest = objectMapper.readValue(req.getInputStream(), NewReimbursementRequest.class);
-            ResponseString generatedId = reimbursementService.createNewReimbursement(newReimbursementRequest);
+            ResponseString generatedId = reimbursementService.createNewReimbursement(newReimbursementRequest, loggedInUser.getId());
             resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
 
         } catch (InvalidRequestException | JsonMappingException e) {

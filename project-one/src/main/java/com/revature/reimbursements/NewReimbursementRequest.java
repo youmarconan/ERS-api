@@ -6,21 +6,58 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
 
     private double amount;
     private String description;
-    private String authorId;
-    private String typeId;
+    private String type;
 
-    
+   
+
     public NewReimbursementRequest() {
         super();
     }
 
 
-    public NewReimbursementRequest(double amount, String description, String authorId, String typeId) {
+
+    public NewReimbursementRequest(double amount, String description, String type) {
         this.amount = amount;
         this.description = description;
-        this.authorId = authorId;
-        this.typeId = typeId;
+        this.type = type;
     }
+
+
+
+    public double getAmount() {
+        return amount;
+    }
+
+
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+
+
+    public String getDescription() {
+        return description;
+    }
+
+
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+
+    public String getType() {
+        return type;
+    }
+
+
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 
 
     @Override
@@ -30,11 +67,11 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         long temp;
         temp = Double.doubleToLongBits(amount);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + ((authorId == null) ? 0 : authorId.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
+
 
 
     @Override
@@ -48,70 +85,26 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         NewReimbursementRequest other = (NewReimbursementRequest) obj;
         if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
             return false;
-        if (authorId == null) {
-            if (other.authorId != null)
-                return false;
-        } else if (!authorId.equals(other.authorId))
-            return false;
         if (description == null) {
             if (other.description != null)
                 return false;
         } else if (!description.equals(other.description))
             return false;
-        if (typeId == null) {
-            if (other.typeId != null)
+        if (type == null) {
+            if (other.type != null)
                 return false;
-        } else if (!typeId.equals(other.typeId))
+        } else if (!type.equals(other.type))
             return false;
         return true;
     }
 
 
-    public double getAmount() {
-        return amount;
-    }
-
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-
-    public String getAuthorId() {
-        return authorId;
-    }
-
-
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
-    }
-
-
-    public String getTypeId() {
-        return typeId;
-    }
-
-
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
 
     @Override
     public String toString() {
-        return "NewReimbursementRequest [amount=" + amount + ", authorId=" + authorId + ", description=" + description
-                + ", typeId=" + typeId + "]";
+        return "NewReimbursementRequest [amount=" + amount + ", description=" + description + ", type=" + type + "]";
     }
+
 
 
     @Override
@@ -122,13 +115,12 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
 
         reimbursement.setAmount(this.amount);
         reimbursement.setDescription(this.description);
-        reimbursement.setAuthorId(this.authorId);
 
-        reimbursementType.setTypeId(this.typeId);
+        reimbursementType.setTypeId(this.type);
 
         reimbursement.setType(reimbursementType);
 
         return reimbursement;
     }
-    
+
 }

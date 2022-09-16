@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.revature.common.ResponseString;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;
+import com.revature.common.exceptions.ResourceNotFoundException;
 
 public class UserService {
     
@@ -29,10 +30,10 @@ public class UserService {
         try {
             return userDAO.findUserById(id)
                           .map(UserResponse::new)
-                          .orElseThrow(InvalidRequestException::new);
+                          .orElseThrow(ResourceNotFoundException::new);
 
         } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException("An invalid ID string was provided.");
+            throw new InvalidRequestException("An invalid ID was provided.");
         }
     }
 
@@ -45,10 +46,10 @@ public class UserService {
         try {
             return userDAO.findUserByUsername(username)
                           .map(UserResponse::new)
-                          .orElseThrow(InvalidRequestException::new);
+                          .orElseThrow(ResourceNotFoundException::new);
 
         } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException("An invalid username string was provided.");
+            throw new InvalidRequestException("An invalid username was provided.");
         }
     }
 
@@ -61,10 +62,10 @@ public class UserService {
         try {
             return userDAO.findUserByEmail(email)
                           .map(UserResponse::new)
-                          .orElseThrow(InvalidRequestException::new);
+                          .orElseThrow(ResourceNotFoundException::new);
 
         } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException("An invalid email string was provided.");
+            throw new InvalidRequestException("An invalid email was provided.");
         }
     }
 
@@ -114,7 +115,7 @@ public class UserService {
         if (updateRequestBody.getUpdateTo() == null || updateRequestBody.getUpdateTo().length() <= 0 ||
             updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
 
-                throw new InvalidRequestException("Must provid a first name and an user ID");
+                throw new InvalidRequestException("Must provid first name and user ID");
             }
 
         if (!userDAO.isIdValid(updateRequestBody.getUserId())){
@@ -243,7 +244,7 @@ public class UserService {
         
         if (!updateRequestBody.getUpdateTo().equals("1") && !updateRequestBody.getUpdateTo().equals("2") && !updateRequestBody.getUpdateTo().equals("3")) {
 
-            throw new InvalidRequestException("Role ID must be one of these numbers:\n(1)ADMIN\n(2)Manager\n(3)Employee");
+            throw new InvalidRequestException("Invalid role ID, Role ID must be one of these numbers: (1)ADMIN (2)Manager (3)Employee");
         }
 
         String updateSuccessfullMessage = userDAO.updateUserRoleId(updateRequestBody.getUpdateTo(), updateRequestBody.getUserId());

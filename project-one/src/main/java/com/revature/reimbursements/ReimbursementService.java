@@ -5,8 +5,6 @@ import java.util.stream.Collectors;
 
 import com.revature.common.ResponseString;
 import com.revature.common.exceptions.InvalidRequestException;
-import com.revature.users.UserDAO;
-
 public class ReimbursementService {
 
     private final ReimbursementDAO reimbursementDAO;
@@ -107,9 +105,7 @@ public class ReimbursementService {
         return new ResponseString(updateSuccessfullMessage);
     }
 
-    public ResponseString createNewReimbursement (NewReimbursementRequest newReimbursement){
-
-        UserDAO userDAO = new UserDAO();
+    public ResponseString createNewReimbursement (NewReimbursementRequest newReimbursement, String authorId){
 
         if (newReimbursement == null){
             throw new InvalidRequestException("Provided request must not be null!");
@@ -119,18 +115,6 @@ public class ReimbursementService {
             throw new InvalidRequestException("Provided amount must be between 0.01 and 9999.99");
         }
 
-        if( newReimbursement.getAuthorId() == null || newReimbursement.getAuthorId().length() <= 0 ){
-            throw new InvalidRequestException("Must provide author ID");
-        }
-        if( !userDAO.isIdValid(newReimbursement.getAuthorId()) ){
-
-            throw new InvalidRequestException("Must provide VALID author ID");
-        }
-
-        if( !userDAO.isIdActive(newReimbursement.getAuthorId()) ){
-
-            throw new InvalidRequestException("Must provide ACTIVE author ID");
-        }
 
         if( newReimbursement.getDescription() == null || newReimbursement.getDescription().length()<=0){
 
@@ -142,17 +126,31 @@ public class ReimbursementService {
             throw new InvalidRequestException("Description must not exceed 65,535 characters");
         }
 
-        if( newReimbursement.getTypeId() == null || newReimbursement.getTypeId().length() <= 0){
+        if( newReimbursement.getType() == null || newReimbursement.getType().length() <= 0){
 
             throw new InvalidRequestException("Must provide type ID");
         }
         
-        if( !newReimbursement.getTypeId().equals("1") && !newReimbursement.getTypeId().equals("2") && !newReimbursement.getTypeId().equals("3") && !newReimbursement.getTypeId().equals("4") ){
+        if(!newReimbursement.getType().equals("lodging") && !newReimbursement.getType().equals("travel") && !newReimbursement.getType().equals("food") && !newReimbursement.getType().equals("other") ){
 
-            throw new InvalidRequestException("Type ID must be one of (\"1\" \"2\" \"3\" \"4\") -hint(\"1\" for lodging, \"2\" for travel, \"3\" for food, \"4\" for other");
+            throw new InvalidRequestException("Reimbursement type must be one of (lodging/travel/food/other)");
+        }
+
+        if(newReimbursement.getType().equals("lodging")){
+            newReimbursement.setType("1");
+        }
+        if(newReimbursement.getType().equals("travel")){
+            newReimbursement.setType("2");
+        }
+        if(newReimbursement.getType().equals("food")){
+            newReimbursement.setType("3");
+        }
+        if(newReimbursement.getType().equals("other")){
+            newReimbursement.setType("4");
         }
 
         Reimbursement reimbursement = newReimbursement.extractEntity();
+        reimbursement.setAuthorId(authorId);
         String reimbursementId = reimbursementDAO.createNewReimbursement(reimbursement);
         return new ResponseString(reimbursementId);
     }

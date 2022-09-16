@@ -66,7 +66,7 @@ public class UserDAO {
             allUsers = mapResultSet(rs);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataSourceException(e);
         }
         return allUsers;
     }
