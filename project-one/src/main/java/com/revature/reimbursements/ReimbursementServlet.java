@@ -47,9 +47,21 @@ public class ReimbursementServlet extends HttpServlet {
         String type = req.getParameter("type");
 
         boolean w = loggedInUser.getRoleName().equals("manager");
-        boolean x = loggedInUser.getId().equals(id);
+        boolean x = false;
+        if (id != null) {
+            try {
+                x = loggedInUser.getId().equals(reimbursementService.getReimbursementById(id).getAuthorId());
+            } catch (InvalidRequestException e) {
 
-        if ((!w && !x)) {
+                resp.setStatus(400);
+
+                Error error = new Error(400, e.getMessage());
+
+                resp.getWriter().write(objectMapper.writeValueAsString(error));
+                return;
+            }
+        }
+        if (!w && !x) {
 
             resp.setStatus(403); // FORBIDDEN
             resp.getWriter().write(objectMapper.writeValueAsString(
@@ -97,7 +109,6 @@ public class ReimbursementServlet extends HttpServlet {
             Error error = new Error(400, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
-
         }
     }
 
@@ -118,18 +129,21 @@ public class ReimbursementServlet extends HttpServlet {
 
         boolean w = loggedInUser.getRoleName().equals("employee");
 
-        if( (!w) ){
+        if ((!w)) {
 
             resp.setStatus(403); // FORBIDDEN
-            resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+            resp.getWriter().write(objectMapper.writeValueAsString(
+                    new Error(403, "Requester is not permitted to communicate with this endpoint.")));
             return;
 
         }
 
         try {
 
-            NewReimbursementRequest newReimbursementRequest = objectMapper.readValue(req.getInputStream(), NewReimbursementRequest.class);
-            ResponseString generatedId = reimbursementService.createNewReimbursement(newReimbursementRequest, loggedInUser.getId());
+            NewReimbursementRequest newReimbursementRequest = objectMapper.readValue(req.getInputStream(),
+                    NewReimbursementRequest.class);
+            ResponseString generatedId = reimbursementService.createNewReimbursement(newReimbursementRequest,
+                    loggedInUser.getId());
             resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
 
         } catch (InvalidRequestException | JsonMappingException e) {
@@ -165,23 +179,23 @@ public class ReimbursementServlet extends HttpServlet {
 
         boolean w = loggedInUser.getRoleName().equals("manager");
 
-        if( (!w) ){
+        if ((!w)) {
 
             resp.setStatus(403); // FORBIDDEN
-            resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+            resp.getWriter().write(objectMapper.writeValueAsString(
+                    new Error(403, "Requester is not permitted to communicate with this endpoint.")));
             return;
 
         }
 
         resp.setContentType("application/json");
 
-
         try {
             ApproveOrDenyBody approveOrDenyBody = objectMapper.readValue(req.getInputStream(), ApproveOrDenyBody.class);
 
             ResponseString generatedId = reimbursementService.approveOrDeny(approveOrDenyBody, loggedInUser.getId());
             resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
-        }catch (InvalidRequestException | JsonMappingException e) {
+        } catch (InvalidRequestException | JsonMappingException e) {
 
             resp.setStatus(400);
 

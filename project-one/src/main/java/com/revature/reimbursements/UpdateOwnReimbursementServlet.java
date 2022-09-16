@@ -62,7 +62,7 @@ public class UpdateOwnReimbursementServlet extends HttpServlet{
 
             if(!y){
                 resp.setStatus(403); // FORBIDDEN
-                resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Reimbuesement's auther ID DOSE NOT match your ID")));
+                resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Reimbuesement's author ID DOSE NOT match your ID")));
                 return;
             }
 

@@ -26,7 +26,7 @@ public class ReimbursementService {
         }
 
         if ( !status.equals("pending") && !status.equals("approved") && !status.equals("denied")){
-            throw new InvalidRequestException("Status value must be one of (pending/approved/denied)");
+            throw new InvalidRequestException("Status value must be one of (pending, approved, denied)");
         }
 
         return reimbursementDAO.findReimbursementbyStatus(status).stream().map(ReimbursementResponse::new).collect(Collectors.toList());
@@ -39,7 +39,7 @@ public class ReimbursementService {
         }
 
         if ( !type.equals("lodging") && !type.equals("travel") && !type.equals("food") && !type.equals("other")){
-            throw new InvalidRequestException("Status value must be one of (lodging/travel/food/other)");
+            throw new InvalidRequestException("Status value must be one of (lodging, travel, food, other)");
         }
 
         return reimbursementDAO.findReimbursementbyType(type).stream().map(ReimbursementResponse::new).collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class ReimbursementService {
 
         if ( !approveOrDenyBody.getStatusName().equals("approve") && !approveOrDenyBody.getStatusName().equals("deny")){
 
-            throw new InvalidRequestException("Status value must be (approve/deny)");
+            throw new InvalidRequestException("Status value must be (approve or deny)");
         }
 
         String statusId = null ;
@@ -133,7 +133,7 @@ public class ReimbursementService {
         
         if(!newReimbursement.getType().equals("lodging") && !newReimbursement.getType().equals("travel") && !newReimbursement.getType().equals("food") && !newReimbursement.getType().equals("other") ){
 
-            throw new InvalidRequestException("Reimbursement type must be one of (lodging/travel/food/other)");
+            throw new InvalidRequestException("Reimbursement type must be one of (lodging, travel, food, other)");
         }
 
         if(newReimbursement.getType().equals("lodging")){
@@ -199,7 +199,7 @@ public class ReimbursementService {
 
         if(!updateOwnReimbBody.getUpdateTo().equals("lodging") && !updateOwnReimbBody.getUpdateTo().equals("travel") && !updateOwnReimbBody.getUpdateTo().equals("food") && !updateOwnReimbBody.getUpdateTo().equals("other") ){
 
-            throw new InvalidRequestException("Reimbursement type must be one of (lodging/travel/food/other)");
+            throw new InvalidRequestException("Reimbursement type must be one of (lodging, travel, food, other)");
         }
 
         if(updateOwnReimbBody.getUpdateTo().equals("lodging")){

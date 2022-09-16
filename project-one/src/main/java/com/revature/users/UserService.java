@@ -101,6 +101,22 @@ public class UserService {
             throw new IsAlreadyExist("The provided username is already taken.");
         }
 
+        if (String.valueOf(newUser.getIsActive()) == null || String.valueOf(newUser.getIsActive()).length() <= 0 ) {
+            throw new InvalidRequestException("Must provid is active status!");
+        }
+
+        if (!String.valueOf(newUser.getIsActive()).equals("false") && !String.valueOf(newUser.getIsActive()).equals("true") ) {
+            throw new InvalidRequestException("Is active status must be one of (true or false)");
+        }
+
+        if (newUser.getUserRoleId() == null || newUser.getUserRoleId().length() <= 0) {
+            throw new InvalidRequestException("Must provid role ID!");
+        }
+
+        if (!newUser.getUserRoleId().equals("1") && !newUser.getUserRoleId().equals("2") && !newUser.getUserRoleId().equals("3") ) {
+            throw new InvalidRequestException("Role ID must be one of (1 or 2 or 3)");
+        }
+
         User userToPersist = newUser.extractEntity();
         String newUserId = userDAO.register(userToPersist);
         return new ResponseString(newUserId);
