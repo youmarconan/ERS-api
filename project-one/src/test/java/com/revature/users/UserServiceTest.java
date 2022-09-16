@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import com.revature.common.ResponseString;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;
+import com.revature.common.exceptions.ResourceNotFoundException;
 
 
 public class UserServiceTest {
@@ -108,7 +109,7 @@ public class UserServiceTest {
         when(mockUserDAO.findUserById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(InvalidRequestException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             sut.getUserById(id);
         });
 
@@ -187,7 +188,7 @@ public class UserServiceTest {
         when(mockUserDAO.findUserByUsername(username)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(InvalidRequestException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             sut.getUserByUsername(username);
         });
 
@@ -265,7 +266,7 @@ public class UserServiceTest {
         when(mockUserDAO.findUserByEmail(email)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(InvalidRequestException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             sut.getUserByEmail(email);
         });
 
