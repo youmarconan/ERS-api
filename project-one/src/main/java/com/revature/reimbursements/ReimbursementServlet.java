@@ -27,7 +27,6 @@ public class ReimbursementServlet extends HttpServlet {
 
     private static Logger logger = LogManager.getLogger(ReimbursementServlet.class);
 
-
     public ReimbursementServlet(ReimbursementService reimbursementService, ObjectMapper objectMapper) {
         this.reimbursementService = reimbursementService;
         this.objectMapper = objectMapper;
@@ -44,7 +43,8 @@ public class ReimbursementServlet extends HttpServlet {
             resp.setStatus(401);
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
 
-            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non logged in requester is not permitted to communicate with this endpoint");
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(),
+                    "Non logged in requester is not permitted to communicate with this endpoint");
 
             return;
         }
@@ -75,9 +75,11 @@ public class ReimbursementServlet extends HttpServlet {
         if (!w && !x) {
 
             resp.setStatus(403); // FORBIDDEN
-            resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+            resp.getWriter().write(objectMapper.writeValueAsString(
+                    new Error(403, "Requester is not permitted to communicate with this endpoint.")));
 
-            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Requester is not permitted to communicate with this endpoint");
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(),
+                    "Requester is not permitted to communicate with this endpoint");
             return;
 
         }
@@ -107,7 +109,6 @@ public class ReimbursementServlet extends HttpServlet {
 
             logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
-
             resp.setStatus(400);
 
             Error error = new Error(400, e.getMessage());
@@ -127,9 +128,9 @@ public class ReimbursementServlet extends HttpServlet {
 
             logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
-            resp.setStatus(400);
+            resp.setStatus(404);
 
-            Error error = new Error(400, e.getMessage());
+            Error error = new Error(404, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         }
@@ -148,8 +149,9 @@ public class ReimbursementServlet extends HttpServlet {
             resp.setStatus(401);
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
 
-            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non logged in requester is not permitted to communicate with this endpoint");
-            
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(),
+                    "Non logged in requester is not permitted to communicate with this endpoint");
+
             return;
         }
 
@@ -163,8 +165,9 @@ public class ReimbursementServlet extends HttpServlet {
             resp.getWriter().write(objectMapper.writeValueAsString(
                     new Error(403, "Requester is not permitted to communicate with this endpoint.")));
 
-            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non employee requester is not permitted to communicate with this endpoint");
-            
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(),
+                    "Non employee requester is not permitted to communicate with this endpoint");
+
             return;
 
         }
@@ -198,6 +201,16 @@ public class ReimbursementServlet extends HttpServlet {
             Error error = new Error(500, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
+
+        } catch (ResourceNotFoundException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
+            resp.setStatus(404);
+
+            Error error = new Error(404, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
         }
     }
 
@@ -212,7 +225,8 @@ public class ReimbursementServlet extends HttpServlet {
             resp.setStatus(401);
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
 
-            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non logged in requester is not permitted to communicate with this endpoint");
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(),
+                    "Non logged in requester is not permitted to communicate with this endpoint");
 
             return;
         }
@@ -227,8 +241,9 @@ public class ReimbursementServlet extends HttpServlet {
             resp.getWriter().write(objectMapper.writeValueAsString(
                     new Error(403, "Requester is not permitted to communicate with this endpoint.")));
 
-                    logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non manager requester is not permitted to communicate with this endpoint");
-            
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(),
+                    "Non manager requester is not permitted to communicate with this endpoint");
+
             return;
 
         }
@@ -236,7 +251,7 @@ public class ReimbursementServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         try {
-            
+
             ApproveOrDenyBody approveOrDenyBody = objectMapper.readValue(req.getInputStream(), ApproveOrDenyBody.class);
 
             ResponseString generatedId = reimbursementService.approveOrDeny(approveOrDenyBody, loggedInUser.getId());
@@ -261,6 +276,15 @@ public class ReimbursementServlet extends HttpServlet {
             resp.setStatus(500);
 
             Error error = new Error(500, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+        }catch (ResourceNotFoundException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
+            resp.setStatus(404);
+
+            Error error = new Error(404, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         }

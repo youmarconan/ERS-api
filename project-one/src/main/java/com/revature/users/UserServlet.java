@@ -128,9 +128,9 @@ public class UserServlet extends HttpServlet {
 
             logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
-            resp.setStatus(400);
+            resp.setStatus(404);
 
-            Error error = new Error(400, e.getMessage());
+            Error error = new Error(404, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         }
@@ -204,6 +204,15 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(500);
 
             Error error = new Error(500, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+        }catch (ResourceNotFoundException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
+            resp.setStatus(404);
+
+            Error error = new Error(404, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         }
@@ -317,6 +326,15 @@ public class UserServlet extends HttpServlet {
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
 
+        }catch (ResourceNotFoundException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
+            resp.setStatus(404);
+
+            Error error = new Error(404, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
         }
 
     }

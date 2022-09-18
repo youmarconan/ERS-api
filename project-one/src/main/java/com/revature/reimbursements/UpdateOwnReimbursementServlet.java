@@ -16,6 +16,7 @@ import com.revature.common.Error;
 import com.revature.common.ResponseString;
 import com.revature.common.exceptions.DataSourceException;
 import com.revature.common.exceptions.InvalidRequestException;
+import com.revature.common.exceptions.ResourceNotFoundException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -127,6 +128,15 @@ public class UpdateOwnReimbursementServlet extends HttpServlet {
             resp.setStatus(500);
 
             Error error = new Error(500, e.getMessage());
+
+            resp.getWriter().write(objectMapper.writeValueAsString(error));
+        }catch (ResourceNotFoundException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
+            resp.setStatus(404);
+
+            Error error = new Error(404, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         }

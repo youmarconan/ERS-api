@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.revature.common.ResponseString;
 import com.revature.common.exceptions.InvalidRequestException;
+import com.revature.common.exceptions.ResourceNotFoundException;
 public class ReimbursementService {
 
     private final ReimbursementDAO reimbursementDAO;
@@ -54,7 +55,7 @@ public class ReimbursementService {
         try {
             return reimbursementDAO.findReimbursementById(id)
                           .map(ReimbursementResponse::new)
-                          .orElseThrow(InvalidRequestException::new);
+                          .orElseThrow(ResourceNotFoundException::new);
 
         } catch (IllegalArgumentException e) {
             throw new InvalidRequestException("An invalid ID string was provided.");
@@ -169,7 +170,7 @@ public class ReimbursementService {
 
         if (!reimbursementDAO.isIdValid(updateOwnReimbBody.getReimbursementId())){
 
-            throw new InvalidRequestException("Must provid a valid reimbursement ID");
+            throw new ResourceNotFoundException();
         }
 
         if (Double.parseDouble(updateOwnReimbBody.getUpdateTo()) > 9999.99 || Double.parseDouble(updateOwnReimbBody.getUpdateTo()) <= 0){
@@ -194,7 +195,7 @@ public class ReimbursementService {
 
         if (!reimbursementDAO.isIdValid(updateOwnReimbBody.getReimbursementId())){
 
-            throw new InvalidRequestException("Must provid a valid reimbursement ID");
+            throw new ResourceNotFoundException();
         }
 
         if(!updateOwnReimbBody.getUpdateTo().equals("lodging") && !updateOwnReimbBody.getUpdateTo().equals("travel") && !updateOwnReimbBody.getUpdateTo().equals("food") && !updateOwnReimbBody.getUpdateTo().equals("other") ){
@@ -234,7 +235,7 @@ public class ReimbursementService {
 
         if (!reimbursementDAO.isIdValid(updateOwnReimbBody.getReimbursementId())){
 
-            throw new InvalidRequestException("Must provid a valid reimbursement ID");
+            throw new ResourceNotFoundException();
         }
 
         if(updateOwnReimbBody.getUpdateTo().length() > 65535 ){
