@@ -1,3 +1,5 @@
 target
 .vscode
 application.properties
+**/logs
+logs

@@ -2,6 +2,8 @@ package com.revature;
 
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -17,7 +19,10 @@ import com.revature.users.UserServlet;
 
 
 public class App {
+    private static Logger logger = LogManager.getFormatterLogger(App.class);
     public static void main(String[] args) throws LifecycleException {
+
+        logger.info("Starting Project One");
 
         String docBase = System.getProperty("java.io.tmpdir");
         Tomcat webServer =new Tomcat();
@@ -54,6 +59,7 @@ public class App {
         webServer.addServlet(rootContext, "UpdateOwnReimbursementServlet", updateOwnReimbursementServlet).addMapping("/updateOwnReimbursement");
 
         webServer.start();
+        logger.info("Web application successfully started");
         webServer.getServer().await();
 
     

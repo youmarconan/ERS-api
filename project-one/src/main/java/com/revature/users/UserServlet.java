@@ -1,6 +1,7 @@
 package com.revature.users;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +27,8 @@ public class UserServlet extends HttpServlet {
     private final UserService userService;
     private final ObjectMapper objectMapper;
 
+    private static Logger logger = LogManager.getLogger(UserServlet.class);
+
     public UserServlet(UserService userService, ObjectMapper objectMapper) {
         this.userService = userService;
         this.objectMapper = objectMapper;
@@ -31,11 +37,17 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        logger.info("A GET request was received by /project1/users at {}", LocalDateTime.now());
+
         HttpSession loggedInUserSession = req.getSession(false);
 
         if (loggedInUserSession == null) {
+
             resp.setStatus(401);
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non logged in requester is not permitted to communicate with this endpoint");
+
             return;
         }
 
@@ -54,6 +66,8 @@ public class UserServlet extends HttpServlet {
 
             resp.setStatus(403); // FORBIDDEN
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Requester is not permitted to communicate with this endpoint");
             return;
 
         }
@@ -79,7 +93,11 @@ public class UserServlet extends HttpServlet {
                 resp.getWriter().write(objectMapper.writeValueAsString(userResponse));
             }
 
+            logger.info("GET request successfully processed at {}", LocalDateTime.now());
+
         }catch (InvalidRequestException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
             resp.setStatus(400);
 
@@ -89,6 +107,8 @@ public class UserServlet extends HttpServlet {
 
         }catch (JsonMappingException e) {
 
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
             resp.setStatus(400);
 
             Error error = new Error(400, e.getMessage());
@@ -97,12 +117,16 @@ public class UserServlet extends HttpServlet {
 
         }catch (DataSourceException e) {
 
+            logger.error("A data source error occurred at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
             resp.setStatus(500);
 
             Error error = new Error(500, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         }catch (ResourceNotFoundException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
             resp.setStatus(400);
 
@@ -114,13 +138,20 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        logger.info("A POST request was received by /project1/users at {}", LocalDateTime.now());
+        
         resp.setContentType("application/json");
 
         HttpSession loggedInUserSession = req.getSession(false);
 
         if (loggedInUserSession == null) {
+
             resp.setStatus(401);
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non logged in requester is not permitted to communicate with this endpoint");
+            
             return;
         }
 
@@ -132,6 +163,9 @@ public class UserServlet extends HttpServlet {
 
             resp.setStatus(403); // FORBIDDEN
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non admin requester is not permitted to communicate with this endpoint");
+            
             return;
 
         }
@@ -142,7 +176,11 @@ public class UserServlet extends HttpServlet {
             ResponseString generatedId = userService.register(requestBody);
             resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
 
+            logger.info("POST request successfully processed at {}", LocalDateTime.now());
+
         } catch (InvalidRequestException | JsonMappingException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
             resp.setStatus(400);
 
@@ -152,12 +190,16 @@ public class UserServlet extends HttpServlet {
 
         } catch (IsAlreadyExist e) {
 
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
             resp.setStatus(409);
 
             Error error = new Error(409, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         } catch (DataSourceException e) {
+
+            logger.error("A data source error occurred at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
             resp.setStatus(500);
 
@@ -170,11 +212,17 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        logger.info("A PUT request was received by /project1/users at {}", LocalDateTime.now());
+
         HttpSession loggedInUserSession = req.getSession(false);
 
         if (loggedInUserSession == null) {
+
             resp.setStatus(401);
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(401, "Please log in first!")));
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non logged in requester is not permitted to communicate with this endpoint");
+
             return;
         }
 
@@ -186,6 +234,9 @@ public class UserServlet extends HttpServlet {
 
             resp.setStatus(403); // FORBIDDEN
             resp.getWriter().write(objectMapper.writeValueAsString(new Error(403, "Requester is not permitted to communicate with this endpoint.")));
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), "Non admin requester is not permitted to communicate with this endpoint");
+            
             return;
 
         }
@@ -195,6 +246,7 @@ public class UserServlet extends HttpServlet {
         
 
         try {
+
             String toBeUpdated = req.getParameter("update");
             UpdateRequestBody requestBody = objectMapper.readValue(req.getInputStream(), UpdateRequestBody.class);
 
@@ -234,7 +286,11 @@ public class UserServlet extends HttpServlet {
                 resp.getWriter().write(objectMapper.writeValueAsString(generatedId));
             }
 
+            logger.info("PUT request successfully processed at {}", LocalDateTime.now());
+
         } catch (InvalidRequestException | JsonMappingException e) {
+
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
             resp.setStatus(400);
 
@@ -244,12 +300,16 @@ public class UserServlet extends HttpServlet {
 
         } catch (DataSourceException e) {
 
+            logger.error("A data source error occurred at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+
             resp.setStatus(500);
 
             Error error = new Error(500, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
         } catch(NullPointerException e){
+            
+            logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 
             resp.setStatus(400);
 

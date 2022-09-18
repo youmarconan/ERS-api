@@ -28,13 +28,11 @@ public class UserServiceTest {
     
     UserService sut;
     UserDAO mockUserDAO;
-    NewUserRequest mockNewUserRequest;
     UpdateRequestBody mockUpdateRequestBody;
 
     @BeforeEach
     public void setup(){
         mockUserDAO = Mockito.mock(UserDAO.class);
-        mockNewUserRequest = Mockito.mock(NewUserRequest.class);
         sut = new UserService(mockUserDAO);
         mockUpdateRequestBody = new UpdateRequestBody();
     }
@@ -316,38 +314,28 @@ public class UserServiceTest {
         verify(mockUserDAO, times(0)).findUserByEmail(email);
     }
 
-    //TODO ask wezley tomorrow
-    // @Test
-    // public void test_register_returnsSuccessfully_givenValidNewUserRequest() {
+    @Test
+    public void test_register_returnsSuccessfully_givenValidNewUserRequest() {
 
-    //     // Arrange
+        // Arrange
        
-    //     UserRole role = new UserRole();
-    //     role.setId("userRoleId");
-    //     User user = new User("id", "username", "email", "password", "firstName", "lastName", true, role);
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstName", "lastName", true, "1");
+
+        when(mockUserDAO.isEmailTaken(newUserRequest.getEmail())).thenReturn(false);
+        when(mockUserDAO.isUsernameTaken(newUserRequest.getUsername())).thenReturn(false);
+        when(mockUserDAO.register(any(User.class))).thenReturn("totally-real-id");
+
     
-    //     mockNewUserRequest.setFirstName("firstName");
-    //     mockNewUserRequest.setLastName("lastName");
-    //     mockNewUserRequest.setEmail("email");
-    //     mockNewUserRequest.setUsername("username");
-    //     mockNewUserRequest.setPassword("password");
-    //     mockNewUserRequest.setIsActive(true);
-    //     mockNewUserRequest.setUserRoleId("id");
+        ResponseString expected = new ResponseString("totally-real-id");
 
-    //     when(mockUserDAO.isEmailTaken(mockNewUserRequest.getEmail())).thenReturn(false);
-    //     when(mockUserDAO.isUsernameTaken(mockNewUserRequest.getUsername())).thenReturn(false);
-    //     when(mockNewUserRequest.extractEntity()).thenReturn(user);
-    //     when(mockUserDAO.register(user)).thenReturn("Generated ID = " + user.getId());
+        // Act
+        ResponseString actual = sut.register(newUserRequest);
 
-        
-    //     ResponseString expected = new ResponseString(mockUserDAO.register(user));
-    //     // Act
-    //     ResponseString actual = sut.register(mockNewUserRequest);
-    //     // Assert
-    //     assertNotNull(actual);
-    //     assertEquals(expected, actual);
-    //     verify(mockUserDAO, times(1)).register(user);
-    // }
+        // Assert
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        verify(mockUserDAO, times(1)).register(any(User.class));
+    }
 
     @Test
     public void test_register_throwsInvalidRequestException_givenNullNewUser() {
