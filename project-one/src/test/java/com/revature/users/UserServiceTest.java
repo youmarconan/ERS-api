@@ -23,23 +23,22 @@ import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;
 import com.revature.common.exceptions.ResourceNotFoundException;
 
-
 public class UserServiceTest {
-    
+
     UserService sut;
     UserDAO mockUserDAO;
     UpdateRequestBody mockUpdateRequestBody;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         mockUserDAO = Mockito.mock(UserDAO.class);
         sut = new UserService(mockUserDAO);
         mockUpdateRequestBody = new UpdateRequestBody();
     }
-    
+
     @AfterEach
     public void cleanUp() {
-        Mockito.reset(mockUserDAO); 
+        Mockito.reset(mockUserDAO);
     }
 
     @Test
@@ -47,9 +46,12 @@ public class UserServiceTest {
 
         // Arrange
         ArrayList<User> usersStub = new ArrayList<>();
-        User user1 = new User("id1", "username1", "email1", "password1", "firstName1", "lastName1", true, new UserRole());
-        User user2 = new User("id2", "username2", "email2", "password2", "firstName2", "lastName2", true, new UserRole());
-        User user3 = new User("id3", "username3", "email3", "password3", "firstName3", "lastName3", true, new UserRole());
+        User user1 = new User("id1", "username1", "email1", "password1", "firstName1", "lastName1", true,
+                new UserRole());
+        User user2 = new User("id2", "username2", "email2", "password2", "firstName2", "lastName2", true,
+                new UserRole());
+        User user3 = new User("id3", "username3", "email3", "password3", "firstName3", "lastName3", true,
+                new UserRole());
 
         usersStub.add(user1);
         usersStub.add(user2);
@@ -59,13 +61,13 @@ public class UserServiceTest {
         UserResponse y = new UserResponse(user2);
         UserResponse z = new UserResponse(user3);
 
-        List <UserResponse> userResponses = new ArrayList<>();
+        List<UserResponse> userResponses = new ArrayList<>();
         userResponses.add(x);
         userResponses.add(y);
         userResponses.add(z);
 
         when(mockUserDAO.allUsers()).thenReturn(usersStub);
-        List<UserResponse> expected =  userResponses;
+        List<UserResponse> expected = userResponses;
 
         // Act
         List<UserResponse> actual = sut.getAllUsers();
@@ -78,7 +80,6 @@ public class UserServiceTest {
 
     }
 
-
     @Test
     public void test_getUserById_returnsSuccessfully_givenValidId() {
 
@@ -89,7 +90,6 @@ public class UserServiceTest {
 
         when(mockUserDAO.findUserById(id)).thenReturn(Optional.of(mockUser));
 
-
         // Act
         UserResponse actual = sut.getUserById(id);
         // Assert
@@ -97,13 +97,13 @@ public class UserServiceTest {
         assertEquals(expected, actual);
         verify(mockUserDAO, times(1)).findUserById(id);
     }
-    
+
     @Test
     public void test_getUserById_throwsInvalidRequestException_givenInvalidId() {
 
         // Arrange
         String id = "invalid";
-       
+
         when(mockUserDAO.findUserById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -119,7 +119,7 @@ public class UserServiceTest {
 
         // Arrange
         String id = "invalid";
-       
+
         when(mockUserDAO.findUserById(id)).thenThrow(new IllegalArgumentException());
 
         // Act & Assert
@@ -143,7 +143,7 @@ public class UserServiceTest {
         verify(mockUserDAO, times(0)).findUserById(id);
 
     }
-    
+
     @Test
     public void test_getUserById_throwsInvalidRequestException_givenZeroLengthId() {
 
@@ -168,7 +168,6 @@ public class UserServiceTest {
 
         when(mockUserDAO.findUserByUsername(username)).thenReturn(Optional.of(mockUser));
 
-
         // Act
         UserResponse actual = sut.getUserByUsername(username);
         // Assert
@@ -176,13 +175,13 @@ public class UserServiceTest {
         assertEquals(expected, actual);
         verify(mockUserDAO, times(1)).findUserByUsername(username);
     }
-    
+
     @Test
     public void test_getUserByUSername_throwsInvalidRequestException_givenInvalidUsername() {
 
         // Arrange
         String username = "invalid";
-       
+
         when(mockUserDAO.findUserByUsername(username)).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -198,7 +197,7 @@ public class UserServiceTest {
 
         // Arrange
         String username = "invalid";
-       
+
         when(mockUserDAO.findUserByUsername(username)).thenThrow(new IllegalArgumentException());
 
         // Act & Assert
@@ -222,7 +221,7 @@ public class UserServiceTest {
         verify(mockUserDAO, times(0)).findUserByUsername(username);
 
     }
-    
+
     @Test
     public void test_getUserByUsername_throwsInvalidRequestException_givenZeroLengthUsername() {
 
@@ -232,7 +231,7 @@ public class UserServiceTest {
         assertThrows(InvalidRequestException.class, () -> {
             sut.getUserByUsername(username);
         });
-    
+
         verify(mockUserDAO, times(0)).findUserByUsername(username);
     }
 
@@ -246,7 +245,6 @@ public class UserServiceTest {
 
         when(mockUserDAO.findUserByEmail(email)).thenReturn(Optional.of(mockUser));
 
-
         // Act
         UserResponse actual = sut.getUserByEmail(email);
         // Assert
@@ -254,13 +252,13 @@ public class UserServiceTest {
         assertEquals(expected, actual);
         verify(mockUserDAO, times(1)).findUserByEmail(email);
     }
-    
+
     @Test
     public void test_getUserByEmail_throwsInvalidRequestException_givenInvalidEmail() {
 
         // Arrange
         String email = "invalid";
-       
+
         when(mockUserDAO.findUserByEmail(email)).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -276,7 +274,7 @@ public class UserServiceTest {
 
         // Arrange
         String email = "invalid";
-       
+
         when(mockUserDAO.findUserByEmail(email)).thenThrow(new IllegalArgumentException());
 
         // Act & Assert
@@ -300,7 +298,7 @@ public class UserServiceTest {
         verify(mockUserDAO, times(0)).findUserByEmail(email);
 
     }
-    
+
     @Test
     public void test_getUserByEmail_throwsInvalidRequestException_givenZeroLengthEmail() {
 
@@ -310,7 +308,7 @@ public class UserServiceTest {
         assertThrows(InvalidRequestException.class, () -> {
             sut.getUserByEmail(email);
         });
-    
+
         verify(mockUserDAO, times(0)).findUserByEmail(email);
     }
 
@@ -318,14 +316,14 @@ public class UserServiceTest {
     public void test_register_returnsSuccessfully_givenValidNewUserRequest() {
 
         // Arrange
-       
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstName", "lastName", true, "1");
+
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstName", "lastName",
+                true, "1");
 
         when(mockUserDAO.isEmailTaken(newUserRequest.getEmail())).thenReturn(false);
         when(mockUserDAO.isUsernameTaken(newUserRequest.getUsername())).thenReturn(false);
         when(mockUserDAO.register(any(User.class))).thenReturn("totally-real-id");
 
-    
         ResponseString expected = new ResponseString("totally-real-id");
 
         // Act
@@ -355,7 +353,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenNullFirstName() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", null, "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", null, "lastName", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -369,7 +368,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenZeroLengthFirstName() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "", "lastName", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -383,7 +383,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenNullLastName() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", null, true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", null, true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -397,7 +398,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenZeroLengthLastName() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -411,7 +413,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenNullEmail() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", null, "password", "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", null, "password", "firstname", "lastName", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -425,7 +428,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenZeroLengthEmail() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "", "password", "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "", "password", "firstname", "lastName", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -439,7 +443,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenNullUsername() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest(null, "email", "password", "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest(null, "email", "password", "firstname", "lastName", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -449,12 +454,12 @@ public class UserServiceTest {
         verify(mockUserDAO, times(0)).register(any());
     }
 
-
     @Test
     public void test_register_throwsInvalidRequestException_givenLessThanFourLengthUsername() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("xxx", "email", "password", "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("xxx", "email", "password", "firstname", "lastName", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -468,7 +473,8 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenNullPassword() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", null, "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", null, "firstname", "lastName", true,
+                "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -478,12 +484,12 @@ public class UserServiceTest {
         verify(mockUserDAO, times(0)).register(any());
     }
 
-
     @Test
     public void test_register_throwsInvalidRequestException_givenLessThanEightLengthPassword() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "xxxxxxx", "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "xxxxxxx", "firstname", "lastName",
+                true, "userRoleId");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -497,7 +503,8 @@ public class UserServiceTest {
     public void test_register_throwsIsAlreadyExist_givenTrueisEmailTaken() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName",
+                true, "userRoleId");
 
         when(mockUserDAO.isEmailTaken(any())).thenReturn(true);
         // Act & Assert
@@ -512,7 +519,8 @@ public class UserServiceTest {
     public void test_register_throwsIsAlreadyExist_givenTrueisUsernameTaken() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName", true, "userRoleId");
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName",
+                true, "userRoleId");
 
         when(mockUserDAO.isUsernameTaken(any())).thenReturn(true);
         // Act & Assert
@@ -523,23 +531,23 @@ public class UserServiceTest {
         verify(mockUserDAO, times(0)).register(any());
     }
 
-
     @Test
     public void test_updateFristNmae_returnsSuccessfully_givenValidUpdateRequestBody() {
 
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserFristName(anyString(), anyString())).thenReturn("User first name updated to " + "updateTo" + ", Rows affected = 1" );
-        ResponseString expected = new ResponseString("User first name updated to " + "updateTo" + ", Rows affected = 1");
+        when(mockUserDAO.updateUserFristName(anyString(), anyString()))
+                .thenReturn("User first name updated to " + "updateTo" + ", Rows affected = 1");
+        ResponseString expected = new ResponseString(
+                "User first name updated to " + "updateTo" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateFristNmae(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserFristName(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserFristName(anyString(), anyString());
     }
 
     @Test
@@ -552,7 +560,7 @@ public class UserServiceTest {
             sut.updateFristNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(), anyString());
     }
 
     @Test
@@ -565,7 +573,7 @@ public class UserServiceTest {
             sut.updateFristNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(), anyString());
     }
 
     @Test
@@ -578,7 +586,7 @@ public class UserServiceTest {
             sut.updateFristNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(), anyString());
     }
 
     @Test
@@ -591,7 +599,7 @@ public class UserServiceTest {
             sut.updateFristNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(), anyString());
     }
 
     @Test
@@ -604,7 +612,7 @@ public class UserServiceTest {
             sut.updateFristNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(), anyString());
     }
 
     @Test
@@ -618,7 +626,7 @@ public class UserServiceTest {
             sut.updateFristNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserFristName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserFristName(anyString(), anyString());
     }
 
     @Test
@@ -627,16 +635,16 @@ public class UserServiceTest {
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserLastName(anyString(), anyString())).thenReturn("User last name updated to " + "updateTo" + ", Rows affected = 1" );
+        when(mockUserDAO.updateUserLastName(anyString(), anyString()))
+                .thenReturn("User last name updated to " + "updateTo" + ", Rows affected = 1");
         ResponseString expected = new ResponseString("User last name updated to " + "updateTo" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateLastNmae(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserLastName(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserLastName(anyString(), anyString());
     }
 
     @Test
@@ -649,7 +657,7 @@ public class UserServiceTest {
             sut.updateLastNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(), anyString());
     }
 
     @Test
@@ -662,7 +670,7 @@ public class UserServiceTest {
             sut.updateLastNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(), anyString());
     }
 
     @Test
@@ -675,7 +683,7 @@ public class UserServiceTest {
             sut.updateLastNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(), anyString());
     }
 
     @Test
@@ -688,7 +696,7 @@ public class UserServiceTest {
             sut.updateLastNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(), anyString());
     }
 
     @Test
@@ -701,7 +709,7 @@ public class UserServiceTest {
             sut.updateLastNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(), anyString());
     }
 
     @Test
@@ -715,25 +723,25 @@ public class UserServiceTest {
             sut.updateLastNmae(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserLastName(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserLastName(anyString(), anyString());
     }
-    
+
     @Test
     public void test_updateupdateEmail_returnsSuccessfully_givenValidUpdateRequestBody() {
 
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserEmail(anyString(), anyString())).thenReturn("User email updated to " + "updateTo" + ", Rows affected = 1" );
+        when(mockUserDAO.updateUserEmail(anyString(), anyString()))
+                .thenReturn("User email updated to " + "updateTo" + ", Rows affected = 1");
         ResponseString expected = new ResponseString("User email updated to " + "updateTo" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateEmail(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserEmail(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserEmail(anyString(), anyString());
     }
 
     @Test
@@ -746,7 +754,7 @@ public class UserServiceTest {
             sut.updateEmail(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(), anyString());
     }
 
     @Test
@@ -759,7 +767,7 @@ public class UserServiceTest {
             sut.updateEmail(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(), anyString());
     }
 
     @Test
@@ -772,7 +780,7 @@ public class UserServiceTest {
             sut.updateEmail(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(), anyString());
     }
 
     @Test
@@ -785,7 +793,7 @@ public class UserServiceTest {
             sut.updateEmail(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(), anyString());
     }
 
     @Test
@@ -798,7 +806,7 @@ public class UserServiceTest {
             sut.updateEmail(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(), anyString());
     }
 
     @Test
@@ -812,7 +820,7 @@ public class UserServiceTest {
             sut.updateEmail(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserEmail(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserEmail(anyString(), anyString());
     }
 
     @Test
@@ -821,16 +829,16 @@ public class UserServiceTest {
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("updateTo", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserPassword(anyString(), anyString())).thenReturn("User password updated to " + "updateTo" + ", Rows affected = 1" );
+        when(mockUserDAO.updateUserPassword(anyString(), anyString()))
+                .thenReturn("User password updated to " + "updateTo" + ", Rows affected = 1");
         ResponseString expected = new ResponseString("User password updated to " + "updateTo" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updatePassword(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -843,7 +851,7 @@ public class UserServiceTest {
             sut.updatePassword(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -856,7 +864,7 @@ public class UserServiceTest {
             sut.updatePassword(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -869,7 +877,7 @@ public class UserServiceTest {
             sut.updatePassword(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -882,7 +890,7 @@ public class UserServiceTest {
             sut.updatePassword(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -895,7 +903,7 @@ public class UserServiceTest {
             sut.updatePassword(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -909,7 +917,7 @@ public class UserServiceTest {
             sut.updatePassword(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -922,7 +930,7 @@ public class UserServiceTest {
             sut.updatePassword(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserPassword(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserPassword(anyString(), anyString());
     }
 
     @Test
@@ -931,16 +939,16 @@ public class UserServiceTest {
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("true", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserIsActive(anyString(), anyString())).thenReturn("User active status updated to " + "true" + ", Rows affected = 1" );
+        when(mockUserDAO.updateUserIsActive(anyString(), anyString()))
+                .thenReturn("User active status updated to " + "true" + ", Rows affected = 1");
         ResponseString expected = new ResponseString("User active status updated to " + "true" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateIsActive(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -949,16 +957,17 @@ public class UserServiceTest {
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("false", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserIsActive(anyString(), anyString())).thenReturn("User active status updated to " + "false" + ", Rows affected = 1" );
-        ResponseString expected = new ResponseString("User active status updated to " + "false" + ", Rows affected = 1");
+        when(mockUserDAO.updateUserIsActive(anyString(), anyString()))
+                .thenReturn("User active status updated to " + "false" + ", Rows affected = 1");
+        ResponseString expected = new ResponseString(
+                "User active status updated to " + "false" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateIsActive(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -971,7 +980,7 @@ public class UserServiceTest {
             sut.updateIsActive(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -984,7 +993,7 @@ public class UserServiceTest {
             sut.updateIsActive(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -997,7 +1006,7 @@ public class UserServiceTest {
             sut.updateIsActive(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -1010,7 +1019,7 @@ public class UserServiceTest {
             sut.updateIsActive(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -1023,7 +1032,7 @@ public class UserServiceTest {
             sut.updateIsActive(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -1037,7 +1046,7 @@ public class UserServiceTest {
             sut.updateIsActive(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(), anyString());
     }
 
     @Test
@@ -1050,9 +1059,8 @@ public class UserServiceTest {
             sut.updateIsActive(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserIsActive(anyString(), anyString());
     }
-
 
     @Test
     public void test_updateRoleId_returnsSuccessfully_givenValidRoleId1UpdateRequestBody() {
@@ -1060,16 +1068,16 @@ public class UserServiceTest {
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("1", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserRoleId(anyString(), anyString())).thenReturn("User role ID updated to " + "1" + ", Rows affected = 1" );
+        when(mockUserDAO.updateUserRoleId(anyString(), anyString()))
+                .thenReturn("User role ID updated to " + "1" + ", Rows affected = 1");
         ResponseString expected = new ResponseString("User role ID updated to " + "1" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateRoleId(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1078,16 +1086,16 @@ public class UserServiceTest {
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("2", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserRoleId(anyString(), anyString())).thenReturn("User role ID updated to " + "2" + ", Rows affected = 1" );
+        when(mockUserDAO.updateUserRoleId(anyString(), anyString()))
+                .thenReturn("User role ID updated to " + "2" + ", Rows affected = 1");
         ResponseString expected = new ResponseString("User role ID updated to " + "2" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateRoleId(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1096,16 +1104,16 @@ public class UserServiceTest {
         // Arrange
         mockUpdateRequestBody = new UpdateRequestBody("3", "userId");
         when(mockUserDAO.isIdValid(anyString())).thenReturn(true);
-        when(mockUserDAO.updateUserRoleId(anyString(), anyString())).thenReturn("User role ID updated to " + "3" + ", Rows affected = 1" );
+        when(mockUserDAO.updateUserRoleId(anyString(), anyString()))
+                .thenReturn("User role ID updated to " + "3" + ", Rows affected = 1");
         ResponseString expected = new ResponseString("User role ID updated to " + "3" + ", Rows affected = 1");
         // Act
         ResponseString actual = sut.updateRoleId(mockUpdateRequestBody);
         // Assert
         assertNotNull(actual);
         assertEquals(expected, actual);
-        
 
-        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(1)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1118,7 +1126,7 @@ public class UserServiceTest {
             sut.updateRoleId(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1131,7 +1139,7 @@ public class UserServiceTest {
             sut.updateRoleId(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1144,7 +1152,7 @@ public class UserServiceTest {
             sut.updateRoleId(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1157,7 +1165,7 @@ public class UserServiceTest {
             sut.updateRoleId(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1170,7 +1178,7 @@ public class UserServiceTest {
             sut.updateRoleId(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1184,7 +1192,7 @@ public class UserServiceTest {
             sut.updateRoleId(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(), anyString());
     }
 
     @Test
@@ -1197,6 +1205,6 @@ public class UserServiceTest {
             sut.updateRoleId(mockUpdateRequestBody);
         });
 
-        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(),anyString());
+        verify(mockUserDAO, times(0)).updateUserRoleId(anyString(), anyString());
     }
 }
