@@ -1,6 +1,6 @@
 > # **Expense Reimbursement System API**
 
-### * ** Users**
+### ** * Users**
 ###### Admin
 ###### Manager
 ###### Employee
