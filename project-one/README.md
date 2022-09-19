@@ -1,9 +1,9 @@
 > # **Expense Reimbursement System API**
 
-### ** * Users**
-###### Admin
-###### Manager
-###### Employee
+### **Users**
+###### 1. Admin
+###### 2. Manager
+###### 3. Employee
 
 ### **All active users can login**
 
