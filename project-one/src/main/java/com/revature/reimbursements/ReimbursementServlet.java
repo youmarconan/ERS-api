@@ -70,6 +70,16 @@ public class ReimbursementServlet extends HttpServlet {
 
                 resp.getWriter().write(objectMapper.writeValueAsString(error));
                 return;
+            }catch (ResourceNotFoundException e) {
+
+                logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
+    
+                resp.setStatus(404);
+    
+                Error error = new Error(404, e.getMessage());
+    
+                resp.getWriter().write(objectMapper.writeValueAsString(error));
+                return;
             }
         }
         if (!w && !x) {
