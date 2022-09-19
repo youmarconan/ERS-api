@@ -5,7 +5,7 @@
 2. ###### Manager
 3. ###### Employee
 
-> ### **All ACTIVE users can login**
+> ### **All **ACTIVE** users can login**
 
 > ### **Admin**
 1. ###### View all users
