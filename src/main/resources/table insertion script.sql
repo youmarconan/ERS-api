@@ -4,15 +4,11 @@ select * from reimbursement_status;
 
 insert into reimbursement_type ("name") values ('lodging'),('travel'),('food'),('other');
 
+select * from reimbursement_type;
+
 insert into user_role ("name") values ('admin'),('manager'),('employee');
 
 select * from user_role;
-
-
-insert into "user" (username,email,"password",first_name,last_name,is_active,role_id) 
-values ('youmarco','marcoyounan@gmail','p@$$word','marco','younan',true,'1');
-
-select * from "user";
 
 select "user".username as username,
 "user".id  as user_id,
@@ -27,16 +23,6 @@ from "user"
 join user_role
 on user_role.id = "user".role_id;
 
-insert into reimbursement (amount,description,author_id,type_id)
-values (2000.35,'description','13','2');
-
-insert into reimbursement (amount,description,author_id,type_id)
-values (1068.35,'description','12','4');
-
-select * 
-from reimbursement 
-join "user"
-on "user".id = reimbursement.author_id;
 
 select reimbursement.id as reimbursement_id,
 reimbursement.amount as amount,
@@ -53,12 +39,6 @@ on reimbursement_type.id = reimbursement.type_id
 join reimbursement_status
 on reimbursement_status.id = reimbursement.status_id ;
 
-
-update reimbursement 
-set amount  = '9999.99',
-type_id  = 1,
-description  = 'this is new description'
-where reimbursement.id =3 ;
 
 
 
