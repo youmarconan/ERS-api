@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -29,6 +30,7 @@ public class ReimbursementServlet extends HttpServlet {
 
     private static Logger logger = LogManager.getLogger(ReimbursementServlet.class);
 
+    @Autowired
     public ReimbursementServlet(ReimbursementService reimbursementService, ObjectMapper objectMapper) {
         this.reimbursementService = reimbursementService;
         this.objectMapper = objectMapper;

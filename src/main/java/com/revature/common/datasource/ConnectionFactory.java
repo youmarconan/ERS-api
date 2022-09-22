@@ -14,16 +14,27 @@ import com.revature.common.exceptions.DataSourceException;
 @Component
 public class ConnectionFactory {
 
-    @Value("${url}")
+    Logger logger = LogManager.getFormatterLogger(ConnectionFactory.class);
+
+    // public ConnectionFactory(String url, String username, String password) {
+    //     this.url = url;
+    //     this.username = username;
+    //     this.password = password;
+    // }
+
+
+    @Value("${db-url}")
     private String url;
-    @Value("${username}")
+
+    @Value("${db-username}")
     private String username;
-    @Value("${password}")
+
+    @Value("${db-password}")
     private String password;
 
     private ConnectionFactory() {
 
-        Logger logger = LogManager.getFormatterLogger(ConnectionFactory.class);
+        
         
         try {
             Class.forName("org.postgresql.Driver");
@@ -36,7 +47,10 @@ public class ConnectionFactory {
 
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url,username,password);
+        System.out.println("url = " + url);
+        System.out.println("username = " + username);
+        System.out.println("password = " + password);
+        return DriverManager.getConnection(url, username, password);
     }
 
 }

@@ -3,6 +3,7 @@ package com.revature.reimbursements;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.common.ResponseString;
@@ -14,6 +15,7 @@ public class ReimbursementService {
 
     private final ReimbursementDAO reimbursementDAO;
 
+    @Autowired
     public ReimbursementService(ReimbursementDAO reimbursementDAO) {
         this.reimbursementDAO = reimbursementDAO;
     }

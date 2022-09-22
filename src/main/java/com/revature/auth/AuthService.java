@@ -1,5 +1,6 @@
 package com.revature.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.common.exceptions.AuthenticationException;
@@ -12,6 +13,7 @@ public class AuthService {
     
     private final UserDAO userDAO;
 
+    @Autowired
     public AuthService (UserDAO userDAO){
         this.userDAO=userDAO;   
     }
@@ -30,7 +32,7 @@ public class AuthService {
             throw new InvalidRequestException("The provided password must be at least 8 characters!");
         }
 
-        UserResponse userResponse = userDAO.login(credentials.getUsername(), credentials.getPassword()).map(UserResponse::new).orElseThrow(AuthenticationException::new);
+        UserResponse userResponse = userDAO.login(credentials).map(UserResponse::new).orElseThrow(AuthenticationException::new);
 
         if(userResponse.isActive()){
             return userResponse;

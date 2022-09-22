@@ -6,7 +6,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+
 import com.revature.auth.AuthServlet;
+
 import com.revature.config.AppConfig;
 
 import com.revature.reimbursements.ReimbursementServlet;
@@ -19,7 +21,7 @@ public class App {
 
     public static void main(String[] args) throws LifecycleException {
 
-        logger.info("Starting Project One");
+        logger.info("Starting Project Two");
 
         try (AnnotationConfigApplicationContext beanContainer = new AnnotationConfigApplicationContext(
                 AppConfig.class)) {
@@ -27,10 +29,11 @@ public class App {
             String docBase = System.getProperty("java.io.tmpdir");
             Tomcat webServer = new Tomcat();
             webServer.setBaseDir(docBase);
-            webServer.setPort(5000);
+            webServer.setPort(5001);
             webServer.getConnector();
             
-      
+            // ObjectMapper objectMapper = new ObjectMapper();
+            // objectMapper.registerModule(new JavaTimeModule());
 
             UserServlet userServlet = beanContainer.getBean(UserServlet.class);
             AuthServlet authServlet = beanContainer.getBean(AuthServlet.class);
@@ -38,7 +41,7 @@ public class App {
 
             UpdateOwnReimbursementServlet updateOwnReimbursementServlet = beanContainer.getBean(UpdateOwnReimbursementServlet.class);
 
-            String rootContext = "/project1";
+            String rootContext = "/project2";
 
             webServer.addContext(rootContext, docBase);
 

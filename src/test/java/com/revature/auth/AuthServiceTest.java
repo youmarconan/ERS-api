@@ -3,7 +3,7 @@ package com.revature.auth;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,7 +47,7 @@ public class AuthServiceTest {
 
         User userStub = new User("id", "username", "email", "password", "first", "last", true, new UserRole("role id", "role name"));
 
-        when(mockUserDAO.login(anyString(), anyString())).thenReturn(Optional.of(userStub));
+        when(mockUserDAO.login(any(Credentials.class))).thenReturn(Optional.of(userStub));
         UserResponse expectedResult = new UserResponse(userStub);
 
         
@@ -57,7 +57,7 @@ public class AuthServiceTest {
         // Assert
         assertNotNull(actualResult);
         assertEquals(expectedResult, actualResult); // PLEASE NOTE: the objects you are comparing need to have a .equals method
-        verify(mockUserDAO, times(1)).login(anyString(), anyString());
+        verify(mockUserDAO, times(1)).login(any(Credentials.class));
 
     }
 
@@ -72,7 +72,7 @@ public class AuthServiceTest {
             sut.authenticate(credentialsStub);
         });
 
-        verify(mockUserDAO, times(0)).login(anyString(), anyString());
+        verify(mockUserDAO, times(0)).login(any(Credentials.class));
 
     }
 
@@ -87,7 +87,7 @@ public class AuthServiceTest {
             sut.authenticate(credentialsStub);
         });
 
-        verify(mockUserDAO, times(0)).login(anyString(), anyString());
+        verify(mockUserDAO, times(0)).login(any(Credentials.class));
 
     }
 
@@ -102,7 +102,7 @@ public class AuthServiceTest {
             sut.authenticate(credentialsStub);
         });
 
-        verify(mockUserDAO, times(0)).login(anyString(), anyString());
+        verify(mockUserDAO, times(0)).login(any(Credentials.class));
 
     }
 
@@ -114,7 +114,7 @@ public class AuthServiceTest {
         User userStub = new User("id", "username", "email", "password", "first", "last", false, new UserRole("role id", "role name"));
         
 
-        when(mockUserDAO.login(anyString(), anyString())).thenReturn(Optional.of(userStub));
+        when(mockUserDAO.login(any(Credentials.class))).thenReturn(Optional.of(userStub));
 
         
         // Act & Assert
@@ -122,7 +122,7 @@ public class AuthServiceTest {
             sut.authenticate(credentialsStub);
         });
 
-        verify(mockUserDAO, times(1)).login(anyString(), anyString());
+        verify(mockUserDAO, times(1)).login(any(Credentials.class));
 
     }
 
@@ -131,7 +131,7 @@ public class AuthServiceTest {
 
         // Arrange
         Credentials credentialsStub = new Credentials("unknown", "credentials");
-        when(mockUserDAO.login(anyString(), anyString())).thenReturn(Optional.empty());
+        when(mockUserDAO.login(any(Credentials.class))).thenReturn(Optional.empty());
 
         // Act
         assertThrows(AuthenticationException.class, () -> {
@@ -139,7 +139,7 @@ public class AuthServiceTest {
         });
 
         // Assert
-        verify(mockUserDAO, times(1)).login(anyString(), anyString());
+        verify(mockUserDAO, times(1)).login(any(Credentials.class));
 
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-@ComponentScan("come.revature")
+@ComponentScan("com.revature")
 @PropertySource("classpath:application.properties")
 public class AppConfig {
 

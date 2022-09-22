@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -31,6 +32,7 @@ public class UserServlet extends HttpServlet {
 
     private static Logger logger = LogManager.getLogger(UserServlet.class);
 
+    @Autowired
     public UserServlet(UserService userService, ObjectMapper objectMapper) {
         this.userService = userService;
         this.objectMapper = objectMapper;

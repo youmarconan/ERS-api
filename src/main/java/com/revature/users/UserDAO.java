@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.revature.auth.Credentials;
 import com.revature.common.datasource.ConnectionFactory;
 import com.revature.common.exceptions.DataSourceException;
 
@@ -100,20 +101,21 @@ public class UserDAO {
 
     }
 
-    public Optional<User> login(String username, String password) {
+    public Optional<User> login(Credentials credentials) {
 
         String sql = baseSelect + "where username = ? and \"password\" = ?";
 
         try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstat = conn.prepareStatement(sql);
-            pstat.setString(1, username);
-            pstat.setString(2, password);
+            pstat.setString(1, credentials.getUsername());
+            pstat.setString(2, credentials.getPassword());
             ResultSet rs = pstat.executeQuery();
 
             return mapResultSet(rs).stream().findFirst();
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataSourceException(e);
         }
 
