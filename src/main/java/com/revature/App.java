@@ -62,7 +62,7 @@ public class App {
         logger.info("Web application successfully started");
         webServer.getServer().await();
 
-    // hello everybody
+    
      
     }
 
