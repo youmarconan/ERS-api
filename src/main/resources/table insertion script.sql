@@ -1,5 +1,6 @@
 insert into reimbursement_status ("name") values ('pending'),('approved'),('denied');
 
+delete from reimbursement_status where id = '35b056a8-88b2-4a15-83b5-2975260b0d3e'
 select * from reimbursement_status;
 
 insert into reimbursement_type ("name") values ('lodging'),('travel'),('food'),('other');
@@ -40,6 +41,12 @@ join reimbursement_status
 on reimbursement_status.id = reimbursement.status_id ;
 
 
+insert into user values
+username mbrooks,
+email mikayla@revature.com,
+password 123345,
+first_name Mikayla,
+last_name Brooks,
 
 
 
