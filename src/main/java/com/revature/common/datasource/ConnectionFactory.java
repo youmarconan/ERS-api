@@ -1,28 +1,41 @@
 package com.revature.common.datasource;
 
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
+
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+
+
+import com.revature.common.exceptions.DataSourceException;
 
 // Implements the Factory and Singleton design patterns
 public class ConnectionFactory {
 
     private static ConnectionFactory connFactory;
-    private Properties dbProps = new Properties();
+
+
+    @Value("${url}")
+    private String url;
+    @Value("${username}")
+    private String username;
+    @Value("${password}")
+    private String password;
 
     private ConnectionFactory() {
+
+        Logger logger = LogManager.getFormatterLogger(ConnectionFactory.class);
+        
         try {
             Class.forName("org.postgresql.Driver");
-            dbProps.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
-        } catch (IOException e) {
-            
-            throw new RuntimeException("Could not read from properties file.", e);
+        
         } catch (ClassNotFoundException e) {
-           
-            throw new RuntimeException("Failed to load PostgreSQL JDBC driver.", e);
+            logger.fatal("Failed to load PostgreSQL JDBC driver.");
+            throw new DataSourceException("Failed to load PostgreSQL JDBC driver.");
         }
     }
 
@@ -34,7 +47,7 @@ public class ConnectionFactory {
     }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(dbProps.getProperty("url"), dbProps.getProperty("username"), dbProps.getProperty("password"));
+        return DriverManager.getConnection(url,username,password);
     }
 
 }
