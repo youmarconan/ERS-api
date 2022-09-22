@@ -6,17 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.revature.auth.AuthService;
 import com.revature.auth.AuthServlet;
 import com.revature.config.AppConfig;
-import com.revature.reimbursements.ReimbursementDAO;
-import com.revature.reimbursements.ReimbursementService;
+
 import com.revature.reimbursements.ReimbursementServlet;
 import com.revature.reimbursements.UpdateOwnReimbursementServlet;
-import com.revature.users.UserDAO;
-import com.revature.users.UserService;
+
 import com.revature.users.UserServlet;
 
 public class App {
@@ -34,23 +29,14 @@ public class App {
             webServer.setBaseDir(docBase);
             webServer.setPort(5000);
             webServer.getConnector();
+            
+      
 
-            UserDAO userDAO = new UserDAO();
-            ReimbursementDAO reimbursementDAO = new ReimbursementDAO();
+            UserServlet userServlet = beanContainer.getBean(UserServlet.class);
+            AuthServlet authServlet = beanContainer.getBean(AuthServlet.class);
+            ReimbursementServlet reimbursementServlet = beanContainer.getBean(ReimbursementServlet.class);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            objectMapper.registerModule(new JavaTimeModule());
-
-            AuthService authService = new AuthService(userDAO);
-            UserService userService = new UserService(userDAO);
-            ReimbursementService reimbursementService = new ReimbursementService(reimbursementDAO);
-
-            UserServlet userServlet = new UserServlet(userService, objectMapper);
-            AuthServlet authServlet = new AuthServlet(authService, objectMapper);
-            ReimbursementServlet reimbursementServlet = new ReimbursementServlet(reimbursementService, objectMapper);
-            UpdateOwnReimbursementServlet updateOwnReimbursementServlet = new UpdateOwnReimbursementServlet(
-                    reimbursementService, objectMapper);
+            UpdateOwnReimbursementServlet updateOwnReimbursementServlet = beanContainer.getBean(UpdateOwnReimbursementServlet.class);
 
             String rootContext = "/project1";
 
