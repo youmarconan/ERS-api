@@ -1,10 +1,13 @@
 package com.revature.auth;
 
+import org.springframework.stereotype.Service;
+
 import com.revature.common.exceptions.AuthenticationException;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.users.UserDAO;
 import com.revature.users.UserResponse;
 
+@Service
 public class AuthService {
     
     private final UserDAO userDAO;
