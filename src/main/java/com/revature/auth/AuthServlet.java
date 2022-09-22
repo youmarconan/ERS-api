@@ -18,7 +18,11 @@ import com.revature.users.UserResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+
+@Controller
 public class AuthServlet extends HttpServlet {
 
     
@@ -27,7 +31,8 @@ public class AuthServlet extends HttpServlet {
     private final ObjectMapper objectMapper;
     
     private static Logger logger = LogManager.getLogger(AuthServlet.class);
-
+    
+    @Autowired
     public AuthServlet (AuthService authService, ObjectMapper objectMapper){
         this.authService=authService;
         this.objectMapper=objectMapper;

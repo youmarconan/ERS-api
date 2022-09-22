@@ -9,10 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.revature.auth.Credentials;
 import com.revature.common.datasource.ConnectionFactory;
 import com.revature.common.exceptions.DataSourceException;
 
+@Repository
 public class UserDAO {
+
+    private final ConnectionFactory connectionFactory;
+
+    @Autowired 
+    public UserDAO (ConnectionFactory connectionFactory){
+        this.connectionFactory = connectionFactory;
+    }
 
     private final String baseSelect = "select \"user\".username as username, " +
             "\"user\".id as user_id, " +
@@ -58,7 +70,7 @@ public class UserDAO {
         String sql = baseSelect + ";";
         ArrayList<User> allUsers = new ArrayList<>();
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             Statement stat = conn.createStatement();
             ResultSet rs = stat.executeQuery(sql);
@@ -75,7 +87,7 @@ public class UserDAO {
 
         String sql = baseSelect + "where \"user\".id = ?" + " ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, Integer.parseInt(id));
@@ -89,20 +101,21 @@ public class UserDAO {
 
     }
 
-    public Optional<User> login(String username, String password) {
+    public Optional<User> login(Credentials credentials) {
 
         String sql = baseSelect + "where username = ? and \"password\" = ?";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstat = conn.prepareStatement(sql);
-            pstat.setString(1, username);
-            pstat.setString(2, password);
+            pstat.setString(1, credentials.getUsername());
+            pstat.setString(2, credentials.getPassword());
             ResultSet rs = pstat.executeQuery();
 
             return mapResultSet(rs).stream().findFirst();
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataSourceException(e);
         }
 
@@ -114,7 +127,7 @@ public class UserDAO {
                 +
                 "(?,?,?,?,?,?,?)";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstat = conn.prepareStatement(sql, new String[] { "id" });
             pstat.setString(1, user.getUsername());
@@ -143,7 +156,7 @@ public class UserDAO {
 
         String sql = baseSelect + "where \"user\".username = ?";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
@@ -161,7 +174,7 @@ public class UserDAO {
 
         String sql = baseSelect + "where \"user\".email = ?";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
@@ -178,7 +191,7 @@ public class UserDAO {
     public String updateUserFristName(String to, String id) {
         String sql = "update \"user\" set  first_name = ? where id = ? ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -197,7 +210,7 @@ public class UserDAO {
     public String updateUserLastName(String to, String id) {
         String sql = "update \"user\" set  last_name = ? where id = ? ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -216,7 +229,7 @@ public class UserDAO {
     public String updateUserEmail(String to, String id) {
         String sql = "update \"user\" set  email = ? where id = ? ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -235,7 +248,7 @@ public class UserDAO {
     public String updateUserPassword(String to, String id) {
         String sql = "update \"user\" set  \"password\" = ? where id = ? ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -254,7 +267,7 @@ public class UserDAO {
     public String updateUserIsActive(String to, String id) {
         String sql = "update \"user\" set  is_active = ? where id = ? ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -273,7 +286,7 @@ public class UserDAO {
     public String updateUserRoleId(String to, String id) {
         String sql = "update \"user\" set  role_id = ? where id = ? ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 

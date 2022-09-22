@@ -19,7 +19,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class ReimbursementServlet extends HttpServlet {
 
     private final ReimbursementService reimbursementService;
@@ -27,6 +30,7 @@ public class ReimbursementServlet extends HttpServlet {
 
     private static Logger logger = LogManager.getLogger(ReimbursementServlet.class);
 
+    @Autowired
     public ReimbursementServlet(ReimbursementService reimbursementService, ObjectMapper objectMapper) {
         this.reimbursementService = reimbursementService;
         this.objectMapper = objectMapper;
@@ -70,14 +74,14 @@ public class ReimbursementServlet extends HttpServlet {
 
                 resp.getWriter().write(objectMapper.writeValueAsString(error));
                 return;
-            }catch (ResourceNotFoundException e) {
+            } catch (ResourceNotFoundException e) {
 
                 logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
-    
+
                 resp.setStatus(404);
-    
+
                 Error error = new Error(404, e.getMessage());
-    
+
                 resp.getWriter().write(objectMapper.writeValueAsString(error));
                 return;
             }
@@ -288,7 +292,7 @@ public class ReimbursementServlet extends HttpServlet {
             Error error = new Error(500, e.getMessage());
 
             resp.getWriter().write(objectMapper.writeValueAsString(error));
-        }catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
 
             logger.warn("Error processing request at {}, error message: {}", LocalDateTime.now(), e.getMessage());
 

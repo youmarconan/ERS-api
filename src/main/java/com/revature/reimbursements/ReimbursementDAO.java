@@ -9,10 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.revature.common.datasource.ConnectionFactory;
 import com.revature.common.exceptions.DataSourceException;
 
+@Repository
 public class ReimbursementDAO {
+
+    private final ConnectionFactory connectionFactory;
+
+    @Autowired 
+    public ReimbursementDAO (ConnectionFactory connectionFactory){
+        this.connectionFactory = connectionFactory;
+    }
 
     private final String baseSelect = "select reimbursement.id as reimbursement_id, " +
             "reimbursement.amount as amount, " +
@@ -68,7 +79,7 @@ public class ReimbursementDAO {
         String sql = baseSelect + ";";
         ArrayList<Reimbursement> allReimbursements = new ArrayList<>();
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             Statement stat = conn.createStatement();
             ResultSet rs = stat.executeQuery(sql);
@@ -85,7 +96,7 @@ public class ReimbursementDAO {
 
         String sql = baseSelect + "where reimbursement_status.\"name\" = ?" + " ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, status);
@@ -103,7 +114,7 @@ public class ReimbursementDAO {
 
         String sql = baseSelect + "where reimbursement_type.\"name\" = ?" + " ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, type);
@@ -121,7 +132,7 @@ public class ReimbursementDAO {
 
         String sql = baseSelect + "where reimbursement.id = ?" + " ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, Integer.parseInt(id));
@@ -143,7 +154,7 @@ public class ReimbursementDAO {
         "resolver_id = ? " +
         "where reimbursement.id = ? ;" ;
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -164,7 +175,7 @@ public class ReimbursementDAO {
 
         String sql = "insert into reimbursement ( amount , description , author_id ,type_id ) values " + " ( ?, ?, ?, ?) ;";
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstat = conn.prepareStatement(sql, new String[] { "id" });
 
@@ -193,7 +204,7 @@ public class ReimbursementDAO {
         "set amount = ? " +
         "where reimbursement.id = ? " ;
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -215,7 +226,7 @@ public class ReimbursementDAO {
         "set type_id = ? " +
         "where reimbursement.id = ? ;" ;
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -236,7 +247,7 @@ public class ReimbursementDAO {
         "set description = ? " +
         "where reimbursement.id = ? ;" ;
 
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+        try (Connection conn = connectionFactory.getConnection()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 

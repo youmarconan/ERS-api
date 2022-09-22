@@ -31,8 +31,8 @@ public class Error {
         this.message = message;
     }
 
-    public LocalDateTime getTime() {
-        return LocalDateTime.now();
+    public String getTime() {
+        return time;
     }
 
     @Override
@@ -73,6 +73,8 @@ public class Error {
     public String toString() {
         return "Error [message=" + message + ", statusCode=" + statusCode + ", time=" + time + "]";
     }
+
+    
 
     
     

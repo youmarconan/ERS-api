@@ -20,7 +20,10 @@ import com.revature.common.exceptions.ResourceNotFoundException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class UpdateOwnReimbursementServlet extends HttpServlet {
 
     private final ReimbursementService reimbursementService;
@@ -28,6 +31,7 @@ public class UpdateOwnReimbursementServlet extends HttpServlet {
 
     private static Logger logger = LogManager.getLogger(UpdateOwnReimbursementServlet.class);
 
+    @Autowired
     public UpdateOwnReimbursementServlet(ReimbursementService reimbursementService, ObjectMapper objectMapper) {
         this.reimbursementService = reimbursementService;
         this.objectMapper = objectMapper;
