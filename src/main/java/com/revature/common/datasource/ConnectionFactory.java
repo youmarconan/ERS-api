@@ -1,23 +1,18 @@
 package com.revature.common.datasource;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.stereotype.Component;
 
 import com.revature.common.exceptions.DataSourceException;
 
-// Implements the Factory and Singleton design patterns
+@Component
 public class ConnectionFactory {
-
-    private static ConnectionFactory connFactory;
-
 
     @Value("${url}")
     private String url;
@@ -39,12 +34,6 @@ public class ConnectionFactory {
         }
     }
 
-    public static ConnectionFactory getInstance() {
-        if (connFactory == null) {
-            connFactory = new ConnectionFactory();
-        }
-        return connFactory;
-    }
 
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url,username,password);
