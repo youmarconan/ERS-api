@@ -18,13 +18,13 @@ public class ReimbursementResponse implements Serializable {
     }
 
     public ReimbursementResponse(Reimbursement reimbursement ) {
-        this.id = reimbursement.getId();
+        this.id = reimbursement.getId().toString();
         this.amount = reimbursement.getAmount();
-        this.submitted = reimbursement.getSubmitted();
-        this.resolved = reimbursement.getResolved();
+        this.submitted = reimbursement.getSubmitted().toString();
+        this.resolved = reimbursement.getResolved().toString();
         this.description = reimbursement.getDescription();
-        this.authorId = reimbursement.getAuthorId();
-        this.resolverId = reimbursement.getResolverId();
+        this.authorId = reimbursement.getAuthorId().toString();
+        this.resolverId = reimbursement.getResolverId().toString();
         this.typeNmae = reimbursement.getType().getTypeName();
         this.statusName = reimbursement.getStatus().getStatusName();
     }
