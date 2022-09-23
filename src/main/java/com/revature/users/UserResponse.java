@@ -16,12 +16,12 @@ public class UserResponse implements Serializable {
     }
 
     public UserResponse(User user) {
-        this.id = user.getId();
+        this.id = user.getId().toString();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.isActive = user.getIsActive();
+        this.isActive = user.isActive();
         this.roleName = user.getRole().getName();
     }
 
