@@ -1,23 +1,38 @@
 package com.revature.reimbursements;
 
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "reimbursement_status")
 public class ReimbursementStatus {
-    private String statusId;
+
+    
+    @Id // indicates a primary key
+    @Column(name = "id")
+    private UUID statusId;
+
+    @Column(name = "name", nullable = false, unique = true)
     private String statusName;
 
     public ReimbursementStatus() {
         super();
     }
 
-    public ReimbursementStatus(String statusId, String statusName) {
+    public ReimbursementStatus(UUID statusId, String statusName) {
         this.statusId = statusId;
         this.statusName = statusName;
     }
 
-    public String getStatusId() {
+    public UUID getStatusId() {
         return statusId;
     }
 
-    public void setStatusId(String statusId) {
+    public void setStatusId(UUID statusId) {
         this.statusId = statusId;
     }
 
@@ -65,4 +80,5 @@ public class ReimbursementStatus {
         return "ReimbursementStatus [statusId=" + statusId + ", statusName=" + statusName + "]";
     }
 
+    
 }
