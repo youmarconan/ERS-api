@@ -1,24 +1,37 @@
 package com.revature.reimbursements;
 
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "reimbursement_type")
 public class ReimbursementType {
 
-    private String typeId;
+    @Id // indicates a primary key
+    @Column(name = "id")
+    private UUID typeId;
+
+    @Column(name = "name", nullable = false, unique = true)
     private String typeName;
 
     public ReimbursementType() {
         super();
     }
 
-    public ReimbursementType(String typeId, String typeName) {
+    public ReimbursementType(UUID typeId, String typeName) {
         this.typeId = typeId;
         this.typeName = typeName;
     }
 
-    public String getTypeId() {
+    public UUID getTypeId() {
         return typeId;
     }
 
-    public void setTypeId(String typeId) {
+    public void setTypeId(UUID typeId) {
         this.typeId = typeId;
     }
 
@@ -65,5 +78,6 @@ public class ReimbursementType {
     public String toString() {
         return "ReimbursementType [typeId=" + typeId + ", typeName=" + typeName + "]";
     }
+
 
 }
