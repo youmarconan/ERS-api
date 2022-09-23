@@ -1,27 +1,37 @@
 package com.revature.users;
 
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user_role")
 public class UserRole {
-    private String id;
+
+    @Id
+    @Column(name = "id")
+    private UUID id;
+
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
-
-
     
     public UserRole() {
         super();
     }
-    
 
-    public UserRole(String id, String name) {
+    public UserRole(UUID id, String name) {
         this.id = id;
         this.name = name;
     }
 
-
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -69,6 +79,7 @@ public class UserRole {
         return "UserRole [id=" + id + ", name=" + name + "]";
     }
 
+   
     
 
 }

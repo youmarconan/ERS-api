@@ -1,5 +1,7 @@
 package com.revature.users;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.common.Request;
 
@@ -12,7 +14,7 @@ public class NewUserRequest implements Request<User> {
     private String lastName;
     @JsonProperty("isActive")
     private boolean isActive;
-    private String userRoleId;
+    private UUID userRoleId;
     
     public NewUserRequest() {
         super();
@@ -20,7 +22,7 @@ public class NewUserRequest implements Request<User> {
 
     
     public NewUserRequest(String username, String email, String password, String firstName, String lastName,
-            boolean isActive, String userRoleId) {
+            boolean isActive, UUID userRoleId) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -123,12 +125,17 @@ public class NewUserRequest implements Request<User> {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    public String getUserRoleId() {
+
+    public UUID getUserRoleId() {
         return userRoleId;
     }
-    public void setUserRoleId(String userRoleId) {
+
+
+    public void setUserRoleId(UUID userRoleId) {
         this.userRoleId = userRoleId;
     }
+
+
     @Override
     public String toString() {
         return "NewUserRequest [email=" + email + ", firstName=" + firstName + ", isActive=" + isActive + ", lastName="
@@ -138,18 +145,18 @@ public class NewUserRequest implements Request<User> {
     public User extractEntity() {
 
         User extractedUser = new User();
-        UserRole extractedRoleId = new UserRole();
+        UserRole extractedRole = new UserRole();
 
         extractedUser.setUsername(this.username);
         extractedUser.setEmail(this.email);
         extractedUser.setPassword(this.password);
         extractedUser.setFirstName(this.firstName);
         extractedUser.setLastName(this.lastName);
-        extractedUser.setIsActive(this.isActive);
+        extractedUser.setActive(this.isActive);
 
-        extractedRoleId.setId(this.userRoleId);
+        extractedRole.setId(this.userRoleId);
 
-        extractedUser.setRole(extractedRoleId);
+        extractedUser.setRole(extractedRole);
 
         return extractedUser;
     }

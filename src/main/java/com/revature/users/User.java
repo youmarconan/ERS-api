@@ -1,21 +1,49 @@
 package com.revature.users;
 
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user")
 public class User {
 
-    private String id;
+    @Id // indicates a primary key
+    @Column(name = "id")
+    private UUID id;
+
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "is_active")
     private boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private UserRole role;
 
     public User() {
         super();
     }
 
-    public User(String id, String username, String email, String password, String firstName, String lastName,
+    public User(UUID id, String username, String email, String password, String firstName, String lastName,
             boolean isActive, UserRole role) {
         this.id = id;
         this.username = username;
@@ -27,11 +55,11 @@ public class User {
         this.role = role;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -75,11 +103,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public boolean getIsActive() {
+    public boolean isActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
+    public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
 
