@@ -1,35 +1,59 @@
 package com.revature.reimbursements;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "reimbursement")
 public class Reimbursement {
     
-    private String id;
+    @Id // indicates a primary key
+    @Column(name = "id")
+    private UUID id;
+
+    @Column(name = "amount", nullable = false)
     private double amount;
-    private String submitted;
-    private String resolved;
+
+    @Column(name = "submitted")
+    private LocalDateTime submitted;
+
+    @Column(name = "resolved")
+    private LocalDateTime resolved;
+
+    @Column(name = "description", nullable = false)
     private String description;
-    private String authorId;
-    private String resolverId;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private UUID authorId;
+
+    
+    @ManyToOne
+    @JoinColumn(name = "resolver_id")
+    private UUID resolverId;
+    
+    @OneToOne
+    @JoinColumn(name = "status_id")
     private ReimbursementStatus status;
+
+    @OneToOne
+    @JoinColumn(name = "type_id")
     private ReimbursementType type;
 
     public Reimbursement() {
         super();
     }
 
-    
-
-    public Reimbursement(double amount, String description, String authorId, ReimbursementType type) {
-        this.amount = amount;
-        this.description = description;
-        this.authorId = authorId;
-        this.type = type;
-    }
-
-
-
-    public Reimbursement(String id, double amount, String submitted, String resolved, String description,
-            String authorId, String resolverId, ReimbursementStatus status, ReimbursementType type) {
+    public Reimbursement(UUID id, double amount, LocalDateTime submitted, LocalDateTime resolved, String description,
+            UUID authorId, UUID resolverId, ReimbursementStatus status, ReimbursementType type) {
         this.id = id;
         this.amount = amount;
         this.submitted = submitted;
@@ -41,11 +65,11 @@ public class Reimbursement {
         this.type = type;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -57,19 +81,19 @@ public class Reimbursement {
         this.amount = amount;
     }
 
-    public String getSubmitted() {
+    public LocalDateTime getSubmitted() {
         return submitted;
     }
 
-    public void setSubmitted(String submitted) {
+    public void setSubmitted(LocalDateTime submitted) {
         this.submitted = submitted;
     }
 
-    public String getResolved() {
+    public LocalDateTime getResolved() {
         return resolved;
     }
 
-    public void setResolved(String resolved) {
+    public void setResolved(LocalDateTime resolved) {
         this.resolved = resolved;
     }
 
@@ -81,19 +105,19 @@ public class Reimbursement {
         this.description = description;
     }
 
-    public String getAuthorId() {
+    public UUID getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(String authorId) {
+    public void setAuthorId(UUID authorId) {
         this.authorId = authorId;
     }
 
-    public String getResolverId() {
+    public UUID getResolverId() {
         return resolverId;
     }
 
-    public void setResolverId(String resolverId) {
+    public void setResolverId(UUID resolverId) {
         this.resolverId = resolverId;
     }
 
@@ -191,6 +215,7 @@ public class Reimbursement {
                 + id + ", resolved=" + resolved + ", resolverId=" + resolverId + ", status=" + status + ", submitted="
                 + submitted + ", type=" + type + "]";
     }
+
 
 
 
