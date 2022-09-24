@@ -29,7 +29,7 @@ public class App {
             String docBase = System.getProperty("java.io.tmpdir");
             Tomcat webServer = new Tomcat();
             webServer.setBaseDir(docBase);
-            webServer.setPort(5001);
+            webServer.setPort(5000);
             webServer.getConnector();
             
             // ObjectMapper objectMapper = new ObjectMapper();
@@ -52,8 +52,8 @@ public class App {
             webServer.addServlet(rootContext, "ReimbursementServlet", reimbursementServlet)
                     .addMapping("/reimbursement");
 
-            webServer.addServlet(rootContext, "UpdateOwnReimbursementServlet", updateOwnReimbursementServlet)
-                    .addMapping("/updateOwnReimbursement");
+            /*webServer.addServlet(rootContext, "UpdateOwnReimbursementServlet", updateOwnReimbursementServlet)
+                    .addMapping("/updateOwnReimbursement");*/
 
             webServer.start();
             logger.info("Web application successfully started");

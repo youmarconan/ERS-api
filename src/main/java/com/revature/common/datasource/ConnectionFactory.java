@@ -16,13 +16,6 @@ public class ConnectionFactory {
 
     Logger logger = LogManager.getFormatterLogger(ConnectionFactory.class);
 
-    // public ConnectionFactory(String url, String username, String password) {
-    //     this.url = url;
-    //     this.username = username;
-    //     this.password = password;
-    // }
-
-
     @Value("${db-url}")
     private String url;
 
