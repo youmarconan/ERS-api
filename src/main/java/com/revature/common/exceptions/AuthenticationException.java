@@ -6,4 +6,8 @@ public class AuthenticationException extends RuntimeException {
         super("Could not find a user account with the provided credentials!");
     }
 
+    public AuthenticationException(String message) {
+        super(message);
+    }
+
 }
