@@ -1,12 +1,14 @@
 package com.revature.users;
 
 import java.util.List;
+
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.revature.common.ResponseString;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;
 import com.revature.common.exceptions.ResourceNotFoundException;
@@ -14,28 +16,23 @@ import com.revature.common.exceptions.ResourceNotFoundException;
 @Service
 public class UserService {
 
-    private final UserDAO userDAO;
+   
+    private final UserRepo userRepo;
 
     @Autowired
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService( UserRepo userRepo) {
+        this.userRepo = userRepo;
     }
 
     public List<UserResponse> getAllUsers() {
-        return userDAO.allUsers().stream().map(UserResponse::new).collect(Collectors.toList());
+        return userRepo.findAll().stream().map(UserResponse::new).collect(Collectors.toList());
     }
 
     public UserResponse getUserById(String id) {
-
-        if (id == null || id.length() <= 0) {
-            throw new InvalidRequestException("A non-empty ID must be provided!");
-        }
-
         try {
-            return userDAO.findUserById(id)
+            return userRepo.findById(UUID.fromString(id))
                     .map(UserResponse::new)
                     .orElseThrow(ResourceNotFoundException::new);
-
         } catch (IllegalArgumentException e) {
             throw new InvalidRequestException("An invalid ID was provided.");
         }
@@ -48,7 +45,7 @@ public class UserService {
         }
 
         try {
-            return userDAO.findUserByUsername(username)
+            return userRepo.findUserByUsername(username)
                     .map(UserResponse::new)
                     .orElseThrow(ResourceNotFoundException::new);
 
@@ -64,16 +61,16 @@ public class UserService {
         }
 
         try {
-            return userDAO.findUserByEmail(email)
-                    .map(UserResponse::new)
-                    .orElseThrow(ResourceNotFoundException::new);
+            return userRepo.findUserByEmail(email)
+            .map(UserResponse::new)
+            .orElseThrow(ResourceNotFoundException::new);
 
         } catch (IllegalArgumentException e) {
             throw new InvalidRequestException("An invalid email was provided.");
         }
     }
 
-    public ResponseString register(NewUserRequest newUser) {
+    public String register(NewUserRequest newUser) {
 
         if (newUser == null) {
             throw new InvalidRequestException("Provided request must not be null!");
@@ -96,11 +93,11 @@ public class UserService {
             throw new InvalidRequestException("A password with at least 8 characters must be provided!");
         }
 
-        if (userDAO.isEmailTaken(newUser.getEmail())) {
+        if (userRepo.existsByEmail(newUser.getEmail())) {
             throw new IsAlreadyExist("The provided email is already taken.");
         }
 
-        if (userDAO.isUsernameTaken(newUser.getUsername())) {
+        if (userRepo.existsByUsername(newUser.getUsername())) {
             throw new IsAlreadyExist("The provided username is already taken.");
         }
 
@@ -117,164 +114,59 @@ public class UserService {
             throw new InvalidRequestException("Must provid role ID!");
         }
 
-
-        // TODO change the .equals value to be UUID that match each role in the database
-        if (!newUser.getUserRoleId().equals("1") && !newUser.getUserRoleId().equals("2")
-                && !newUser.getUserRoleId().equals("3")) {
-            throw new InvalidRequestException("Role ID must be one of (1 or 2 or 3)");
+        if (!newUser.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4") && !newUser.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
+                && !newUser.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78")) {
+            throw new InvalidRequestException("invalid role ID provided");
         }
 
         User userToPersist = newUser.extractEntity();
-        String newUserId = userDAO.register(userToPersist);
-        return new ResponseString(newUserId);
+        userRepo.save(userToPersist);
+        return "New persisted user's ID is "+ userToPersist.getId();
     }
 
-    public ResponseString updateFristNmae(UpdateRequestBody updateRequestBody) {
 
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("Provided request must not be null!");
+    @Transactional
+    public void updateUser(UpdateRequestBody updateRequestBody) {
+
+        // fetch the user from the database using the UserRepo by their ID (the user fetched from here is in a "persistent" state)
+        // throw a ResoureNotFoundException if no user is found with the provided ID
+        // only update the fields provided in the UpdateRequestBody (ignore)
+        // no need to call a save or update method, because the fetched user is persistent and will be automagically updated when this method ends (automatic dirty checking)
+        
+        User user = userRepo.findById(updateRequestBody.getUserId()).orElseThrow(ResourceNotFoundException::new);
+
+        if(!updateRequestBody.getUsername().equals(null) && updateRequestBody.getUsername().length() >= 4 && !userRepo.existsByUsername(updateRequestBody.getUsername())){
+            user.setUsername(updateRequestBody.getUsername());
         }
 
-        if (updateRequestBody.getUpdateTo() == null || updateRequestBody.getUpdateTo().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-
-            throw new InvalidRequestException("Must provid first name and user ID");
+        if(!updateRequestBody.getEmail().equals(null) && !userRepo.existsByEmail(updateRequestBody.getEmail()) && updateRequestBody.getEmail().length() > 0){
+            user.setEmail(updateRequestBody.getEmail());
         }
 
-        if (!userDAO.isIdValid(updateRequestBody.getUserId())) {
-
-            throw new InvalidRequestException("Must provid a valid user ID");
+        if(!updateRequestBody.getPassword().equals(null) && updateRequestBody.getPassword().length() >= 8){
+            user.setPassword(updateRequestBody.getPassword());
         }
 
-        String updateSuccessfullMessage = userDAO.updateUserFristName(updateRequestBody.getUpdateTo(),
-                updateRequestBody.getUserId());
-        return new ResponseString(updateSuccessfullMessage);
+        if(!updateRequestBody.getFirstName().equals(null) && updateRequestBody.getFirstName().length() > 0){
+            user.setFirstName(updateRequestBody.getFirstName());
+        }
+
+        if(!updateRequestBody.getLastName().equals(null) && updateRequestBody.getLastName().length() > 0){
+            user.setLastName(updateRequestBody.getLastName());
+        }
+
+        if(!String.valueOf(updateRequestBody.isActive()).equals(null) && (String.valueOf(updateRequestBody.isActive()).equals("true") || String.valueOf(updateRequestBody.isActive()).equals("false"))){
+            user.setActive(updateRequestBody.isActive());
+        }
+
+        if (!String.valueOf(updateRequestBody.getUserRoleId()).equals(null) && (updateRequestBody.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4") || updateRequestBody.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
+                || updateRequestBody.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78"))){
+               UserRole userRole = new UserRole();
+               userRole.setId(updateRequestBody.getUserId());
+               user.setRole(userRole);
+            }
+
+           
     }
 
-    public ResponseString updateLastNmae(UpdateRequestBody updateRequestBody) {
-
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("Provided request must not be null!");
-        }
-
-        if (updateRequestBody.getUpdateTo() == null || updateRequestBody.getUpdateTo().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-
-            throw new InvalidRequestException("Must provid a last name and an user ID");
-        }
-
-        if (!userDAO.isIdValid(updateRequestBody.getUserId())) {
-
-            throw new InvalidRequestException("Must provid a valid user ID");
-        }
-
-        String updateSuccessfullMessage = userDAO.updateUserLastName(updateRequestBody.getUpdateTo(),
-                updateRequestBody.getUserId());
-        return new ResponseString(updateSuccessfullMessage);
-    }
-
-    public ResponseString updateEmail(UpdateRequestBody updateRequestBody) {
-
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("Provided request must not be null!");
-        }
-
-        if (updateRequestBody.getUpdateTo() == null || updateRequestBody.getUpdateTo().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-
-            throw new InvalidRequestException("Must provid email and user ID");
-        }
-
-        if (!userDAO.isIdValid(updateRequestBody.getUserId())) {
-
-            throw new InvalidRequestException("Must provid a valid user ID");
-        }
-
-        String updateSuccessfullMessage = userDAO.updateUserEmail(updateRequestBody.getUpdateTo(),
-                updateRequestBody.getUserId());
-        return new ResponseString(updateSuccessfullMessage);
-    }
-
-    public ResponseString updatePassword(UpdateRequestBody updateRequestBody) {
-
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("Provided request must not be null!");
-        }
-
-        if (updateRequestBody.getUpdateTo() == null || updateRequestBody.getUpdateTo().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-
-            throw new InvalidRequestException("Must provid password and user ID");
-        }
-
-        if (!userDAO.isIdValid(updateRequestBody.getUserId())) {
-
-            throw new InvalidRequestException("Must provid a valid user ID");
-        }
-
-        if (updateRequestBody.getUpdateTo().length() < 8) {
-            throw new InvalidRequestException("A password with at least 8 characters must be provided!");
-        }
-
-        String updateSuccessfullMessage = userDAO.updateUserPassword(updateRequestBody.getUpdateTo(),
-                updateRequestBody.getUserId());
-        return new ResponseString(updateSuccessfullMessage);
-    }
-
-    public ResponseString updateIsActive(UpdateRequestBody updateRequestBody) {
-
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("Provided request must not be null!");
-        }
-
-        if (updateRequestBody.getUpdateTo() == null || updateRequestBody.getUpdateTo().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-
-            throw new InvalidRequestException("Must provid IsActive status and user ID");
-        }
-
-        if (!userDAO.isIdValid(updateRequestBody.getUserId())) {
-
-            throw new InvalidRequestException("Must provid a valid user ID");
-        }
-
-        if (!updateRequestBody.getUpdateTo().equals(String.valueOf(false))
-                && !updateRequestBody.getUpdateTo().equals(String.valueOf(true))) {
-
-            throw new InvalidRequestException("IsActive status must be boolean value (true/false)");
-        }
-
-        String updateSuccessfullMessage = userDAO.updateUserIsActive(updateRequestBody.getUpdateTo(),
-                updateRequestBody.getUserId());
-        return new ResponseString(updateSuccessfullMessage);
-    }
-
-    public ResponseString updateRoleId(UpdateRequestBody updateRequestBody) {
-
-        if (updateRequestBody == null) {
-            throw new InvalidRequestException("Provided request must not be null!");
-        }
-
-        if (updateRequestBody.getUpdateTo() == null || updateRequestBody.getUpdateTo().length() <= 0 ||
-                updateRequestBody.getUserId() == null || updateRequestBody.getUserId().length() <= 0) {
-
-            throw new InvalidRequestException("Must provid role ID and user ID");
-        }
-
-        if (!userDAO.isIdValid(updateRequestBody.getUserId())) {
-
-            throw new InvalidRequestException("Must provid a valid user ID");
-        }
-
-        if (!updateRequestBody.getUpdateTo().equals("1") && !updateRequestBody.getUpdateTo().equals("2")
-                && !updateRequestBody.getUpdateTo().equals("3")) {
-
-            throw new InvalidRequestException(
-                    "Invalid role ID, Role ID must be one of these numbers: (1)ADMIN (2)Manager (3)Employee");
-        }
-
-        String updateSuccessfullMessage = userDAO.updateUserRoleId(updateRequestBody.getUpdateTo(),
-                updateRequestBody.getUserId());
-        return new ResponseString(updateSuccessfullMessage);
-    }
 }

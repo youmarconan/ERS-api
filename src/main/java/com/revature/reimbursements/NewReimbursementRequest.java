@@ -1,5 +1,7 @@
 package com.revature.reimbursements;
 
+import java.util.UUID;
+
 import com.revature.common.Request;
 
 public class NewReimbursementRequest implements Request<Reimbursement> {
@@ -116,7 +118,7 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         reimbursement.setAmount(this.amount);
         reimbursement.setDescription(this.description);
 
-        reimbursementType.setTypeId(this.type);
+        reimbursementType.setTypeId(UUID.fromString(this.type));
 
         reimbursement.setType(reimbursementType);
 
