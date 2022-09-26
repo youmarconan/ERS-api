@@ -158,6 +158,8 @@ public class NewUserRequest implements Request<User> {
 
         extractedUser.setRole(extractedRole);
 
+        extractedUser.setId(UUID.randomUUID());
+
         return extractedUser;
     }
 
