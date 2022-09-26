@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.revature.users.User;
+
 @Entity
 @Table(name = "reimbursement")
 public class Reimbursement {
@@ -19,7 +21,7 @@ public class Reimbursement {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "amount", nullable = false)
+    @Column(columnDefinition = "NUMERIC(6,2)",name = "amount", nullable = false)
     private double amount;
 
     @Column(name = "submitted")
@@ -31,12 +33,12 @@ public class Reimbursement {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "author_id")
     private UUID authorId;
 
     
-    @ManyToOne
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "resolver_id")
     private UUID resolverId;
     

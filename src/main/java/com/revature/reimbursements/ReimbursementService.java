@@ -30,33 +30,33 @@ public class ReimbursementService {
 
     }
 
-    public List<ReimbursementResponse> getReimbursementsByStatus(String status) {
+    // public List<ReimbursementResponse> getReimbursementsByStatus(String status) {
 
-        if (status == null || status.length() <= 0) {
-            throw new InvalidRequestException("A non-empty status must be provided!");
-        }
+    //     if (status == null || status.length() <= 0) {
+    //         throw new InvalidRequestException("A non-empty status must be provided!");
+    //     }
 
-        if (!status.equals("pending") && !status.equals("approved") && !status.equals("denied")) {
-            throw new InvalidRequestException("Status value must be one of (pending, approved, denied)");
-        }
+    //     if (!status.equals("pending") && !status.equals("approved") && !status.equals("denied")) {
+    //         throw new InvalidRequestException("Status value must be one of (pending, approved, denied)");
+    //     }
 
-        return reimbursementRepo.findReimbursementbyStatusName(status).stream().map(ReimbursementResponse::new)
-                .collect(Collectors.toList());
-    }
+    //     return reimbursementRepo.findReimbursementbyStatusName(status).stream().map(ReimbursementResponse::new)
+    //             .collect(Collectors.toList());
+    // }
 
-    public List<ReimbursementResponse> getReimbursementsByType(String type) {
+    // public List<ReimbursementResponse> getReimbursementsByType(String type) {
 
-        if (type == null || type.length() <= 0) {
-            throw new InvalidRequestException("A non-empty type must be provided!");
-        }
+    //     if (type == null || type.length() <= 0) {
+    //         throw new InvalidRequestException("A non-empty type must be provided!");
+    //     }
 
-        if (!type.equals("lodging") && !type.equals("travel") && !type.equals("food") && !type.equals("other")) {
-            throw new InvalidRequestException("Status value must be one of (lodging, travel, food, other)");
-        }
+    //     if (!type.equals("lodging") && !type.equals("travel") && !type.equals("food") && !type.equals("other")) {
+    //         throw new InvalidRequestException("Status value must be one of (lodging, travel, food, other)");
+    //     }
 
-        return reimbursementRepo.findReimbursementbyTypeName(type).stream().map(ReimbursementResponse::new)
-                .collect(Collectors.toList());
-    }
+    //     return reimbursementRepo.findReimbursementbyTypeName(type).stream().map(ReimbursementResponse::new)
+    //             .collect(Collectors.toList());
+    // }
 
     public ReimbursementResponse getReimbursementById(String id) {
 
