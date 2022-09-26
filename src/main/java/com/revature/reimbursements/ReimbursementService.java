@@ -30,19 +30,19 @@ public class ReimbursementService {
 
     }
 
-    // public List<ReimbursementResponse> getReimbursementsByStatus(String status) {
+    public List<ReimbursementResponse> getReimbursementsByStatus(String status) {
 
-    //     if (status == null || status.length() <= 0) {
-    //         throw new InvalidRequestException("A non-empty status must be provided!");
-    //     }
+        if (status == null || status.length() <= 0) {
+            throw new InvalidRequestException("A non-empty status must be provided!");
+        }
 
-    //     if (!status.equals("pending") && !status.equals("approved") && !status.equals("denied")) {
-    //         throw new InvalidRequestException("Status value must be one of (pending, approved, denied)");
-    //     }
+        if (!status.equals("pending") && !status.equals("approved") && !status.equals("denied")) {
+            throw new InvalidRequestException("Status value must be one of (pending, approved, denied)");
+        }
 
-    //     return reimbursementRepo.findReimbursementbyStatusName(status).stream().map(ReimbursementResponse::new)
-    //             .collect(Collectors.toList());
-    // }
+        return reimbursementRepo.findReimbursementByStatus(status).stream().map(ReimbursementResponse::new)
+                .collect(Collectors.toList());
+    }
 
     // public List<ReimbursementResponse> getReimbursementsByType(String type) {
 
@@ -54,7 +54,7 @@ public class ReimbursementService {
     //         throw new InvalidRequestException("Status value must be one of (lodging, travel, food, other)");
     //     }
 
-    //     return reimbursementRepo.findReimbursementbyTypeName(type).stream().map(ReimbursementResponse::new)
+    //     return reimbursementRepo.findReimbursementByTypeId_Name(type).stream().map(ReimbursementResponse::new)
     //             .collect(Collectors.toList());
     // }
 

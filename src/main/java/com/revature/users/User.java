@@ -9,8 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.stereotype.Repository;
+
 @Entity
 @Table(name = "user")
+@Repository
 public class User {
 
     @Id // indicates a primary key

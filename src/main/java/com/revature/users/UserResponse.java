@@ -2,6 +2,9 @@ package com.revature.users;
 
 import java.io.Serializable;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class UserResponse implements Serializable {
     private String id;
     private String username;

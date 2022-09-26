@@ -1,5 +1,8 @@
 package com.revature.auth;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Credentials {
 
     private String username;
