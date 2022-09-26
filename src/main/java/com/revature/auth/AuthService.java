@@ -30,7 +30,8 @@ public class AuthService {
 
         if (credentials.getPassword().length() < 8) {
             throw new InvalidRequestException("The provided password must be at least 8 characters!");
-        }
+        } 
+
 
         UserResponse userResponse = userRepo
                 .findUserByUsernameAndPassword(credentials.getUsername(), credentials.getPassword())

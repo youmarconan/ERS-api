@@ -22,7 +22,7 @@ public class SecurityUtils {
     }
 
     public static void enforcePermissions(HttpSession userSession, String expectedRole) {
-        if (!((UserResponse) userSession.getAttribute("authUser")).getRoleName().equals(expectedRole)) {
+        if (!((UserResponse) userSession.getAttribute("loggedInUser")).getRoleName().equals(expectedRole)) {
             throw new AuthorizationException();
         }
 
@@ -32,7 +32,7 @@ public class SecurityUtils {
 
     public static boolean validateRole(HttpSession userSession, String expectedRole) {
 
-        if (!((UserResponse) userSession.getAttribute("authUser")).getRoleName().equals(expectedRole)) {
+        if (!((UserResponse) userSession.getAttribute("loggedInUser")).getRoleName().equals(expectedRole)) {
             return false;
         }
         return true;
@@ -40,7 +40,7 @@ public class SecurityUtils {
 
     public static boolean validateUserId(HttpSession userSession, String userId) {
 
-        String id = ((UserResponse) userSession.getAttribute("authUser")).getId();
+        String id = ((UserResponse) userSession.getAttribute("loggedInUser")).getId();
 
         if (!userId.equals(id.toString())) {
             return false;

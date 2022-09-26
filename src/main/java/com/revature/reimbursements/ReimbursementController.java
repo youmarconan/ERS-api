@@ -49,19 +49,19 @@ public class ReimbursementController {
         return reimbursementService.getAllReimbursements();
     }
 
-    // @GetMapping(value = "/{status}", produces = "application/json")
-    // public List<ReimbursementResponse> getAllReimbursementsByStatus(@PathVariable String status,
-    //         HttpServletRequest req) {
+    @GetMapping(value = "/{status}", produces = "application/json")
+    public List<ReimbursementResponse> getAllReimbursementsByStatus(@PathVariable String status,
+            HttpServletRequest req) {
 
-    //     logger.info("A GET request was received by /reimbursement at {}", LocalDateTime.now());
+        logger.info("A GET request was received by /reimbursement at {}", LocalDateTime.now());
 
-    //     HttpSession userSession = req.getSession(false);
+        HttpSession userSession = req.getSession(false);
 
-    //     SecurityUtils.enforceAuthentication(userSession);
-    //     SecurityUtils.enforcePermissions(userSession, "manager");
+        SecurityUtils.enforceAuthentication(userSession);
+        SecurityUtils.enforcePermissions(userSession, "manager");
 
-    //     return reimbursementService.getReimbursementsByStatus(status);
-    // }
+        return reimbursementService.getReimbursementsByStatus(status);
+    }
 
     // @GetMapping(value = "/{type}", produces = "application/json")
     // public List<ReimbursementResponse> getAllReimbursementsByType(@PathVariable String type, HttpServletRequest req) {
