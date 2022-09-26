@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.common.exceptions.AuthorizationException;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import com.revature.common.SecurityUtils;
 
@@ -96,6 +96,8 @@ public class UserController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public String registerNewUser(@RequestBody NewUserRequest requestBody, HttpServletRequest req) {
+
+        System.out.println(requestBody);
 
         logger.info("A POST request was received by /users at {}", LocalDateTime.now());
 
