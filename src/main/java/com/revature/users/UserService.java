@@ -18,10 +18,12 @@ public class UserService {
 
    
     private final UserRepo userRepo;
+    private final RoleRepo roleRepo;
 
     @Autowired
-    public UserService( UserRepo userRepo) {
+    public UserService( UserRepo userRepo, RoleRepo roleRepo) {
         this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
     }
 
     public List<UserResponse> getAllUsers() {
@@ -161,9 +163,10 @@ public class UserService {
 
         if (!String.valueOf(updateRequestBody.getUserRoleId()).equals(null) && (updateRequestBody.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4") || updateRequestBody.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
                 || updateRequestBody.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78"))){
-               UserRole userRole = new UserRole();
-               userRole.setId(updateRequestBody.getUserId());
-               user.setRole(userRole);
+
+                UserRole role = roleRepo.findById(updateRequestBody.getUserRoleId()).orElseThrow(ResourceNotFoundException::new);
+                user.setRole(role);
+
             }
 
            

@@ -7,7 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.stereotype.Component;
+
 @Entity
+@Component
 @Table(name = "user_role")
 public class UserRole {
 
@@ -15,7 +18,7 @@ public class UserRole {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", unique = true)
     private String name;
     
     public UserRole() {
