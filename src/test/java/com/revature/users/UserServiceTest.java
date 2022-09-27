@@ -26,12 +26,13 @@ public class UserServiceTest {
 
     UserService sut;
     UserRepo mockUserRepo;
+    RoleRepo mockRoleRepo;
     UpdateRequestBody mockUpdateRequestBody;
 
     @BeforeEach
     public void setup() {
         mockUserRepo = Mockito.mock(UserRepo.class);
-        sut = new UserService(mockUserRepo);
+        sut = new UserService(mockUserRepo,mockRoleRepo);
         mockUpdateRequestBody = new UpdateRequestBody();
     }
 
