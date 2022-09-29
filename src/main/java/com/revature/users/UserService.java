@@ -16,12 +16,11 @@ import com.revature.common.exceptions.ResourceNotFoundException;
 @Service
 public class UserService {
 
-   
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
 
     @Autowired
-    public UserService( UserRepo userRepo, RoleRepo roleRepo) {
+    public UserService(UserRepo userRepo, RoleRepo roleRepo) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
     }
@@ -64,8 +63,8 @@ public class UserService {
 
         try {
             return userRepo.findUserByEmail(email)
-            .map(UserResponse::new)
-            .orElseThrow(ResourceNotFoundException::new);
+                    .map(UserResponse::new)
+                    .orElseThrow(ResourceNotFoundException::new);
 
         } catch (IllegalArgumentException e) {
             throw new InvalidRequestException("An invalid email was provided.");
@@ -116,60 +115,81 @@ public class UserService {
             throw new InvalidRequestException("Must provid role ID!");
         }
 
-        if (!newUser.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4") && !newUser.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
+        if (!newUser.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4")
+                && !newUser.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
                 && !newUser.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78")) {
             throw new InvalidRequestException("invalid role ID provided");
         }
 
         User userToPersist = newUser.extractEntity();
         userRepo.save(userToPersist);
-        return "New persisted user's ID is "+ userToPersist.getId();
+        return "New persisted user's ID is " + userToPersist.getId();
     }
-
 
     @Transactional
     public void updateUser(UpdateRequestBody updateRequestBody) {
 
-        // fetch the user from the database using the UserRepo by their ID (the user fetched from here is in a "persistent" state)
+        // fetch the user from the database using the UserRepo by their ID (the user
+        // fetched from here is in a "persistent" state)
         // throw a ResoureNotFoundException if no user is found with the provided ID
         // only update the fields provided in the UpdateRequestBody (ignore)
-        // no need to call a save or update method, because the fetched user is persistent and will be automagically updated when this method ends (automatic dirty checking)
-        
+        // no need to call a save or update method, because the fetched user is
+        // persistent and will be automagically updated when this method ends (automatic
+        // dirty checking)
+
+        System.out.println("\n" + updateRequestBody + "\n");
+
         User user = userRepo.findById(updateRequestBody.getUserId()).orElseThrow(ResourceNotFoundException::new);
 
-        if(!updateRequestBody.getUsername().equals(null) && updateRequestBody.getUsername().length() >= 4 && !userRepo.existsByUsername(updateRequestBody.getUsername())){
-            user.setUsername(updateRequestBody.getUsername());
+        if (updateRequestBody.getUsername() != null) {
+            if (!userRepo.existsByUsername(updateRequestBody.getUsername())) {
+                user.setUsername(updateRequestBody.getUsername());
+            } else {
+                throw new IsAlreadyExist("Provided username is already taken");
+            }
+        }
+        if (updateRequestBody.getEmail() != null) {
+
+            if (!userRepo.existsByEmail(updateRequestBody.getEmail())) {
+                user.setEmail(updateRequestBody.getEmail());
+            }else{
+                throw new IsAlreadyExist("Provided Email is already taken");
+            }
         }
 
-        if(!updateRequestBody.getEmail().equals(null) && !userRepo.existsByEmail(updateRequestBody.getEmail()) && updateRequestBody.getEmail().length() > 0){
-            user.setEmail(updateRequestBody.getEmail());
-        }
-
-        if(!updateRequestBody.getPassword().equals(null) && updateRequestBody.getPassword().length() >= 8){
+        if (updateRequestBody.getPassword() != null) {
             user.setPassword(updateRequestBody.getPassword());
         }
 
-        if(!updateRequestBody.getFirstName().equals(null) && updateRequestBody.getFirstName().length() > 0){
+        if (updateRequestBody.getFirstName() != null) {
             user.setFirstName(updateRequestBody.getFirstName());
         }
 
-        if(!updateRequestBody.getLastName().equals(null) && updateRequestBody.getLastName().length() > 0){
+        if (updateRequestBody.getLastName() != null) {
             user.setLastName(updateRequestBody.getLastName());
         }
 
-        if(!String.valueOf(updateRequestBody.isActive()).equals(null) && (String.valueOf(updateRequestBody.isActive()).equals("true") || String.valueOf(updateRequestBody.isActive()).equals("false"))){
-            user.setActive(updateRequestBody.isActive());
+        if (updateRequestBody.isActive() != null) {
+            if (String.valueOf(updateRequestBody.isActive()).equals("true")
+                    || String.valueOf(updateRequestBody.isActive()).equals("false")) {
+                user.setActive(updateRequestBody.isActive());
+            }else{
+                throw new InvalidRequestException();
+            }
         }
 
-        if (!String.valueOf(updateRequestBody.getUserRoleId()).equals(null) && (updateRequestBody.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4") || updateRequestBody.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
-                || updateRequestBody.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78"))){
+        if (updateRequestBody.getUserRoleId() != null) {
+            if (updateRequestBody.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4")
+                    || updateRequestBody.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
+                    || updateRequestBody.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78")) {
 
-                UserRole role = roleRepo.findById(updateRequestBody.getUserRoleId()).orElseThrow(ResourceNotFoundException::new);
+                UserRole role = roleRepo.findById(updateRequestBody.getUserRoleId())
+                        .orElseThrow(ResourceNotFoundException::new);
                 user.setRole(role);
 
             }
+        }
 
-           
     }
 
 }

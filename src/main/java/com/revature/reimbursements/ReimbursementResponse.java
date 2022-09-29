@@ -2,6 +2,9 @@ package com.revature.reimbursements;
 
 import java.io.Serializable;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ReimbursementResponse implements Serializable {
 
     private String id;
@@ -21,10 +24,22 @@ public class ReimbursementResponse implements Serializable {
         this.id = reimbursement.getId().toString();
         this.amount = reimbursement.getAmount();
         this.submitted = reimbursement.getSubmitted().toString();
-        this.resolved = reimbursement.getResolved().toString();
+
+        if(reimbursement.getResolved() == null){
+            this.resolved = null;
+        }else{
+            this.resolved = reimbursement.getResolved().toString();
+        }
+        
         this.description = reimbursement.getDescription();
-        this.authorId = reimbursement.getAuthorId().toString();
-        this.resolverId = reimbursement.getResolverId().toString();
+        this.authorId = reimbursement.getAuthor().getId().toString();
+
+        if(reimbursement.getResolver() == null){
+            this.resolverId = null;
+        }else{
+            this.resolverId = reimbursement.getResolver().getId().toString();
+        }
+       
         this.typeNmae = reimbursement.getType().getTypeName();
         this.statusName = reimbursement.getStatus().getStatusName();
     }

@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.stereotype.Component;
+
 @Entity
 @Table(name = "reimbursement_type")
+@Component
 public class ReimbursementType {
 
     @Id // indicates a primary key

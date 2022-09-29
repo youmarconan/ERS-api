@@ -3,18 +3,23 @@ package com.revature.reimbursements;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.stereotype.Component;
+
 import com.revature.users.User;
 
 @Entity
 @Table(name = "reimbursement")
+@Component
 public class Reimbursement {
     
     @Id // indicates a primary key
@@ -33,21 +38,21 @@ public class Reimbursement {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "author_id")
-    private UUID authorId;
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
 
     
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "resolver_id")
-    private UUID resolverId;
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "resolver_id", referencedColumnName = "id")
+    private User resolver;
     
-    @OneToOne
-    @JoinColumn(name = "status_id")
+    @OneToOne(targetEntity = ReimbursementStatus.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "status_id", referencedColumnName = "id")
     private ReimbursementStatus status;
 
-    @OneToOne
-    @JoinColumn(name = "type_id")
+    @OneToOne(targetEntity = ReimbursementType.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
     private ReimbursementType type;
 
     public Reimbursement() {
@@ -55,14 +60,14 @@ public class Reimbursement {
     }
 
     public Reimbursement(UUID id, double amount, LocalDateTime submitted, LocalDateTime resolved, String description,
-            UUID authorId, UUID resolverId, ReimbursementStatus status, ReimbursementType type) {
+            User author, User resolver, ReimbursementStatus status, ReimbursementType type) {
         this.id = id;
         this.amount = amount;
         this.submitted = submitted;
         this.resolved = resolved;
         this.description = description;
-        this.authorId = authorId;
-        this.resolverId = resolverId;
+        this.author = author;
+        this.resolver = resolver;
         this.status = status;
         this.type = type;
     }
@@ -107,20 +112,20 @@ public class Reimbursement {
         this.description = description;
     }
 
-    public UUID getAuthorId() {
-        return authorId;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(UUID authorId) {
-        this.authorId = authorId;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
-    public UUID getResolverId() {
-        return resolverId;
+    public User getResolver() {
+        return resolver;
     }
 
-    public void setResolverId(UUID resolverId) {
-        this.resolverId = resolverId;
+    public void setResolver(User resolver) {
+        this.resolver = resolver;
     }
 
     public ReimbursementStatus getStatus() {
@@ -146,11 +151,11 @@ public class Reimbursement {
         long temp;
         temp = Double.doubleToLongBits(amount);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + ((authorId == null) ? 0 : authorId.hashCode());
+        result = prime * result + ((author == null) ? 0 : author.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((resolved == null) ? 0 : resolved.hashCode());
-        result = prime * result + ((resolverId == null) ? 0 : resolverId.hashCode());
+        result = prime * result + ((resolver == null) ? 0 : resolver.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
         result = prime * result + ((submitted == null) ? 0 : submitted.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -168,10 +173,10 @@ public class Reimbursement {
         Reimbursement other = (Reimbursement) obj;
         if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
             return false;
-        if (authorId == null) {
-            if (other.authorId != null)
+        if (author == null) {
+            if (other.author != null)
                 return false;
-        } else if (!authorId.equals(other.authorId))
+        } else if (!author.equals(other.author))
             return false;
         if (description == null) {
             if (other.description != null)
@@ -188,10 +193,10 @@ public class Reimbursement {
                 return false;
         } else if (!resolved.equals(other.resolved))
             return false;
-        if (resolverId == null) {
-            if (other.resolverId != null)
+        if (resolver == null) {
+            if (other.resolver != null)
                 return false;
-        } else if (!resolverId.equals(other.resolverId))
+        } else if (!resolver.equals(other.resolver))
             return false;
         if (status == null) {
             if (other.status != null)
@@ -213,8 +218,8 @@ public class Reimbursement {
 
     @Override
     public String toString() {
-        return "Reimbursement [amount=" + amount + ", authorId=" + authorId + ", description=" + description + ", id="
-                + id + ", resolved=" + resolved + ", resolverId=" + resolverId + ", status=" + status + ", submitted="
+        return "Reimbursement [amount=" + amount + ", author=" + author + ", description=" + description + ", id=" + id
+                + ", resolved=" + resolved + ", resolver=" + resolver + ", status=" + status + ", submitted="
                 + submitted + ", type=" + type + "]";
     }
 
