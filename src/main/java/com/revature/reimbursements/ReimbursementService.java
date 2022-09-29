@@ -12,15 +12,24 @@ import org.springframework.stereotype.Service;
 
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.ResourceNotFoundException;
+import com.revature.users.User;
+import com.revature.users.UserRepo;
 
 @Service
 public class ReimbursementService {
 
     private final ReimbursementRepo reimbursementRepo;
+    private final UserRepo userRepo;
+    private final StatusRepo statusRepo;
+    private final TypeRepo typeRepo;
 
     @Autowired
-    public ReimbursementService(ReimbursementRepo reimbursementRepo) {
+    public ReimbursementService(ReimbursementRepo reimbursementRepo, UserRepo userRepo, StatusRepo statusRepo,
+            TypeRepo typeRepo) {
         this.reimbursementRepo = reimbursementRepo;
+        this.userRepo = userRepo;
+        this.statusRepo = statusRepo;
+        this.typeRepo = typeRepo;
     }
 
     public List<ReimbursementResponse> getAllReimbursements() {
@@ -46,16 +55,19 @@ public class ReimbursementService {
 
     // public List<ReimbursementResponse> getReimbursementsByType(String type) {
 
-    //     if (type == null || type.length() <= 0) {
-    //         throw new InvalidRequestException("A non-empty type must be provided!");
-    //     }
+    // if (type == null || type.length() <= 0) {
+    // throw new InvalidRequestException("A non-empty type must be provided!");
+    // }
 
-    //     if (!type.equals("lodging") && !type.equals("travel") && !type.equals("food") && !type.equals("other")) {
-    //         throw new InvalidRequestException("Status value must be one of (lodging, travel, food, other)");
-    //     }
+    // if (!type.equals("lodging") && !type.equals("travel") && !type.equals("food")
+    // && !type.equals("other")) {
+    // throw new InvalidRequestException("Status value must be one of (lodging,
+    // travel, food, other)");
+    // }
 
-    //     return reimbursementRepo.findReimbursementByTypeId_Name(type).stream().map(ReimbursementResponse::new)
-    //             .collect(Collectors.toList());
+    // return
+    // reimbursementRepo.findReimbursementByTypeId_Name(type).stream().map(ReimbursementResponse::new)
+    // .collect(Collectors.toList());
     // }
 
     public ReimbursementResponse getReimbursementById(String id) {
@@ -109,12 +121,14 @@ public class ReimbursementService {
         Reimbursement reimbursement = reimbursementRepo
                 .findById(UUID.fromString(approveOrDenyBody.getReimbursementId()))
                 .orElseThrow(ResourceNotFoundException::new);
-        ReimbursementStatus reimbursementStatus = new ReimbursementStatus();
-        reimbursementStatus.setStatusId(UUID.fromString(statusId));
+
+        ReimbursementStatus reimbursementStatus = statusRepo.findById(UUID.fromString(statusId))
+                .orElseThrow(ResourceNotFoundException::new);
+        User resolver = userRepo.findById(UUID.fromString(resolverId)).orElseThrow(ResourceNotFoundException::new);
 
         reimbursement.setStatus(reimbursementStatus);
         reimbursement.setResolved(LocalDateTime.now());
-        reimbursement.setResolverId(UUID.fromString(resolverId));
+        reimbursement.setResolver(resolver);
 
     }
 
@@ -124,7 +138,7 @@ public class ReimbursementService {
             throw new InvalidRequestException("Provided request must not be null!");
         }
 
-        if (newReimbursement.getAmount() > 9999.99 || newReimbursement.getAmount() <= 0) {
+        if (newReimbursement.getAmount() >= 9999.99 || newReimbursement.getAmount() <= 0) {
             throw new InvalidRequestException("Provided amount must be between 0.01 and 9999.99");
         }
 
@@ -138,27 +152,46 @@ public class ReimbursementService {
             throw new InvalidRequestException("Description must not exceed 65,535 characters");
         }
 
-        if (!newReimbursement.getType().equals("lodging") && !newReimbursement.getType().equals("travel")
-                && !newReimbursement.getType().equals("food") && !newReimbursement.getType().equals("other")) {
+        ReimbursementType reimbursementType = typeRepo.findById(UUID.fromString("cadb6fcb-06ab-4583-b467-711185626cb7"))
+                .orElseThrow(ResourceNotFoundException::new);
 
-            throw new InvalidRequestException("Reimbursement type must be one of (lodging, travel, food, other)");
+        if (newReimbursement.getType() != null) {
+
+            if (newReimbursement.getType().equals("lodging")) {
+
+                reimbursementType = typeRepo.findById(UUID.fromString("3401d663-0c60-4389-ae8b-34ee3be05e07"))
+                        .orElseThrow(ResourceNotFoundException::new);
+
+            }
+            if (newReimbursement.getType().equals("travel")) {
+
+                reimbursementType = typeRepo.findById(UUID.fromString("c59565bd-504d-4ec3-a95f-b4714f90174f"))
+                        .orElseThrow(ResourceNotFoundException::new);
+
+            }
+            if (newReimbursement.getType().equals("food")) {
+
+                reimbursementType = typeRepo.findById(UUID.fromString("ff73b3a8-89ce-4d76-976c-267a35f9e712"))
+                        .orElseThrow(ResourceNotFoundException::new);
+
+            }
+
         }
 
-        if (newReimbursement.getType().equals("lodging")) {
-            newReimbursement.setType("3401d663-0c60-4389-ae8b-34ee3be05e07");
-        }
-        if (newReimbursement.getType().equals("travel")) {
-            newReimbursement.setType("c59565bd-504d-4ec3-a95f-b4714f90174f");
-        }
-        if (newReimbursement.getType().equals("food")) {
-            newReimbursement.setType("ff73b3a8-89ce-4d76-976c-267a35f9e712");
-        }
-        if (newReimbursement.getType().equals("other") || newReimbursement.getType().equals(null)) {
-            newReimbursement.setType("cadb6fcb-06ab-4583-b467-711185626cb7");
-        }
+        ReimbursementStatus reimbursementStatus = statusRepo
+                .findById(UUID.fromString("41301461-daf4-41d1-91e1-767eb87c398d"))
+                .orElseThrow(ResourceNotFoundException::new);
 
         Reimbursement reimbursement = newReimbursement.extractEntity();
-        reimbursement.setAuthorId(UUID.fromString(authorId));
+
+        reimbursement.setType(reimbursementType);
+        reimbursement.setStatus(reimbursementStatus);
+        reimbursement.setSubmitted(LocalDateTime.now());
+
+        User author = userRepo.findById(UUID.fromString(authorId)).orElseThrow(ResourceNotFoundException::new);
+
+        reimbursement.setAuthor(author);
+
         reimbursementRepo.save(reimbursement);
 
         return "Successfully submitted new reimbursement with ID = " + reimbursement.getId().toString();
@@ -190,15 +223,15 @@ public class ReimbursementService {
                 .findById(UUID.fromString(updateOwnReimbBody.getReimbursementId()))
                 .orElseThrow(ResourceNotFoundException::new);
 
-        if(!String.valueOf(updateOwnReimbBody.getAmount()).equals(null)){
+        if (!String.valueOf(updateOwnReimbBody.getAmount()).equals(null)) {
             reimbursement.setAmount(updateOwnReimbBody.getAmount());
         }
 
-        if(!updateOwnReimbBody.getDescription().equals(null)){
+        if (!updateOwnReimbBody.getDescription().equals(null)) {
             reimbursement.setDescription(updateOwnReimbBody.getDescription());
         }
-        
-        if(!updateOwnReimbBody.getType().equals(null)){
+
+        if (!updateOwnReimbBody.getType().equals(null)) {
 
             ReimbursementType type = new ReimbursementType();
 
@@ -214,7 +247,7 @@ public class ReimbursementService {
             if (updateOwnReimbBody.getType().equals("other")) {
                 type.setTypeId(UUID.fromString("cadb6fcb-06ab-4583-b467-711185626cb7"));
             }
-            
+
             reimbursement.setType(type);
         }
     }

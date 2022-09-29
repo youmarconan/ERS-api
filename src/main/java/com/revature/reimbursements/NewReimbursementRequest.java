@@ -2,13 +2,17 @@ package com.revature.reimbursements;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import com.revature.common.Request;
 
+@Component
 public class NewReimbursementRequest implements Request<Reimbursement> {
 
-    private double amount;
+    private float amount;
     private String description;
     private String type;
+    
 
    
 
@@ -18,7 +22,7 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
 
 
 
-    public NewReimbursementRequest(double amount, String description, String type) {
+    public NewReimbursementRequest(float amount, String description, String type) {
         this.amount = amount;
         this.description = description;
         this.type = type;
@@ -26,13 +30,13 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
 
 
 
-    public double getAmount() {
+    public float getAmount() {
         return amount;
     }
 
 
 
-    public void setAmount(double amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 
@@ -62,13 +66,18 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
 
 
 
+
+
+
+
+
+
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        long temp;
-        temp = Double.doubleToLongBits(amount);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + Float.floatToIntBits(amount);
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
@@ -85,7 +94,7 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         if (getClass() != obj.getClass())
             return false;
         NewReimbursementRequest other = (NewReimbursementRequest) obj;
-        if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
+        if (Float.floatToIntBits(amount) != Float.floatToIntBits(other.amount))
             return false;
         if (description == null) {
             if (other.description != null)
@@ -113,14 +122,12 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
     public Reimbursement extractEntity() {
 
         Reimbursement reimbursement = new Reimbursement();
-        ReimbursementType reimbursementType = new ReimbursementType();
 
         reimbursement.setAmount(this.amount);
         reimbursement.setDescription(this.description);
 
-        reimbursementType.setTypeId(UUID.fromString(this.type));
 
-        reimbursement.setType(reimbursementType);
+        reimbursement.setId(UUID.randomUUID());
 
         return reimbursement;
     }

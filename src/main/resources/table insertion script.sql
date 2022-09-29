@@ -11,6 +11,8 @@ insert into user_role ("name") values ('admin'),('manager'),('employee');
 
 select * from user_role;
 
+delete from user_role where id = 'e0ac0158-2b16-49fd-baa1-30a4b734eb35';
+
 select "user".username as username,
 "user".id  as user_id,
 "user".email as email,
@@ -40,13 +42,9 @@ on reimbursement_type.id = reimbursement.type_id
 join reimbursement_status
 on reimbursement_status.id = reimbursement.status_id ;
 
+select * from "user" ;
 
-insert into user values
-username mbrooks,
-email mikayla@revature.com,
-password 123345,
-first_name Mikayla,
-last_name Brooks,
+
 
 
 

@@ -1,5 +1,8 @@
 package com.revature.reimbursements;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class UpdateOwnReimbBody {
 
     private String ReimbursementId;

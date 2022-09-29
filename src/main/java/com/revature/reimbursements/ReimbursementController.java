@@ -9,16 +9,14 @@ import com.revature.common.SecurityUtils;
 import com.revature.common.exceptions.AuthorizationException;
 import com.revature.users.UserResponse;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,19 +47,19 @@ public class ReimbursementController {
         return reimbursementService.getAllReimbursements();
     }
 
-    @GetMapping(value = "/{status}", produces = "application/json")
-    public List<ReimbursementResponse> getAllReimbursementsByStatus(@PathVariable String status,
-            HttpServletRequest req) {
+    // @GetMapping(value = "/{status}", produces = "application/json")
+    // public List<ReimbursementResponse> getAllReimbursementsByStatus(@PathVariable String status,
+    //         HttpServletRequest req) {
 
-        logger.info("A GET request was received by /reimbursement at {}", LocalDateTime.now());
+    //     logger.info("A GET request was received by /reimbursement at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+    //     HttpSession userSession = req.getSession(false);
 
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "manager");
+    //     SecurityUtils.enforceAuthentication(userSession);
+    //     SecurityUtils.enforcePermissions(userSession, "manager");
 
-        return reimbursementService.getReimbursementsByStatus(status);
-    }
+    //     return reimbursementService.getReimbursementsByStatus(status);
+    // }
 
     // @GetMapping(value = "/{type}", produces = "application/json")
     // public List<ReimbursementResponse> getAllReimbursementsByType(@PathVariable String type, HttpServletRequest req) {
@@ -76,22 +74,22 @@ public class ReimbursementController {
     //     return reimbursementService.getReimbursementsByType(type);
     // }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ReimbursementResponse getAllReimbursementsById(@PathVariable String id, HttpServletRequest req) {
+    // @GetMapping(value = "/{id}", produces = "application/json")
+    // public ReimbursementResponse getReimbursementsById(@PathVariable String id, HttpServletRequest req) {
 
-        logger.info("A GET request was received by /reimbursement at {}", LocalDateTime.now());
+    //     logger.info("A GET request was received by /reimbursement at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+    //     HttpSession userSession = req.getSession(false);
 
-        SecurityUtils.enforceAuthentication(userSession);
+    //     SecurityUtils.enforceAuthentication(userSession);
 
-        if (SecurityUtils.validateRole(userSession, "manager") || SecurityUtils.validateUserId(userSession, id)) {
-            return reimbursementService.getReimbursementById(id);
-        } else {
-            throw new AuthorizationException();
-        }
+    //     if (SecurityUtils.validateRole(userSession, "manager") || SecurityUtils.validateUserId(userSession, id)) {
+    //         return reimbursementService.getReimbursementById(id);
+    //     } else {
+    //         throw new AuthorizationException();
+    //     }
 
-    }
+    // }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
@@ -104,8 +102,9 @@ public class ReimbursementController {
         SecurityUtils.enforceAuthentication(userSession);
         SecurityUtils.enforcePermissions(userSession, "employee");
 
-        return reimbursementService.createNewReimbursement(newReimbursement,
-                ((UserResponse) userSession.getAttribute("authUser")).getId());
+        String id = ((UserResponse) userSession.getAttribute("loggedInUser")).getId();
+
+        return reimbursementService.createNewReimbursement(newReimbursement, id);
     }
 
     @PutMapping(consumes = "application/json")
@@ -134,18 +133,21 @@ public class ReimbursementController {
 
     }
 
-    @PutMapping(value = "/{approveOrDenyBody}",consumes = "application/json")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void approveOrDeny(@RequestBody @PathVariable ApproveOrDenyBody approveOrDenyBody, HttpServletRequest req) {
+    // @PutMapping(value = "/{approveOrDenyBody}",consumes = "application/json")
+    // @ResponseStatus(HttpStatus.NO_CONTENT)
+    // public void approveOrDeny(@RequestBody @PathVariable ApproveOrDenyBody approveOrDenyBody, HttpServletRequest req) {
 
-        logger.info("A PUT request was received by /reimbursement at {}", LocalDateTime.now());
+    //     logger.info("A PUT request was received by /reimbursement at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+    //     HttpSession userSession = req.getSession(false);
 
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "manager");
+    //     SecurityUtils.enforceAuthentication(userSession);
+    //     SecurityUtils.enforcePermissions(userSession, "manager");
 
-        reimbursementService.approveOrDeny(approveOrDenyBody,((UserResponse) userSession.getAttribute("authUser")).getId()); 
+        
+    //     User user = UserRepo.
 
-    }
+    //     reimbursementService.approveOrDeny(approveOrDenyBody,((UserResponse) userSession.getAttribute("authUser")).getId()); 
+
+    // }
 }
