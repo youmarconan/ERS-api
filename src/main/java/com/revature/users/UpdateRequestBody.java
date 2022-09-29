@@ -13,7 +13,7 @@ public class UpdateRequestBody {
     private String firstName;
     private String lastName;
     @JsonProperty("isActive")
-    private boolean isActive;
+    private Boolean isActive;
     private UUID userRoleId;
 
     public UpdateRequestBody() {
@@ -21,7 +21,7 @@ public class UpdateRequestBody {
     }
 
     public UpdateRequestBody(UUID userId, String username, String email, String password, String firstName,
-            String lastName, boolean isActive, UUID userRoleId) {
+            String lastName, Boolean isActive, UUID userRoleId) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -80,11 +80,11 @@ public class UpdateRequestBody {
         this.lastName = lastName;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean isActive) {
+    public void setActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
