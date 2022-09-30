@@ -39,36 +39,50 @@ public class ReimbursementService {
 
     }
 
-    public List<ReimbursementResponse> getReimbursementsByStatus(String status) {
+    public List<ReimbursementResponse> viewMyReimbursement(String authorId) {
 
-        if (status == null || status.length() <= 0) {
+        User author = userRepo.getById(UUID.fromString(authorId));
+
+
+        return reimbursementRepo.findReimbursementByAuthor(author).stream().map(ReimbursementResponse::new)
+                .collect(Collectors.toList());
+
+    }
+
+    public List<ReimbursementResponse> getReimbursementsByStatus(String name) {
+
+        if (name == null || name.length() <= 0) {
             throw new InvalidRequestException("A non-empty status must be provided!");
         }
 
-        if (!status.equals("pending") && !status.equals("approved") && !status.equals("denied")) {
+        if (!name.equals("pending") && !name.equals("approved") && !name.equals("denied")) {
             throw new InvalidRequestException("Status value must be one of (pending, approved, denied)");
         }
+
+        ReimbursementStatus status = statusRepo.findReimbursementStatusByStatusName(name)
+                .orElseThrow(ResourceNotFoundException::new);
 
         return reimbursementRepo.findReimbursementByStatus(status).stream().map(ReimbursementResponse::new)
                 .collect(Collectors.toList());
     }
 
-    // public List<ReimbursementResponse> getReimbursementsByType(String type) {
+    public List<ReimbursementResponse> getReimbursementsByType(String name) {
 
-    // if (type == null || type.length() <= 0) {
-    // throw new InvalidRequestException("A non-empty type must be provided!");
-    // }
+        if (name == null || name.length() <= 0) {
+            throw new InvalidRequestException("A non-empty type must be provided!");
+        }
 
-    // if (!type.equals("lodging") && !type.equals("travel") && !type.equals("food")
-    // && !type.equals("other")) {
-    // throw new InvalidRequestException("Status value must be one of (lodging,
-    // travel, food, other)");
-    // }
+        if (!name.equals("lodging") && !name.equals("travel") && !name.equals("food")
+                && !name.equals("other")) {
+            throw new InvalidRequestException("Status value must be one of (lodging,travel, food, other)");
+        }
 
-    // return
-    // reimbursementRepo.findReimbursementByTypeId_Name(type).stream().map(ReimbursementResponse::new)
-    // .collect(Collectors.toList());
-    // }
+        ReimbursementType type = typeRepo.findReimbursementTypeByTypeName(name)
+                .orElseThrow(ResourceNotFoundException::new);
+
+        return reimbursementRepo.findReimbursementByType(type).stream().map(ReimbursementResponse::new)
+                .collect(Collectors.toList());
+    }
 
     public ReimbursementResponse getReimbursementById(String id) {
 
@@ -204,51 +218,56 @@ public class ReimbursementService {
             throw new InvalidRequestException("Provided request must not be null!");
         }
 
-        if (updateOwnReimbBody.getAmount() > 9999.99 || updateOwnReimbBody.getAmount() <= 0) {
-            throw new InvalidRequestException("Provided amount must be between 0.01 and 9999.99");
-        }
-
-        if (updateOwnReimbBody.getDescription().length() > 65535) {
-
-            throw new InvalidRequestException("Description must not exceed 65,535 characters");
-        }
-
-        if (!updateOwnReimbBody.getType().equals("lodging") && !updateOwnReimbBody.getType().equals("travel")
-                && !updateOwnReimbBody.getType().equals("food") && !updateOwnReimbBody.getType().equals("other")) {
-
-            throw new InvalidRequestException("Reimbursement type must be one of (lodging, travel, food, other)");
-        }
-
         Reimbursement reimbursement = reimbursementRepo
                 .findById(UUID.fromString(updateOwnReimbBody.getReimbursementId()))
                 .orElseThrow(ResourceNotFoundException::new);
+        
 
-        if (!String.valueOf(updateOwnReimbBody.getAmount()).equals(null)) {
-            reimbursement.setAmount(updateOwnReimbBody.getAmount());
+        if (String.valueOf(updateOwnReimbBody.getAmount()) != null) {
+
+            if (updateOwnReimbBody.getAmount() > 9999.99 || updateOwnReimbBody.getAmount() <= 0) {
+                throw new InvalidRequestException("Provided amount must be between 0.01 and 9999.99");
+            } else {
+                reimbursement.setAmount(updateOwnReimbBody.getAmount());
+            }
         }
 
-        if (!updateOwnReimbBody.getDescription().equals(null)) {
-            reimbursement.setDescription(updateOwnReimbBody.getDescription());
+        if (updateOwnReimbBody.getDescription() != null) {
+            if (updateOwnReimbBody.getDescription().length() > 65535) {
+
+                throw new InvalidRequestException("Description must not exceed 65,535 characters");
+            } else {
+                reimbursement.setDescription(updateOwnReimbBody.getDescription());
+            }
         }
 
-        if (!updateOwnReimbBody.getType().equals(null)) {
+        if (updateOwnReimbBody.getType() != null) {
 
-            ReimbursementType type = new ReimbursementType();
+            if (!updateOwnReimbBody.getType().equals("lodging") && !updateOwnReimbBody.getType().equals("travel")
+                    && !updateOwnReimbBody.getType().equals("food") && !updateOwnReimbBody.getType().equals("other")) {
 
-            if (updateOwnReimbBody.getType().equals("lodging")) {
-                type.setTypeId(UUID.fromString("3401d663-0c60-4389-ae8b-34ee3be05e07"));
-            }
-            if (updateOwnReimbBody.getType().equals("travel")) {
-                type.setTypeId(UUID.fromString("c59565bd-504d-4ec3-a95f-b4714f90174f"));
-            }
-            if (updateOwnReimbBody.getType().equals("food")) {
-                type.setTypeId(UUID.fromString("ff73b3a8-89ce-4d76-976c-267a35f9e712"));
-            }
-            if (updateOwnReimbBody.getType().equals("other")) {
-                type.setTypeId(UUID.fromString("cadb6fcb-06ab-4583-b467-711185626cb7"));
-            }
+                throw new InvalidRequestException("Reimbursement type must be one of (lodging, travel, food, other)");
 
-            reimbursement.setType(type);
+            } else {
+
+                UUID id = null;
+                if (updateOwnReimbBody.getType().equals("lodging")) {
+                    id = UUID.fromString("3401d663-0c60-4389-ae8b-34ee3be05e07");
+                }
+                if (updateOwnReimbBody.getType().equals("travel")) {
+                    id = UUID.fromString("c59565bd-504d-4ec3-a95f-b4714f90174f");
+                }
+                if (updateOwnReimbBody.getType().equals("food")) {
+                    id = UUID.fromString("ff73b3a8-89ce-4d76-976c-267a35f9e712");
+                }
+                if (updateOwnReimbBody.getType().equals("other")) {
+                    id = UUID.fromString("cadb6fcb-06ab-4583-b467-711185626cb7");
+                }
+
+                ReimbursementType type = typeRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
+                reimbursement.setType(type);
+            }
         }
+
     }
 }
