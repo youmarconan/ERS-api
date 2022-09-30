@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateOwnReimbBody {
 
-    private String ReimbursementId;
+    private String reimbursementId;
     private double amount;
     private String description;
     private String type;
@@ -14,18 +14,18 @@ public class UpdateOwnReimbBody {
     }
 
     public UpdateOwnReimbBody(String reimbursementId, double amount, String description, String type) {
-        ReimbursementId = reimbursementId;
+        this.reimbursementId = reimbursementId;
         this.amount = amount;
         this.description = description;
         this.type = type;
     }
 
     public String getReimbursementId() {
-        return ReimbursementId;
+        return reimbursementId;
     }
 
     public void setReimbursementId(String reimbursementId) {
-        ReimbursementId = reimbursementId;
+        this.reimbursementId = reimbursementId;
     }
 
     public double getAmount() {
@@ -56,11 +56,11 @@ public class UpdateOwnReimbBody {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((ReimbursementId == null) ? 0 : ReimbursementId.hashCode());
         long temp;
         temp = Double.doubleToLongBits(amount);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + ((description == null) ? 0 : description.hashCode());
+        result = prime * result + ((reimbursementId == null) ? 0 : reimbursementId.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
@@ -74,17 +74,17 @@ public class UpdateOwnReimbBody {
         if (getClass() != obj.getClass())
             return false;
         UpdateOwnReimbBody other = (UpdateOwnReimbBody) obj;
-        if (ReimbursementId == null) {
-            if (other.ReimbursementId != null)
-                return false;
-        } else if (!ReimbursementId.equals(other.ReimbursementId))
-            return false;
         if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
             return false;
         if (description == null) {
             if (other.description != null)
                 return false;
         } else if (!description.equals(other.description))
+            return false;
+        if (reimbursementId == null) {
+            if (other.reimbursementId != null)
+                return false;
+        } else if (!reimbursementId.equals(other.reimbursementId))
             return false;
         if (type == null) {
             if (other.type != null)
@@ -96,8 +96,10 @@ public class UpdateOwnReimbBody {
 
     @Override
     public String toString() {
-        return "UpdateOwnReimbBody [ReimbursementId=" + ReimbursementId + ", amount=" + amount + ", description="
-                + description + ", type=" + type + "]";
+        return "UpdateOwnReimbBody [amount=" + amount + ", description=" + description + ", reimbursementId="
+                + reimbursementId + ", type=" + type + "]";
     }
+
+    
 
 }

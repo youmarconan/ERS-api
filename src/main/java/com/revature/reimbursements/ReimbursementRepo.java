@@ -4,20 +4,21 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import com.revature.users.User;
 
 
 @Repository
 public interface ReimbursementRepo extends JpaRepository<Reimbursement, UUID> {
     
 
+    List<Reimbursement> findReimbursementByStatus(ReimbursementStatus status);
 
-    @Query(value = "select r from Reimbursement where r.status.name = 1 ", nativeQuery = true)
-    List<Reimbursement> findReimbursementByStatus(String statusName);
+    List<Reimbursement> findReimbursementByType(ReimbursementType type);
 
-    // List<Reimbursement> findReimbursementByTypeId_Name(String typeName);
-
+    List<Reimbursement> findReimbursementByAuthor(User user);
+   
    
 
 }
