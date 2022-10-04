@@ -35,7 +35,6 @@ public class AuthController {
     @PostMapping(produces = "application/json", consumes = "application/json")
     public UserResponse authenticate(@RequestBody Credentials credentials, HttpServletRequest req) {
 
-        System.out.println(credentials);
 
         UserResponse loggedInUserResponse = authService.authenticate(credentials);
 

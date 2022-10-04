@@ -102,7 +102,7 @@ public class UserService {
             throw new IsAlreadyExist("The provided username is already taken.");
         }
 
-        if (String.valueOf(newUser.getIsActive()) == null || String.valueOf(newUser.getIsActive()).length() <= 0) {
+        if (String.valueOf(newUser.getIsActive()) == null) {
             throw new InvalidRequestException("Must provid is active status!");
         }
 
@@ -122,6 +122,8 @@ public class UserService {
         }
 
         User userToPersist = newUser.extractEntity();
+        UserRole role = roleRepo.findById(newUser.getUserRoleId()).orElseThrow(ResourceNotFoundException::new);
+        userToPersist.setRole(role);
         userRepo.save(userToPersist);
         return "New persisted user's ID is " + userToPersist.getId();
     }
@@ -141,8 +143,8 @@ public class UserService {
 
         User user = userRepo.findById(updateRequestBody.getUserId()).orElseThrow(ResourceNotFoundException::new);
 
-        if (updateRequestBody.getUsername() != null) {
-            if (!userRepo.existsByUsername(updateRequestBody.getUsername())) {
+        if (updateRequestBody.getUsername() != null ) {
+            if (!userRepo.existsByUsername(updateRequestBody.getUsername()) && updateRequestBody.getUsername().length() >= 4) {
                 user.setUsername(updateRequestBody.getUsername());
             } else {
                 throw new IsAlreadyExist("Provided username is already taken");
@@ -152,13 +154,18 @@ public class UserService {
 
             if (!userRepo.existsByEmail(updateRequestBody.getEmail())) {
                 user.setEmail(updateRequestBody.getEmail());
-            }else{
+            } else {
                 throw new IsAlreadyExist("Provided Email is already taken");
             }
         }
 
         if (updateRequestBody.getPassword() != null) {
-            user.setPassword(updateRequestBody.getPassword());
+
+            if (updateRequestBody.getPassword() == null || updateRequestBody.getPassword().length() < 8) {
+                throw new InvalidRequestException("A password with at least 8 characters must be provided!");
+            } else {
+                user.setPassword(updateRequestBody.getPassword());
+            }
         }
 
         if (updateRequestBody.getFirstName() != null) {
@@ -173,7 +180,7 @@ public class UserService {
             if (String.valueOf(updateRequestBody.isActive()).equals("true")
                     || String.valueOf(updateRequestBody.isActive()).equals("false")) {
                 user.setActive(updateRequestBody.isActive());
-            }else{
+            } else {
                 throw new InvalidRequestException();
             }
         }
@@ -187,6 +194,8 @@ public class UserService {
                         .orElseThrow(ResourceNotFoundException::new);
                 user.setRole(role);
 
+            } else {
+                throw new InvalidRequestException();
             }
         }
 

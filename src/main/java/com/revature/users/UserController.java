@@ -51,21 +51,21 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    // @GetMapping (produces = "application/json")
-    // public UserResponse getUserById(@RequestParam(name = "id") String id, HttpSession userSession) {
+    @GetMapping(value = "/byId/{id}", produces = "application/json")
+    public UserResponse getUserById(@PathVariable(name = "id") String id, HttpSession userSession) {
 
-    //     logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
+        logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
 
-    //     SecurityUtils.enforceAuthentication(userSession);
+        SecurityUtils.enforceAuthentication(userSession);
 
-    //     if (SecurityUtils.validateRole(userSession, "admin") || SecurityUtils.validateUserId(userSession, id)) {
-    //         return userService.getUserById(id);
-    //     } else {
-    //         throw new AuthorizationException();
-    //     }
-    // }
+        if (SecurityUtils.validateRole(userSession, "admin") || SecurityUtils.validateUserId(userSession, id)) {
+            return userService.getUserById(id);
+        } else {
+            throw new AuthorizationException();
+        }
+    }
 
-    @GetMapping(value = "/{username}", produces = "application/json")
+    @GetMapping(value = "/byUsername/{username}", produces = "application/json")
     public UserResponse getUserByUsername(@PathVariable String username, HttpSession userSession) {
 
         logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
@@ -79,19 +79,19 @@ public class UserController {
         }
     }
 
-    //  @GetMapping (produces = "application/json")
-    // public UserResponse getUserByEmail(@RequestParam(name = "email") String email, HttpSession userSession) {
+    @GetMapping(value = "/byEmail/{email}", produces = "application/json")
+    public UserResponse getUserByEmail(@PathVariable(name = "email") String email, HttpSession userSession) {
 
-    //     logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
+        logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
 
-    //     SecurityUtils.enforceAuthentication(userSession);
+        SecurityUtils.enforceAuthentication(userSession);
 
-    //     if (SecurityUtils.validateRole(userSession, "admin")) {
-    //         return userService.getUserByEmail(email);
-    //     } else {
-    //         throw new AuthorizationException();
-    //     }
-    // }
+        if (SecurityUtils.validateRole(userSession, "admin")) {
+            return userService.getUserByEmail(email);
+        } else {
+            throw new AuthorizationException();
+        }
+    }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)

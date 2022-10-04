@@ -45,6 +45,9 @@ on reimbursement_status.id = reimbursement.status_id ;
 select * from "user" ;
 
 
+select * from reimbursement ;
+
+delete from reimbursement where id = '6a9890bd-26d7-4779-b469-64ce4707b813' ;
 
 
 

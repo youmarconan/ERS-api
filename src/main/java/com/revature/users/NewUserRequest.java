@@ -13,7 +13,7 @@ public class NewUserRequest implements Request<User> {
     private String firstName;
     private String lastName;
     @JsonProperty("isActive")
-    private boolean isActive;
+    private Boolean isActive;
     private UUID userRoleId;
     
     public NewUserRequest() {
@@ -145,18 +145,12 @@ public class NewUserRequest implements Request<User> {
     public User extractEntity() {
 
         User extractedUser = new User();
-        UserRole extractedRole = new UserRole();
-
         extractedUser.setUsername(this.username);
         extractedUser.setEmail(this.email);
         extractedUser.setPassword(this.password);
         extractedUser.setFirstName(this.firstName);
         extractedUser.setLastName(this.lastName);
         extractedUser.setActive(this.isActive);
-
-        extractedRole.setId(this.userRoleId);
-
-        extractedUser.setRole(extractedRole);
 
         extractedUser.setId(UUID.randomUUID());
 
