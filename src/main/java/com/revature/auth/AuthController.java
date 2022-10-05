@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpSession;
 
+import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.users.UserResponse;
 
 
@@ -34,6 +35,11 @@ public class AuthController {
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     public UserResponse authenticate(@RequestBody Credentials credentials, HttpServletRequest req) {
+        
+
+        if (credentials == null) {
+            throw new InvalidRequestException("The provided credentials object must not be null!");
+        }
 
 
         UserResponse loggedInUserResponse = authService.authenticate(credentials);
