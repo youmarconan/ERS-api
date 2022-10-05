@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto8
+  pre_build:
+    commands:
+      - aws s3 cp s3://elasticbeanstalk-us-west-1-134464471564/application.properties ./src/main/resources
+  build:
+    commands:
+      - mvn clean package -Dspring.profiles.active=test
+  post_build:
+    commands:
+      - mv target/*.jar ./ers.jar
+
+artifacts:
+  files:
+    - ers.jar
