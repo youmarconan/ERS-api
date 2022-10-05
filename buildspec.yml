@@ -6,7 +6,7 @@ phases:
       java: corretto8
   pre_build:
     commands:
-      - aws s3 cp s3://elasticbeanstalk-us-west-1-134464471564/application.properties ./src/main/resources
+      - aws s3 cp s3://ers-resources/application.properties ./src/main/resources
   build:
     commands:
       - mvn clean package -Dspring.profiles.active=test
