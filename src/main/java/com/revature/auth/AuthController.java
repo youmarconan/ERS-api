@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins="http://localhost:4200/", allowCredentials="true")
 public class AuthController {
 
     private final AuthService authService;
@@ -35,7 +37,7 @@ public class AuthController {
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     public UserResponse authenticate(@RequestBody Credentials credentials, HttpServletRequest req) {
-        
+
 
         if (credentials == null) {
             throw new InvalidRequestException("The provided credentials object must not be null!");
