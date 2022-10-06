@@ -14,14 +14,14 @@ public class UpdateRequestBody {
     private String lastName;
     @JsonProperty("isActive")
     private Boolean isActive;
-    private UUID userRoleId;
+    private String userRoleName;
 
     public UpdateRequestBody() {
         super();
     }
 
     public UpdateRequestBody(UUID userId, String username, String email, String password, String firstName,
-            String lastName, Boolean isActive, UUID userRoleId) {
+            String lastName, Boolean isActive, String userRoleName) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -29,7 +29,7 @@ public class UpdateRequestBody {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isActive = isActive;
-        this.userRoleId = userRoleId;
+        this.userRoleName = userRoleName;
     }
 
     public UUID getUserId() {
@@ -80,34 +80,34 @@ public class UpdateRequestBody {
         this.lastName = lastName;
     }
 
-    public Boolean isActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
-    public UUID getUserRoleId() {
-        return userRoleId;
+    public String getUserRoleName() {
+        return userRoleName;
     }
 
-    public void setUserRoleId(UUID userRoleId) {
-        this.userRoleId = userRoleId;
+    public void setUserRoleName(String userRoleName) {
+        this.userRoleName = userRoleName;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((email == null) ? 0 : email.hashCode());
-        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-        result = prime * result + (isActive ? 1231 : 1237);
-        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-        result = prime * result + ((password == null) ? 0 : password.hashCode());
         result = prime * result + ((userId == null) ? 0 : userId.hashCode());
-        result = prime * result + ((userRoleId == null) ? 0 : userRoleId.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((isActive == null) ? 0 : isActive.hashCode());
+        result = prime * result + ((userRoleName == null) ? 0 : userRoleName.hashCode());
         return result;
     }
 
@@ -120,53 +120,54 @@ public class UpdateRequestBody {
         if (getClass() != obj.getClass())
             return false;
         UpdateRequestBody other = (UpdateRequestBody) obj;
-        if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        if (firstName == null) {
-            if (other.firstName != null)
-                return false;
-        } else if (!firstName.equals(other.firstName))
-            return false;
-        if (isActive != other.isActive)
-            return false;
-        if (lastName == null) {
-            if (other.lastName != null)
-                return false;
-        } else if (!lastName.equals(other.lastName))
-            return false;
-        if (password == null) {
-            if (other.password != null)
-                return false;
-        } else if (!password.equals(other.password))
-            return false;
         if (userId == null) {
             if (other.userId != null)
                 return false;
         } else if (!userId.equals(other.userId))
-            return false;
-        if (userRoleId == null) {
-            if (other.userRoleId != null)
-                return false;
-        } else if (!userRoleId.equals(other.userRoleId))
             return false;
         if (username == null) {
             if (other.username != null)
                 return false;
         } else if (!username.equals(other.username))
             return false;
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
+            return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
+        if (firstName == null) {
+            if (other.firstName != null)
+                return false;
+        } else if (!firstName.equals(other.firstName))
+            return false;
+        if (lastName == null) {
+            if (other.lastName != null)
+                return false;
+        } else if (!lastName.equals(other.lastName))
+            return false;
+        if (isActive == null) {
+            if (other.isActive != null)
+                return false;
+        } else if (!isActive.equals(other.isActive))
+            return false;
+        if (userRoleName == null) {
+            if (other.userRoleName != null)
+                return false;
+        } else if (!userRoleName.equals(other.userRoleName))
+            return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "UpdateRequestBody [email=" + email + ", firstName=" + firstName + ", isActive=" + isActive
-                + ", lastName=" + lastName + ", password=" + password + ", userId=" + userId + ", userRoleId="
-                + userRoleId + ", username=" + username + "]";
+        return "UpdateRequestBody [userId=" + userId + ", username=" + username + ", email=" + email + ", password="
+                + password + ", firstName=" + firstName + ", lastName=" + lastName + ", isActive=" + isActive
+                + ", userRoleName=" + userRoleName + "]";
     }
-   
-    
 
 }

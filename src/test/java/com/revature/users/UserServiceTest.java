@@ -299,8 +299,7 @@ public class UserServiceTest {
     public void test_register_throwsInvalidRequestException_givenNullFirstName() {
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", null, "lastName", true,
-        UUID.randomUUID()  );
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", null, "lastName", true, "admin" );
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -315,7 +314,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "", "lastName", true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -330,7 +329,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", null, true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -345,7 +344,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "", true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -360,7 +359,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", null, "password", "firstname", "lastName", true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -375,7 +374,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "", "password", "firstname", "lastName", true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -390,7 +389,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest(null, "email", "password", "firstname", "lastName", true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -405,7 +404,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("xxx", "email", "password", "firstname", "lastName", true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -420,7 +419,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "email", null, "firstname", "lastName", true,
-        UUID.randomUUID());
+        "admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -435,7 +434,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "email", "xxxxxxx", "firstname", "lastName",
-                true, UUID.randomUUID());
+                true,"admin");
 
         // Act & Assert
         assertThrows(InvalidRequestException.class, () -> {
@@ -450,7 +449,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName",
-                true, UUID.randomUUID());
+                true, "admin");
 
         when(mockUserRepo.existsByEmail(any())).thenReturn(true);
         // Act & Assert
@@ -466,7 +465,7 @@ public class UserServiceTest {
 
         // Arrange
         NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName",
-                true, UUID.randomUUID());
+                true, "admin");
 
         when(mockUserRepo.existsByUsername(any())).thenReturn(true);
         // Act & Assert
@@ -482,7 +481,7 @@ public class UserServiceTest {
 
 
         // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName", Boolean.valueOf(null) , UUID.randomUUID());
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName", null , "admin");
 
         when(mockUserRepo.existsByUsername(any())).thenReturn(false);
         when(mockUserRepo.existsByEmail(any())).thenReturn(false);
@@ -494,22 +493,6 @@ public class UserServiceTest {
         verify(mockUserRepo, times(0)).save(any());
     }
 
-    @Test
-    public void test_register_throwsInvalidRequestException_givenInvalidIsActive() {
-
-
-        // Arrange
-        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName", Boolean.valueOf("invalid") , UUID.randomUUID());
-
-        when(mockUserRepo.existsByUsername(any())).thenReturn(false);
-        when(mockUserRepo.existsByEmail(any())).thenReturn(false);
-        // Act & Assert
-        assertThrows(InvalidRequestException.class, () -> {
-            sut.register(newUserRequest);
-        });
-
-        verify(mockUserRepo, times(0)).save(any());
-    }
    
     @Test
     public void test_register_throwsInvalidRequestException_givenNullRoll() {

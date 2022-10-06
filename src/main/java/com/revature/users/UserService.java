@@ -111,18 +111,32 @@ public class UserService {
             throw new InvalidRequestException("Is active status must be one of (true or false)");
         }
 
-        if (newUser.getUserRoleId() == null || newUser.getUserRoleId().toString().length() <= 0) {
+        if (newUser.getUserRoleName() == null || newUser.getUserRoleName().toString().length() <= 0) {
             throw new InvalidRequestException("Must provid role ID!");
         }
 
-        if (!newUser.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4")
-                && !newUser.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
-                && !newUser.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78")) {
-            throw new InvalidRequestException("invalid role ID provided");
+        if (!newUser.getUserRoleName().equals("admin")
+                && !newUser.getUserRoleName().equals("manager")
+                && !newUser.getUserRoleName().equals("employee")) {
+            throw new InvalidRequestException("invalid role name provided");
+        }
+
+        String roleId = null;
+
+        if (newUser.getUserRoleName().equals("admin")) {
+            roleId = "6e7feb50-2feb-477b-813a-3033cfdeb0b4";
+        }
+
+        if (newUser.getUserRoleName().equals("manager")) {
+            roleId = "1b2ee323-f6cc-438d-9424-a2fe50ff7fc9";
+        }
+
+        if (newUser.getUserRoleName().equals("employee")) {
+            roleId = "c342e80b-e53a-42e0-8942-c1fd661c6a78";
         }
 
         User userToPersist = newUser.extractEntity();
-        UserRole role = roleRepo.findById(newUser.getUserRoleId()).orElseThrow(ResourceNotFoundException::new);
+        UserRole role = roleRepo.findById(UUID.fromString(roleId)).orElseThrow(ResourceNotFoundException::new);
         userToPersist.setRole(role);
         userRepo.save(userToPersist);
         return "New persisted user's ID is " + userToPersist.getId();
@@ -143,12 +157,17 @@ public class UserService {
 
         User user = userRepo.findById(updateRequestBody.getUserId()).orElseThrow(ResourceNotFoundException::new);
 
-        if (updateRequestBody.getUsername() != null ) {
-            if (!userRepo.existsByUsername(updateRequestBody.getUsername()) && updateRequestBody.getUsername().length() >= 4) {
-                user.setUsername(updateRequestBody.getUsername());
-            } else {
+        if (updateRequestBody.getUsername() != null) {
+
+            if (userRepo.existsByUsername(updateRequestBody.getUsername())) {
                 throw new IsAlreadyExist("Provided username is already taken");
             }
+            if (updateRequestBody.getUsername().length() < 4) {
+                throw new InvalidRequestException("Username must be more than 4 characters");
+            }
+
+            user.setUsername(updateRequestBody.getUsername());
+
         }
         if (updateRequestBody.getEmail() != null) {
 
@@ -176,26 +195,41 @@ public class UserService {
             user.setLastName(updateRequestBody.getLastName());
         }
 
-        if (updateRequestBody.isActive() != null) {
-            if (String.valueOf(updateRequestBody.isActive()).equals("true")
-                    || String.valueOf(updateRequestBody.isActive()).equals("false")) {
-                user.setActive(updateRequestBody.isActive());
+        if (updateRequestBody.getIsActive() != null) {
+            if (String.valueOf(updateRequestBody.getIsActive()).equals("true")
+                    || String.valueOf(updateRequestBody.getIsActive()).equals("false")) {
+                user.setActive(updateRequestBody.getIsActive());
             } else {
                 throw new InvalidRequestException();
             }
         }
 
-        if (updateRequestBody.getUserRoleId() != null) {
-            if (updateRequestBody.getUserRoleId().toString().equals("6e7feb50-2feb-477b-813a-3033cfdeb0b4")
-                    || updateRequestBody.getUserRoleId().toString().equals("1b2ee323-f6cc-438d-9424-a2fe50ff7fc9")
-                    || updateRequestBody.getUserRoleId().toString().equals("c342e80b-e53a-42e0-8942-c1fd661c6a78")) {
+        if (updateRequestBody.getUserRoleName() != null) {
 
-                UserRole role = roleRepo.findById(updateRequestBody.getUserRoleId())
+            if (updateRequestBody.getUserRoleName().equals("admin")
+                    || updateRequestBody.getUserRoleName().equals("manager")
+                    || updateRequestBody.getUserRoleName().equals("employee")) {
+
+                String roleId = null;
+
+                if (updateRequestBody.getUserRoleName().equals("admin")) {
+                    roleId = "6e7feb50-2feb-477b-813a-3033cfdeb0b4";
+                }
+
+                if (updateRequestBody.getUserRoleName().equals("manager")) {
+                    roleId = "1b2ee323-f6cc-438d-9424-a2fe50ff7fc9";
+                }
+
+                if (updateRequestBody.getUserRoleName().equals("employee")) {
+                    roleId = "c342e80b-e53a-42e0-8942-c1fd661c6a78";
+                }
+
+                UserRole role = roleRepo.findById(UUID.fromString(roleId))
                         .orElseThrow(ResourceNotFoundException::new);
                 user.setRole(role);
 
             } else {
-                throw new InvalidRequestException();
+                throw new InvalidRequestException("invalid role name provided");
             }
         }
 
