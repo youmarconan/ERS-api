@@ -62,8 +62,8 @@
             <version>1.6.11</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
+                   <groupId>com.fasterxml.jackson.core</groupId>
+                   <artifactId>jackson-databind</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

@@ -180,7 +180,7 @@ public class UserService {
 
         if (updateRequestBody.getPassword() != null) {
 
-            if (updateRequestBody.getPassword() == null || updateRequestBody.getPassword().length() < 8) {
+            if (updateRequestBody.getPassword().length() < 8) {
                 throw new InvalidRequestException("A password with at least 8 characters must be provided!");
             } else {
                 user.setPassword(updateRequestBody.getPassword());
@@ -188,11 +188,20 @@ public class UserService {
         }
 
         if (updateRequestBody.getFirstName() != null) {
+
+            if (updateRequestBody.getFirstName().length() == 0) {
+                throw new InvalidRequestException("Must provide first name");
+            } else {
             user.setFirstName(updateRequestBody.getFirstName());
+            }
         }
 
         if (updateRequestBody.getLastName() != null) {
+            if (updateRequestBody.getFirstName().length() == 0) {
+                throw new InvalidRequestException("Must provide last name");
+            } else {
             user.setLastName(updateRequestBody.getLastName());
+            }
         }
 
         if (updateRequestBody.getIsActive() != null) {

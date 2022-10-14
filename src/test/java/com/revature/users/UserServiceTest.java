@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,13 +28,12 @@ public class UserServiceTest {
     UserService sut;
     UserRepo mockUserRepo;
     RoleRepo mockRoleRepo;
-    UpdateRequestBody mockUpdateRequestBody;
 
     @BeforeEach
     public void setup() {
         mockUserRepo = Mockito.mock(UserRepo.class);
+        mockRoleRepo = Mockito.mock(RoleRepo.class);
         sut = new UserService(mockUserRepo,mockRoleRepo);
-        mockUpdateRequestBody = new UpdateRequestBody();
     }
 
     @AfterEach
@@ -510,6 +510,74 @@ public class UserServiceTest {
 
         verify(mockUserRepo, times(0)).save(any());
     }
+
+    @Test
+    public void test_register_throwsInvalidRequestException_givenInvalidRoll() {
+
+
+        // Arrange
+        NewUserRequest newUserRequest = new NewUserRequest("username", "email", "password", "firstname", "lastName", true , "invalid");
+
+        when(mockUserRepo.existsByUsername(any())).thenReturn(false);
+        when(mockUserRepo.existsByEmail(any())).thenReturn(false);
+        // Act & Assert
+        assertThrows(InvalidRequestException.class, () -> {
+            sut.register(newUserRequest);
+        });
+
+        verify(mockUserRepo, times(0)).save(any());
+    }
+
+    @Test
+    public void test_register_returnsSuccessfully_givenValidNewUserRequest() {
+
+        // Arrange
+        NewUserRequest newUserRequest = new NewUserRequest("valid", "valid", "password", "valid", "valid", true, "admin");
+
+        User user = newUserRequest.extractEntity();
+
+        UserRole userRole = new UserRole(UUID.randomUUID(), "admin");
+        
+        when(mockRoleRepo.findById(any())).thenReturn(Optional.of(userRole));
+        when(mockUserRepo.save(any())).thenReturn(user);
+       
+        // Act
+        String actual = sut.register(newUserRequest);
+        // Assert
+        assertNotNull(actual);
+        verify(mockUserRepo, times(1)).save(any());
+    }
+
+    @Test
+    public void test_updateUser_returnsSuccessfully_givenValidUpdateRequestBody() {
+
+        // Arrange
+
+        UpdateRequestBody updateRequestBody = new UpdateRequestBody(UUID.randomUUID(), "valid", "valid", "password", "valid", "valid", true, "admin");
+
+        UserRole userRole = new UserRole(UUID.randomUUID(), "admin");
+        when(mockRoleRepo.findById(any())).thenReturn(Optional.of(userRole));
+
+        User user = new User();
+        
+        when(mockUserRepo.findById(any())).thenReturn(Optional.of(user));
+        when(mockUserRepo.existsByUsername(any())).thenReturn(false);
+        when(mockUserRepo.existsByEmail(any())).thenReturn(false);
+
+
+       
+        // Act
+        sut.updateUser(updateRequestBody);
+        // Assert
+        assertEquals(updateRequestBody.getUsername(), user.getUsername());
+        assertEquals(updateRequestBody.getEmail(), user.getEmail());
+        assertEquals(updateRequestBody.getPassword(), user.getPassword());
+        assertEquals(updateRequestBody.getFirstName(), user.getFirstName());
+        assertEquals(updateRequestBody.getLastName(), user.getLastName());
+        assertEquals(updateRequestBody.getUserRoleName(), user.getRole().getName());
+
+    }
+
 
 
 }
