@@ -28,7 +28,15 @@ public class AuthController {
 
     private final AuthService authService;
 
+    public static HttpSession userSession;
+
     private static Logger logger = LogManager.getLogger(AuthController.class);
+
+    
+
+    public AuthController() {
+        this.authService = null;
+    }
 
     @Autowired
     public AuthController(AuthService authService) {
@@ -48,7 +56,8 @@ public class AuthController {
 
         logger.info("Establishing user session for user: {}", loggedInUserResponse.getUsername());
 
-        HttpSession userSession = req.getSession();
+        userSession = req.getSession();
+        
         userSession.setAttribute("loggedInUser", loggedInUserResponse);
 
         return loggedInUserResponse;

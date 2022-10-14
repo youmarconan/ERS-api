@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.common.exceptions.AuthorizationException;
-
-
+import com.revature.auth.AuthController;
 import com.revature.common.SecurityUtils;
 
 @RestController
@@ -45,12 +44,15 @@ public class UserController {
 
         logger.info("A GET request was received by /users at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+        // HttpSession userSession = req.getSession(false);
 
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "admin");
-
+        // SecurityUtils.enforceAuthentication(userSession);
+        // SecurityUtils.enforcePermissions(userSession, "admin");
+        if(AuthController.userSession != null){
+        
         return userService.getAllUsers();
+        }
+        return null;
     }
 
     @GetMapping(value = "/byId/{id}", produces = "application/json")
