@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
+import com.revature.auth.AuthController;
 import com.revature.common.SecurityUtils;
 import com.revature.common.exceptions.AuthorizationException;
 import com.revature.common.exceptions.InvalidRequestException;
@@ -43,10 +44,8 @@ public class ReimbursementController {
 
         logger.info("A GET request was received by /reimbursement at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
-
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "manager");
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "manager");
 
         return reimbursementService.getAllReimbursements();
     }
@@ -56,12 +55,10 @@ public class ReimbursementController {
 
         logger.info("A GET request was received by /reimbursement/myReimbs at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "employee");
 
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "employee");
-
-        String id = ((UserResponse) userSession.getAttribute("loggedInUser")).getId();
+        String id = ((UserResponse) (AuthController.userSession).getAttribute("loggedInUser")).getId();
 
         return reimbursementService.viewMyReimbursement(id);
     }
@@ -72,10 +69,8 @@ public class ReimbursementController {
 
         logger.info("A GET request was received by /reimbursement/byStatus at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
-
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "manager");
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "manager");
 
         return reimbursementService.getReimbursementsByStatus(status);
     }
@@ -85,10 +80,8 @@ public class ReimbursementController {
 
         logger.info("A GET request was received by /reimbursement/byType at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
-
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "manager");
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "manager");
 
         return reimbursementService.getReimbursementsByType(type);
     }
@@ -98,11 +91,9 @@ public class ReimbursementController {
 
         logger.info("A GET request was received by /reimbursement/byId at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
 
-        SecurityUtils.enforceAuthentication(userSession);
-
-        if (SecurityUtils.validateRole(userSession, "manager") || SecurityUtils.validateUserId(userSession, id)) {
+        if (SecurityUtils.validateRole(AuthController.userSession, "manager") || SecurityUtils.validateUserId(AuthController.userSession, id)) {
             return reimbursementService.getReimbursementById(id);
         } else {
             throw new AuthorizationException();
@@ -117,12 +108,10 @@ public class ReimbursementController {
 
         logger.info("A POST request was received by /reimbursement at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "employee");
 
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "employee");
-
-        String id = ((UserResponse) userSession.getAttribute("loggedInUser")).getId();
+        String id = ((UserResponse) (AuthController.userSession).getAttribute("loggedInUser")).getId();
 
         return reimbursementService.createNewReimbursement(newReimbursement, id);
     }
@@ -133,10 +122,8 @@ public class ReimbursementController {
 
         logger.info("A PUT request was received by /reimbursement at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
-
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "employee");
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "employee");
 
         ReimbursementResponse reimbursement = null;
         if (updateOwnReimbBody.getReimbursementId() != null) {
@@ -153,7 +140,7 @@ public class ReimbursementController {
 
         String currentStatus = reimbursement.getStatusName();
 
-        String loggedInUserId = ((UserResponse) userSession.getAttribute("loggedInUser")).getId();
+        String loggedInUserId = ((UserResponse) (AuthController.userSession).getAttribute("loggedInUser")).getId();
 
         if (loggedInUserId.equals(autherId) && currentStatus.equals("pending")) {
             reimbursementService.updateReimbursement(updateOwnReimbBody);
@@ -170,12 +157,10 @@ public class ReimbursementController {
         logger.info("A PUT request was received by /reimbursement at {}",
                 LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "manager");
 
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "manager");
-
-        String resolverId = ((UserResponse) userSession.getAttribute("loggedInUser")).getId();
+        String resolverId = ((UserResponse) (AuthController.userSession).getAttribute("loggedInUser")).getId();
 
         reimbursementService.approveOrDeny(approveOrDenyBody,resolverId);
 

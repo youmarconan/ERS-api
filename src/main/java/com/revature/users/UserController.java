@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/byId/{id}", produces = "application/json")
-    public UserResponse getUserById(@PathVariable(name = "id") String id /*, HttpSession userSession */) {
+    public UserResponse getUserById(@PathVariable(name = "id") String id) {
 
         logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
 
@@ -67,13 +65,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/byUsername/{username}", produces = "application/json")
-    public UserResponse getUserByUsername(@PathVariable String username, HttpSession userSession) {
+    public UserResponse getUserByUsername(@PathVariable String username) {
 
         logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
 
-        SecurityUtils.enforceAuthentication(userSession);
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
 
-        if (SecurityUtils.validateRole(userSession, "admin")) {
+        if (SecurityUtils.validateRole(AuthController.userSession, "admin")) {
             return userService.getUserByUsername(username);
         } else {
             throw new AuthorizationException();
@@ -81,13 +79,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/byEmail/{email}", produces = "application/json")
-    public UserResponse getUserByEmail(@PathVariable(name = "email") String email, HttpSession userSession) {
+    public UserResponse getUserByEmail(@PathVariable(name = "email") String email) {
 
         logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
 
-        SecurityUtils.enforceAuthentication(userSession);
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
 
-        if (SecurityUtils.validateRole(userSession, "admin")) {
+        if (SecurityUtils.validateRole(AuthController.userSession, "admin")) {
             return userService.getUserByEmail(email);
         } else {
             throw new AuthorizationException();
@@ -102,10 +100,8 @@ public class UserController {
 
         logger.info("A POST request was received by /users at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
-
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "admin");
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "admin");
 
         return userService.register(requestBody);
     }
@@ -116,10 +112,8 @@ public class UserController {
 
         logger.info("A PUT request was received by /users at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
-
-        SecurityUtils.enforceAuthentication(userSession);
-        SecurityUtils.enforcePermissions(userSession, "admin");
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "admin");
 
         userService.updateUser(updateRequestBody);
 
