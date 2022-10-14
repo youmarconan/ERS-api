@@ -44,15 +44,12 @@ public class UserController {
 
         logger.info("A GET request was received by /users at {}", LocalDateTime.now());
 
-        // HttpSession userSession = req.getSession(false);
 
-        // SecurityUtils.enforceAuthentication(userSession);
-        // SecurityUtils.enforcePermissions(userSession, "admin");
-        if(AuthController.userSession != null){
-        
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
+        SecurityUtils.enforcePermissions(AuthController.userSession, "admin");
+
         return userService.getAllUsers();
-        }
-        return null;
+     
     }
 
     @GetMapping(value = "/byId/{id}", produces = "application/json")
