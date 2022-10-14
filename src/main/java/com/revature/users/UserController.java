@@ -53,13 +53,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/byId/{id}", produces = "application/json")
-    public UserResponse getUserById(@PathVariable(name = "id") String id, HttpSession userSession) {
+    public UserResponse getUserById(@PathVariable(name = "id") String id /*, HttpSession userSession */) {
 
         logger.info("A GET request was received by /users/{id} at {}", LocalDateTime.now());
 
-        SecurityUtils.enforceAuthentication(userSession);
+        SecurityUtils.enforceAuthentication(AuthController.userSession);
 
-        if (SecurityUtils.validateRole(userSession, "admin") || SecurityUtils.validateUserId(userSession, id)) {
+        if (SecurityUtils.validateRole(AuthController.userSession, "admin") || SecurityUtils.validateUserId(AuthController.userSession, id)) {
             return userService.getUserById(id);
         } else {
             throw new AuthorizationException();
