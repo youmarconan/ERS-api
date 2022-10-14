@@ -45,7 +45,9 @@ public class UserController {
 
         logger.info("A GET request was received by /users at {}", LocalDateTime.now());
 
-        HttpSession userSession = req.getSession(false);
+       // HttpSession userSession = req.getSession(false);
+
+        HttpSession userSession = req.getSession(true);
 
         SecurityUtils.enforceAuthentication(userSession);
         SecurityUtils.enforcePermissions(userSession, "admin");
