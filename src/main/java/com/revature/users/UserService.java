@@ -155,7 +155,7 @@ public class UserService {
 
         System.out.println("\n" + updateRequestBody + "\n");
 
-        User user = userRepo.findById(updateRequestBody.getUserId()).orElseThrow(ResourceNotFoundException::new);
+        User user = userRepo.findById(UUID.fromString(updateRequestBody.getUserId())).orElseThrow(ResourceNotFoundException::new);
 
         if (updateRequestBody.getUsername() != null) {
 

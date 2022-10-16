@@ -1,12 +1,10 @@
 package com.revature.users;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateRequestBody {
 
-    private UUID userId;
+    private String userId;
     private String username;
     private String email;
     private String password;
@@ -20,7 +18,7 @@ public class UpdateRequestBody {
         super();
     }
 
-    public UpdateRequestBody(UUID userId, String username, String email, String password, String firstName,
+    public UpdateRequestBody(String userId, String username, String email, String password, String firstName,
             String lastName, Boolean isActive, String userRoleName) {
         this.userId = userId;
         this.username = username;
@@ -32,11 +30,11 @@ public class UpdateRequestBody {
         this.userRoleName = userRoleName;
     }
 
-    public UUID getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

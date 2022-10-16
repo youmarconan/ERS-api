@@ -553,7 +553,7 @@ public class UserServiceTest {
 
         // Arrange
 
-        UpdateRequestBody updateRequestBody = new UpdateRequestBody(UUID.randomUUID(), "valid", "valid", "password", "valid", "valid", true, "admin");
+        UpdateRequestBody updateRequestBody = new UpdateRequestBody(UUID.randomUUID().toString(), "valid", "valid", "password", "valid", "valid", true, "admin");
 
         UserRole userRole = new UserRole(UUID.randomUUID(), "admin");
         when(mockRoleRepo.findById(any())).thenReturn(Optional.of(userRole));
