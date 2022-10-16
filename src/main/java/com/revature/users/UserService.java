@@ -112,7 +112,7 @@ public class UserService {
         }
 
         if (newUser.getUserRoleName() == null || newUser.getUserRoleName().toString().length() <= 0) {
-            throw new InvalidRequestException("Must provid role ID!");
+            throw new InvalidRequestException("Must provid role name!");
         }
 
         if (!newUser.getUserRoleName().equals("admin")
@@ -157,7 +157,7 @@ public class UserService {
 
         User user = userRepo.findById(UUID.fromString(updateRequestBody.getUserId())).orElseThrow(ResourceNotFoundException::new);
 
-        if (updateRequestBody.getUsername() != null) {
+        if (updateRequestBody.getUsername() != "") {
 
             if (userRepo.existsByUsername(updateRequestBody.getUsername())) {
                 throw new IsAlreadyExist("Provided username is already taken");
@@ -169,7 +169,7 @@ public class UserService {
             user.setUsername(updateRequestBody.getUsername());
 
         }
-        if (updateRequestBody.getEmail() != null) {
+        if (updateRequestBody.getEmail() != "") {
 
             if (!userRepo.existsByEmail(updateRequestBody.getEmail())) {
                 user.setEmail(updateRequestBody.getEmail());
@@ -178,7 +178,7 @@ public class UserService {
             }
         }
 
-        if (updateRequestBody.getPassword() != null) {
+        if (updateRequestBody.getPassword() != "") {
 
             if (updateRequestBody.getPassword().length() < 8) {
                 throw new InvalidRequestException("A password with at least 8 characters must be provided!");
@@ -187,7 +187,7 @@ public class UserService {
             }
         }
 
-        if (updateRequestBody.getFirstName() != null) {
+        if (updateRequestBody.getFirstName() != "") {
 
             if (updateRequestBody.getFirstName().length() == 0) {
                 throw new InvalidRequestException("Must provide first name");
@@ -196,7 +196,7 @@ public class UserService {
             }
         }
 
-        if (updateRequestBody.getLastName() != null) {
+        if (updateRequestBody.getLastName() != "") {
             if (updateRequestBody.getFirstName().length() == 0) {
                 throw new InvalidRequestException("Must provide last name");
             } else {
@@ -204,10 +204,10 @@ public class UserService {
             }
         }
 
-        if (updateRequestBody.getIsActive() != null) {
+        if (updateRequestBody.getIsActive() != "") {
             if (String.valueOf(updateRequestBody.getIsActive()).equals("true")
                     || String.valueOf(updateRequestBody.getIsActive()).equals("false")) {
-                user.setActive(updateRequestBody.getIsActive());
+                user.setActive(Boolean.parseBoolean(updateRequestBody.getIsActive()));
             } else {
                 throw new InvalidRequestException();
             }
