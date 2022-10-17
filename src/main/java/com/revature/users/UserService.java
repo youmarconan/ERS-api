@@ -213,7 +213,7 @@ public class UserService {
             }
         }
 
-        if (updateRequestBody.getUserRoleName() != null) {
+        if (updateRequestBody.getUserRoleName() != "") {
 
             if (updateRequestBody.getUserRoleName().equals("admin")
                     || updateRequestBody.getUserRoleName().equals("manager")
