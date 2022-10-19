@@ -9,81 +9,53 @@ import com.revature.common.Request;
 @Component
 public class NewReimbursementRequest implements Request<Reimbursement> {
 
-    private float amount;
+    private String amount;
     private String description;
     private String type;
-    
-
-   
 
     public NewReimbursementRequest() {
         super();
     }
 
-
-
-    public NewReimbursementRequest(float amount, String description, String type) {
+    public NewReimbursementRequest(String amount, String description, String type) {
         this.amount = amount;
         this.description = description;
         this.type = type;
     }
 
-
-
-    public float getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-
-
-    public void setAmount(float amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
-
-
 
     public String getDescription() {
         return description;
     }
 
-
-
     public void setDescription(String description) {
         this.description = description;
     }
-
-
 
     public String getType() {
         return type;
     }
 
-
-
     public void setType(String type) {
         this.type = type;
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Float.floatToIntBits(amount);
+        result = prime * result + ((amount == null) ? 0 : amount.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
-
-
 
     @Override
     public boolean equals(Object obj) {
@@ -94,7 +66,10 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         if (getClass() != obj.getClass())
             return false;
         NewReimbursementRequest other = (NewReimbursementRequest) obj;
-        if (Float.floatToIntBits(amount) != Float.floatToIntBits(other.amount))
+        if (amount == null) {
+            if (other.amount != null)
+                return false;
+        } else if (!amount.equals(other.amount))
             return false;
         if (description == null) {
             if (other.description != null)
@@ -109,23 +84,18 @@ public class NewReimbursementRequest implements Request<Reimbursement> {
         return true;
     }
 
-
-
     @Override
     public String toString() {
         return "NewReimbursementRequest [amount=" + amount + ", description=" + description + ", type=" + type + "]";
     }
-
-
 
     @Override
     public Reimbursement extractEntity() {
 
         Reimbursement reimbursement = new Reimbursement();
 
-        reimbursement.setAmount(this.amount);
+        reimbursement.setAmount(Double.parseDouble(this.amount));
         reimbursement.setDescription(this.description);
-
 
         reimbursement.setId(UUID.randomUUID());
 

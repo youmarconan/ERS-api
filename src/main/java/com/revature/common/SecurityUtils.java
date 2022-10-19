@@ -25,7 +25,6 @@ public class SecurityUtils {
         if (!((UserResponse) userSession.getAttribute("loggedInUser")).getRoleName().equals(expectedRole)) {
             throw new AuthorizationException();
         }
-
     }
 
 

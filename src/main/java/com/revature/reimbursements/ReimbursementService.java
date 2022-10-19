@@ -152,7 +152,7 @@ public class ReimbursementService {
             throw new InvalidRequestException("Provided request must not be null!");
         }
 
-        if (newReimbursement.getAmount() >= 9999.99 || newReimbursement.getAmount() <= 0) {
+        if (Double.parseDouble(newReimbursement.getAmount()) >= 9999.99 || Double.parseDouble(newReimbursement.getAmount()) <= 0) {
             throw new InvalidRequestException("Provided amount must be between 0.01 and 9999.99");
         }
 
