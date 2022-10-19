@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.revature.common.GeneratedResponse;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;
 import com.revature.common.exceptions.ResourceNotFoundException;
@@ -542,7 +543,7 @@ public class UserServiceTest {
         when(mockUserRepo.save(any())).thenReturn(user);
        
         // Act
-        String actual = sut.register(newUserRequest);
+        GeneratedResponse actual = sut.register(newUserRequest);
         // Assert
         assertNotNull(actual);
         verify(mockUserRepo, times(1)).save(any());

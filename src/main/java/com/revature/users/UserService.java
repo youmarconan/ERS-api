@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.revature.common.GeneratedResponse;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.IsAlreadyExist;
 import com.revature.common.exceptions.ResourceNotFoundException;
@@ -71,7 +72,7 @@ public class UserService {
         }
     }
 
-    public String register(NewUserRequest newUser) {
+    public GeneratedResponse register(NewUserRequest newUser) {
 
         if (newUser == null) {
             throw new InvalidRequestException("Provided request must not be null!");
@@ -139,7 +140,7 @@ public class UserService {
         UserRole role = roleRepo.findById(UUID.fromString(roleId)).orElseThrow(ResourceNotFoundException::new);
         userToPersist.setRole(role);
         userRepo.save(userToPersist);
-        return "New persisted user's ID is " + userToPersist.getId();
+        return new GeneratedResponse("New persisted user's ID is " + userToPersist.getId());
     }
 
     @Transactional

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.revature.auth.AuthController;
+import com.revature.common.GeneratedResponse;
 import com.revature.common.SecurityUtils;
 import com.revature.common.exceptions.AuthorizationException;
 import com.revature.common.exceptions.InvalidRequestException;
@@ -103,7 +104,7 @@ public class ReimbursementController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createNewReimbursement(@RequestBody NewReimbursementRequest newReimbursement,
+    public GeneratedResponse createNewReimbursement(@RequestBody NewReimbursementRequest newReimbursement,
             HttpServletRequest req) {
 
         logger.info("A POST request was received by /reimbursement at {}", LocalDateTime.now());

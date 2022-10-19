@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.revature.common.GeneratedResponse;
 import com.revature.common.exceptions.InvalidRequestException;
 import com.revature.common.exceptions.ResourceNotFoundException;
 import com.revature.users.User;
@@ -146,7 +147,7 @@ public class ReimbursementService {
 
     }
 
-    public String createNewReimbursement(NewReimbursementRequest newReimbursement, String authorId) {
+    public GeneratedResponse createNewReimbursement(NewReimbursementRequest newReimbursement, String authorId) {
 
         if (newReimbursement == null) {
             throw new InvalidRequestException("Provided request must not be null!");
@@ -208,7 +209,7 @@ public class ReimbursementService {
 
         reimbursementRepo.save(reimbursement);
 
-        return "Successfully submitted new reimbursement with ID = " + reimbursement.getId().toString();
+        return new GeneratedResponse("Successfully submitted new reimbursement with ID = " + reimbursement.getId().toString());
     }
 
     @Transactional

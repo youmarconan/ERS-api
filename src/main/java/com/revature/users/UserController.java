@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.common.exceptions.AuthorizationException;
 import com.revature.auth.AuthController;
+import com.revature.common.GeneratedResponse;
 import com.revature.common.SecurityUtils;
 
 @RestController
@@ -91,7 +92,7 @@ public class UserController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public String registerNewUser(@RequestBody NewUserRequest requestBody, HttpServletRequest req) {
+    public GeneratedResponse registerNewUser(@RequestBody NewUserRequest requestBody, HttpServletRequest req) {
 
         System.out.println(requestBody);
 
