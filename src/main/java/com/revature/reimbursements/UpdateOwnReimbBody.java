@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 public class UpdateOwnReimbBody {
 
     private String reimbursementId;
-    private double amount;
+    private String amount;
     private String description;
     private String type;
 
     public UpdateOwnReimbBody() {
     }
 
-    public UpdateOwnReimbBody(String reimbursementId, double amount, String description, String type) {
+    public UpdateOwnReimbBody(String reimbursementId, String amount, String description, String type) {
         this.reimbursementId = reimbursementId;
         this.amount = amount;
         this.description = description;
@@ -28,11 +28,11 @@ public class UpdateOwnReimbBody {
         this.reimbursementId = reimbursementId;
     }
 
-    public double getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
@@ -52,15 +52,15 @@ public class UpdateOwnReimbBody {
         this.type = type;
     }
 
+  
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        long temp;
-        temp = Double.doubleToLongBits(amount);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((reimbursementId == null) ? 0 : reimbursementId.hashCode());
+        result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
@@ -74,17 +74,20 @@ public class UpdateOwnReimbBody {
         if (getClass() != obj.getClass())
             return false;
         UpdateOwnReimbBody other = (UpdateOwnReimbBody) obj;
-        if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
+        if (reimbursementId == null) {
+            if (other.reimbursementId != null)
+                return false;
+        } else if (!reimbursementId.equals(other.reimbursementId))
+            return false;
+        if (amount == null) {
+            if (other.amount != null)
+                return false;
+        } else if (!amount.equals(other.amount))
             return false;
         if (description == null) {
             if (other.description != null)
                 return false;
         } else if (!description.equals(other.description))
-            return false;
-        if (reimbursementId == null) {
-            if (other.reimbursementId != null)
-                return false;
-        } else if (!reimbursementId.equals(other.reimbursementId))
             return false;
         if (type == null) {
             if (other.type != null)

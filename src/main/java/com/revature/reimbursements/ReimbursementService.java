@@ -226,10 +226,10 @@ public class ReimbursementService {
 
         if (String.valueOf(updateOwnReimbBody.getAmount()) != null) {
 
-            if (updateOwnReimbBody.getAmount() > 9999.99 || updateOwnReimbBody.getAmount() <= 0) {
+            if (Double.parseDouble(updateOwnReimbBody.getAmount()) > 9999.99 || Double.parseDouble(updateOwnReimbBody.getAmount()) <= 0) {
                 throw new InvalidRequestException("Provided amount must be between 0.01 and 9999.99");
             } else {
-                reimbursement.setAmount(updateOwnReimbBody.getAmount());
+                reimbursement.setAmount(Double.parseDouble(updateOwnReimbBody.getAmount()));
             }
         }
 
