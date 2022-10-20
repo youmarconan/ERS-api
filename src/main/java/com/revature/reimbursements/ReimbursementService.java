@@ -215,16 +215,12 @@ public class ReimbursementService {
     @Transactional
     public void updateReimbursement(UpdateOwnReimbBody updateOwnReimbBody) {
 
-        if (updateOwnReimbBody == null) {
-            throw new InvalidRequestException("Provided request must not be null!");
-        }
-
         Reimbursement reimbursement = reimbursementRepo
                 .findById(UUID.fromString(updateOwnReimbBody.getReimbursementId()))
                 .orElseThrow(ResourceNotFoundException::new);
         
 
-        if (String.valueOf(updateOwnReimbBody.getAmount()) != null) {
+        if (String.valueOf(updateOwnReimbBody.getAmount()) != "") {
 
             if (Double.parseDouble(updateOwnReimbBody.getAmount()) > 9999.99 || Double.parseDouble(updateOwnReimbBody.getAmount()) <= 0) {
                 throw new InvalidRequestException("Provided amount must be between 0.01 and 9999.99");
@@ -233,7 +229,7 @@ public class ReimbursementService {
             }
         }
 
-        if (updateOwnReimbBody.getDescription() != null) {
+        if (updateOwnReimbBody.getDescription() != "") {
             if (updateOwnReimbBody.getDescription().length() > 65535) {
 
                 throw new InvalidRequestException("Description must not exceed 65,535 characters");
@@ -242,7 +238,7 @@ public class ReimbursementService {
             }
         }
 
-        if (updateOwnReimbBody.getType() != null) {
+        if (updateOwnReimbBody.getType() != "") {
 
             if (!updateOwnReimbBody.getType().equals("lodging") && !updateOwnReimbBody.getType().equals("travel")
                     && !updateOwnReimbBody.getType().equals("food") && !updateOwnReimbBody.getType().equals("other")) {
